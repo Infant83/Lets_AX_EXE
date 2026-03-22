@@ -1,0 +1,80 @@
+{
+  "route": "#ch04-clip02",
+  "clipTitle": "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑",
+  "overview": "Gemini Deep Research 결과와 외부 보고서를 NotebookLM에 올려 교차 분석하고, LG 스타일 슬라이드 브리핑으로 전환하는 흐름을 실습합니다.",
+  "badges": [
+    "~30분",
+    "CH 04",
+    "실습"
+  ],
+  "sections": [
+    {
+      "index": 1,
+      "title": "실습 준비 파일",
+      "text": "NotebookLM 플레이북, WEF, Deloitte 2023/2026, LG 로고를 준비해 업로드한다."
+    },
+    {
+      "index": 2,
+      "title": "CIQO로 이해하는 문서 기반 AI 리서치",
+      "text": "좋은 컨텍스트를 넣을수록 더 신뢰도 높은 경영진 브리핑이 나온다는 점을 강조한다."
+    },
+    {
+      "index": 3,
+      "title": "실제 NotebookLM 교차 분석 화면",
+      "text": "출처가 붙은 응답을 검증하며 다중 소스 교차 분석을 수행한다."
+    },
+    {
+      "index": 4,
+      "title": "바로 써볼 프롬프트",
+      "text": "교차 분석 질문과 LG 스타일 슬라이드 커스터마이징 프롬프트를 제공한다."
+    }
+  ],
+  "prompts": [
+    {
+      "index": 1,
+      "label": "교차 분석 질문",
+      "content": "Gemini Deep Research 결과와 함께 업로드된 WEF 2025, Deloitte 2023, Deloitte 2026을 교차 분석해 주세요. 세 소스가 공통적으로 시사하는 변화 신호 3가지를 먼저 정리하고, 각 신호가 LG 경영진 의사결정에 주는 의미를 표로 요약해 주세요. 모든 핵심 주장에는 출처를 붙여 주세요."
+    },
+    {
+      "index": 2,
+      "label": "LG 스타일 슬라이드 커스터마이징",
+      "content": "LG 경영진 대상 6~8장 브리핑 슬라이드로 만들어줘. 업로드된 LG 로고를 참고해 흰 배경, 절제된 빨간 포인트, 간결한 데이터 중심 레이아웃을 사용하고, 교차 분석 결과를 바탕으로 CIQO 메시지와 경영진 액션 아이템을 분명하게 보여줘. 마지막 장에는 So What 한 줄과 다음 액션을 넣어줘."
+    }
+  ],
+  "links": [
+    {
+      "href": "/assets/practice/ch03/notebooklm-research-playbook.md",
+      "text": "NotebookLM 리서치 플레이북"
+    },
+    {
+      "href": "/assets/practice/ch03/wef-future-of-jobs-2025.pdf",
+      "text": "WEF Future of Jobs 2025"
+    },
+    {
+      "href": "/assets/practice/ch03/deloitte-luxury-2023.pdf",
+      "text": "Deloitte Luxury 2023"
+    },
+    {
+      "href": "/assets/practice/ch03/deloitte-luxury-2026.pdf",
+      "text": "Deloitte Luxury 2026"
+    },
+    {
+      "href": "/assets/practice/ch03/lg-logo-red.png",
+      "text": "LG 로고"
+    },
+    {
+      "href": "#ch04-clip01",
+      "text": "← NotebookLM 소개 및 문서 기반 AI 연구 도우미"
+    },
+    {
+      "href": "#ch04-clip03",
+      "text": "기업 분석 코스: Gems에서 NotebookLM까지 →"
+    }
+  ],
+  "images": [
+    {
+      "src": "/assets/notebooklm/ch03-notebooklm/screens/ciqo-cross-analysis.png",
+      "alt": "NotebookLM 교차 분석 실제 화면"
+    }
+  ]
+}

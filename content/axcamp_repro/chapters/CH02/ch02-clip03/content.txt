@@ -1,0 +1,25 @@
+CH 02
+참고
+AI 모델 비교
+주요 AI 모델들의 특징을 비교하여 용도에 맞는 선택을 도와줍니다. (2026년 2월 기준)
+이 페이지에서는
+EXAONE, Gemini, GPT, Claude 등 주요 AI 모델의 강점을 비교합니다
+보안, 성능, 특화 영역 기준으로 업무 용도별 최적 모델을 파악합니다
+사내 기밀 데이터 처리 시 EXAONE을 선택해야 하는 이유를 이해합니다
+주요 AI 모델 비교
+모델	개발사	최신 버전	강점	보안 특징
+EXAONE	LG AI Research	K-EXAONE (236B)
+EXAONE
+EXAONE
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.
+ 4.0 (32B)	한국어 특화, 온프레미스 배포, 하이브리드 추론	내부 서버 운영 가능
+Gemini	Google	Gemini 3.1 Pro
+Gemini 3 Flash	LMArena 1위, 추론 최강 (ARC-AGI-2: 77.1%), 1M 토큰	Google Cloud 보안
+GPT	OpenAI	GPT-5.2
+o3 / o4-mini	통합 추론 아키텍처, 할루시네이션 6배 감소	Enterprise API 제공
+Claude	Anthropic	Opus 4.6
+Sonnet 4.6	코딩 최강 (SWE-bench 80.8%), 1M 토큰 컨텍스트	헌법적 AI 원칙 적용
+어떤 모델을 선택해야 하나?
+기밀 데이터 분석이 필요하면 → EXAONE (온프레미스). 범용 업무와 Google 연동 → Gemini. 코딩/에이전트 → Claude 또는 GPT. 실무에서는 용도에 따라 여러 모델을 병행 사용하는 것이 일반적입니다. 2026년 현재 주요 모델 간 성능 격차가 크게 좁혀져, 어떤 모델을 쓰느냐보다 어떤 프롬프트를 쓰느냐가 더 중요합니다.
+← EXAONE 실습
+실습 시트 →

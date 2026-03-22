@@ -1,0 +1,41 @@
+{
+  "route": "#ch03-clip01",
+  "clipTitle": "Gemini 소개 및 접속 방법",
+  "overview": "오늘 실습의 기본 workbench인 Gemini에 접속하고, 모델 선택과 파일 첨부, Gems까지 이어지는 전체 흐름을 먼저 잡습니다.",
+  "badges": [
+    "CH 03",
+    "플랫폼"
+  ],
+  "sections": [
+    {
+      "index": 1,
+      "title": "오늘 Gemini에서 경험할 것",
+      "text": "Chat UI, 멀티모달 입력, Gems까지 오늘 챕터 전체 흐름을 먼저 이해합니다."
+    },
+    {
+      "index": 2,
+      "title": "접속 후 바로 확인할 3가지",
+      "text": "gemini.google.com 접속, 모드 선택, 파일 업로드 메뉴 확인."
+    },
+    {
+      "index": 3,
+      "title": "오늘 주로 쓰는 기능",
+      "text": "Chat, 파일 첨부, 멀티턴 대화, Deep Research, Gems를 오늘 실습과 연결합니다."
+    }
+  ],
+  "prompts": [],
+  "links": [
+    {
+      "href": "https://gemini.google.com/app",
+      "text": "gemini.google.com/app"
+    },
+    {
+      "href": "#ch01-clip05",
+      "text": "← 프롬프트 구조화 하기"
+    },
+    {
+      "href": "#ch03-clip02",
+      "text": "프롬프팅 기초 및 비즈니스 프롬프트 연습 →"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "route": "#ch01-clip05",
+  "url": "https://lg.cmdspace.work/axcamp#ch01-clip05",
+  "pageTitle": "AX Camp for Leaders | LG",
+  "clipTitle": "프롬프트 구조화 하기",
+  "overview": "좋은 프롬프트는 문장보다 구조가 중요하다. Markdown은 읽기 쉬운 섹션을 만들고, XML은 역할·맥락·예시의 경계를 엄격하게 나눈다.",
+  "badges": [
+    "CH 01",
+    "참고"
+  ],
+  "html": "",
+  "text": "CH 01 참고 프롬프트 구조화 하기. Markdown은 역할, 요청, 형식, 제약을 빠르게 구분하는 구조화 방식이고, XML은 instructions, context, examples, input을 명확히 분리하는 방식이다. AWS, Google, Anthropic 공식 가이드는 모두 명확한 섹션 구분과 일관된 포맷을 권장한다.",
+  "sections": [],
+  "prompts": [],
+  "links": [
+    {
+      "href": "#ch01-clip04",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch01-clip04",
+      "text": "← 개념 다지기"
+    },
+    {
+      "href": "#ch03-clip01",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch03-clip01",
+      "text": "접속 방법 →"
+    }
+  ],
+  "images": [],
+  "iframes": []
+}

@@ -1,0 +1,58 @@
+{
+  "chapterId": "ch06",
+  "chapterNum": "CH 06",
+  "title": "Vibe Coding",
+  "time": "13:55",
+  "clips": [
+    {
+      "route": "#ch06-clip01",
+      "title": "바이브 코딩이란",
+      "type": "개념",
+      "folder": "chapters/CH06/ch06-clip01",
+      "linkCount": 2,
+      "imageCount": 0,
+      "sectionCount": 1,
+      "promptCount": 0
+    },
+    {
+      "route": "#ch06-clip02",
+      "title": "AI Studio 파라미터 이해",
+      "type": "개념",
+      "folder": "chapters/CH06/ch06-clip02",
+      "linkCount": 3,
+      "imageCount": 1,
+      "sectionCount": 1,
+      "promptCount": 0
+    },
+    {
+      "route": "#ch06-clip03",
+      "title": "파라미터 직접 체험",
+      "type": "실습",
+      "folder": "chapters/CH06/ch06-clip03",
+      "linkCount": 3,
+      "imageCount": 0,
+      "sectionCount": 1,
+      "promptCount": 1
+    },
+    {
+      "route": "#ch06-clip04",
+      "title": "외부 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동",
+      "type": "참고",
+      "folder": "chapters/CH06/ch06-clip04",
+      "linkCount": 2,
+      "imageCount": 0,
+      "sectionCount": 2,
+      "promptCount": 0
+    },
+    {
+      "route": "#ch06-clip05",
+      "title": "실습 시트: 앱 만들기",
+      "type": "실습",
+      "folder": "chapters/CH06/ch06-clip05",
+      "linkCount": 3,
+      "imageCount": 0,
+      "sectionCount": 5,
+      "promptCount": 8
+    }
+  ]
+}

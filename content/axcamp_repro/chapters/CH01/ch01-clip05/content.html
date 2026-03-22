@@ -1,0 +1,142 @@
+<div class="clip-header">
+  <div class="clip-badges">
+    <span class="clip-badge chapter">CH 01</span>
+    <span class="clip-badge type-reference">참고</span>
+  </div>
+  <h1 class="clip-title">프롬프트 구조화 하기</h1>
+</div>
+
+<div class="clip-overview">좋은 프롬프트는 문장 몇 개가 아니라 <strong>구조</strong>다. Markdown은 읽기 쉬운 섹션을 만들고, XML은 역할·맥락·예시의 경계를 엄격하게 나눠서 모델이 혼동하지 않게 한다.</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">왜 구조가 성능을 바꾸나</div>
+  <div class="clip-section-content">
+    <p>AWS, Google, Anthropic 공식 가이드는 공통적으로 <strong>명확한 섹션 구분과 일관된 포맷</strong>을 권한다. 구조가 잡히면 모델이 역할, 맥락, 작업, 제약을 덜 혼동하고 긴 입력에서도 집중점을 유지하기 쉬워진다.</p>
+    <div class="prompt-format-grid" style="margin-top:16px">
+      <article class="prompt-format-card">
+        <span class="prompt-format-kicker">Markdown</span>
+        <h2 class="prompt-format-title">읽기 쉽고 빠르게 설계할 때</h2>
+        <p class="prompt-format-copy">헤더, 불릿, 코드 블록으로 역할·요청·출력 형식을 나누는 방식이다. Gemini 같은 대화형 실습에서 빠르게 쓰고 고치기에 가장 가볍다.</p>
+        <ul class="prompt-format-list">
+          <li><strong># / ##</strong>로 섹션 계층을 만든다.</li>
+          <li><strong>-</strong>로 요구사항과 체크리스트를 분리한다.</li>
+          <li><strong>```</strong>로 예시 데이터나 출력 샘플을 본문과 분리한다.</li>
+        </ul>
+      </article>
+      <article class="prompt-format-card">
+        <span class="prompt-format-kicker">XML</span>
+        <h2 class="prompt-format-title">경계와 위계를 엄격하게 나눌 때</h2>
+        <p class="prompt-format-copy">instructions, context, examples, input 같은 태그로 블록을 분리하는 방식이다. 긴 문서, 복잡한 지시, 여러 예시가 섞인 프롬프트에서 특히 강하다.</p>
+        <ul class="prompt-format-list">
+          <li><strong>&lt;instructions&gt;</strong>, <strong>&lt;context&gt;</strong>, <strong>&lt;example&gt;</strong>처럼 역할을 태그로 분리한다.</li>
+          <li>중첩 구조로 문서와 메타데이터의 위계를 유지할 수 있다.</li>
+          <li>특히 Claude 계열 문서에서 권장하는 방식이다.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">언제 무엇을 쓰나</div>
+  <div class="clip-section-content">
+    <table class="comparison-table">
+      <thead><tr><th>구분</th><th>Markdown</th><th>XML</th></tr></thead>
+      <tbody>
+        <tr><td><strong>강점</strong></td><td>읽기 쉽고 작성이 빠르다</td><td>구조와 경계가 엄격해 복잡한 입력에 강하다</td></tr>
+        <tr><td><strong>잘 맞는 상황</strong></td><td>일반적인 대화형 프롬프트, 요약, 초안 작성, 간단한 보고서 지시</td><td>긴 문서 분석, 복수 예시, 멀티파트 지시, 도구/컨텍스트 분리</td></tr>
+        <tr><td><strong>오늘 수업 연결</strong></td><td>Gemini, NotebookLM, AI Studio Build 초반 실습</td><td>Claude 스타일 구조화, 긴 컨텍스트, 에이전트용 instruction 설계</td></tr>
+        <tr><td><strong>핵심 포인트</strong></td><td>사람과 모델이 모두 읽기 쉬운 포맷</td><td>모델이 어떤 블록이 데이터이고 어떤 블록이 지시인지 덜 헷갈림</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">Markdown 패턴</div>
+  <div class="clip-section-content">
+    <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px">왼쪽에서 Markdown을 수정하면 오른쪽 미리보기가 함께 바뀐다. 역할, 요청, 출력 형식, 제약을 분리하는 가장 가벼운 구조화 방식이다.</p>
+    <div class="md-live-editor">
+      <div class="md-editor-pane">
+        <div class="md-editor-label">Markdown 입력</div>
+        <textarea class="md-editor-input"># 역할
+당신은 LG전자 가전 사업부의 전략 컨설턴트입니다.
+
+# 요청
+아래 보고서를 분석하여 **핵심 이슈 3가지**를 추출해주세요.
+
+# 출력 형식
+- **이슈명**: 한 줄 요약
+- **현황**: 데이터 기반 설명
+- **제안**: 실행 방안
+
+# 제약 조건
+- 경영진 보고용 격식체
+- 확인되지 않은 사실은 추정으로 쓰지 않기</textarea>
+      </div>
+      <div class="md-preview-pane">
+        <div class="md-editor-label">렌더링 결과</div>
+        <div class="md-editor-preview"><h1>역할</h1><p>당신은 LG전자 가전 사업부의 전략 컨설턴트입니다.</p><br><h1>요청</h1><p>아래 보고서를 분석하여 <strong>핵심 이슈 3가지</strong>를 추출해주세요.</p><br><h1>출력 형식</h1><ul><li><strong>이슈명</strong>: 한 줄 요약</li><li><strong>현황</strong>: 데이터 기반 설명</li><li><strong>제안</strong>: 실행 방안</li></ul><br><h1>제약 조건</h1><ul><li>경영진 보고용 격식체</li><li>확인되지 않은 사실은 추정으로 쓰지 않기</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">XML 패턴</div>
+  <div class="clip-section-content">
+    <div class="prompt-format-grid">
+      <article class="prompt-format-card">
+        <span class="prompt-format-kicker">Example</span>
+        <h2 class="prompt-format-title">태그로 역할과 맥락을 분리</h2>
+        <pre class="prompt-code-block">&lt;system_instruction&gt;
+당신은 고객 전략팀을 돕는 분석가입니다.
+제공된 자료 안에서만 근거를 찾아 답변하세요.
+&lt;/system_instruction&gt;
+
+&lt;context&gt;
+[시장 보고서, 고객 인터뷰, 경쟁사 자료]
+&lt;/context&gt;
+
+&lt;user_query&gt;
+2026년 핵심 리스크 3가지를 정리해줘.
+&lt;/user_query&gt;</pre>
+      </article>
+      <article class="prompt-format-card">
+        <span class="prompt-format-kicker">Why It Works</span>
+        <h2 class="prompt-format-title">복잡한 입력에서 강한 이유</h2>
+        <ul class="prompt-format-list">
+          <li>지시문과 데이터의 경계가 명확해져서 모호성이 줄어든다.</li>
+          <li>예시와 실제 입력을 태그로 구분해 few-shot 품질을 올리기 쉽다.</li>
+          <li>긴 문서, 다단계 분석, 에이전트용 system prompt처럼 위계가 중요한 작업에 잘 맞는다.</li>
+        </ul>
+        <p class="prompt-format-copy">Anthropic은 XML 태그가 instructions, context, examples, input을 섞지 않게 도와준다고 설명하고, Google도 XML-style tags나 Markdown headings처럼 <strong>일관된 구조</strong>를 권장한다.</p>
+      </article>
+    </div>
+  </div>
+</div>
+
+<div class="tip-block">
+  <div class="tip-block-title">최근 흐름</div>
+  <div class="tip-block-content">실무는 단순한 <strong>Prompt Engineering</strong>에서 끝나지 않고, 좋은 자료 묶음을 설계하는 <strong>Context Engineering</strong>, 그리고 그 구조를 반복 가능한 작업 방식으로 만드는 <strong>Workflow Design</strong>으로 확장되고 있다. 즉, 좋은 한 문장보다 좋은 구조와 좋은 맥락이 더 중요해지는 방향이다.</div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">참고한 공식 가이드</div>
+  <div class="clip-section-content">
+    <ul>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#structure-prompts-with-xml-tags" target="_blank" rel="noopener noreferrer">Anthropic Prompting Best Practices</a> — XML 태그로 instructions, context, examples를 분리하는 방식을 권장합니다.</li>
+      <li><a href="https://ai.google.dev/gemini-api/docs/prompting-strategies" target="_blank" rel="noopener noreferrer">Google Gemini Prompting Strategies</a> — XML-style tags 또는 Markdown headings처럼 일관된 구조를 사용하라고 안내합니다.</li>
+      <li><a href="https://docs.aws.amazon.com/nova/latest/userguide/prompting-focus.html" target="_blank" rel="noopener noreferrer">AWS Nova Prompt Focus</a> — Markdown, XML 같은 구조로 섹션을 나누면 모델이 특정 블록에 더 잘 집중할 수 있다고 설명합니다.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="clip-nav-footer">
+  <a class="clip-nav-btn" href="#ch01-clip04">
+    ← 개념 다지기
+  </a>
+  <a class="clip-nav-btn" href="#ch03-clip01">
+    접속 방법 →
+  </a>
+</div>

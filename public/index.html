@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AX Literacy</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <section id="loginView" class="login-view">
+      <div class="login-card">
+        <p class="eyebrow">AX Literacy</p>
+        <h1>AX Literacy 학습 포털</h1>
+        <p class="muted">회원가입 후 로그인하면 개인 진도, 과제, 노트가 계정별로 저장됩니다.</p>
+
+        <div class="auth-tabs">
+          <button id="showLoginModeBtn" type="button" class="ghost active">로그인</button>
+          <button id="showSignupModeBtn" type="button" class="ghost">회원가입</button>
+        </div>
+
+        <form id="loginForm" class="login-form">
+          <label>
+            교육과정 코드
+            <input
+              id="loginCourseCode"
+              name="loginCourseCode"
+              list="courseCodeList"
+              placeholder="예: AXCAMP"
+              maxlength="24"
+            />
+          </label>
+          <label>
+            계정아이디 (Let's ID)
+            <input
+              id="loginAccountId"
+              name="loginAccountId"
+              placeholder="예: leader01"
+              minlength="2"
+              maxlength="32"
+              required
+            />
+          </label>
+          <label>
+            비밀번호
+            <input
+              id="loginPassword"
+              name="loginPassword"
+              type="password"
+              placeholder="비밀번호"
+              minlength="2"
+              maxlength="64"
+              required
+            />
+          </label>
+          <div class="auth-actions-row">
+            <button type="submit">로그인</button>
+            <button id="showPasswordHelpBtn" type="button" class="ghost">비밀번호 찾기</button>
+          </div>
+          <p id="loginError" class="error"></p>
+        </form>
+
+        <form id="signupForm" class="login-form hidden">
+          <label>
+            교육과정 코드
+            <input
+              id="signupCourseCode"
+              name="signupCourseCode"
+              list="courseCodeList"
+              placeholder="예: AXCAMP"
+              maxlength="24"
+            />
+          </label>
+          <label>
+            계정아이디 (Let's ID)
+            <input
+              id="signupAccountId"
+              name="signupAccountId"
+              placeholder="예: leader01"
+              minlength="2"
+              maxlength="32"
+              required
+            />
+          </label>
+          <label>
+            비밀번호 (PW)
+            <input
+              id="signupPassword"
+              name="signupPassword"
+              type="password"
+              placeholder="임의의 비밀번호"
+              minlength="2"
+              maxlength="64"
+              required
+            />
+          </label>
+          <label>
+            소속 팀명
+            <input
+              id="signupTeamName"
+              name="signupTeamName"
+              placeholder="예: AX추진팀"
+              maxlength="64"
+              required
+            />
+          </label>
+          <label>
+            표시이름
+            <input
+              id="signupDisplayName"
+              name="signupDisplayName"
+              placeholder="예: 홍길동"
+              maxlength="64"
+              required
+            />
+          </label>
+          <button type="submit">회원가입</button>
+          <p id="signupError" class="error"></p>
+        </form>
+
+        <section id="passwordHelpPanel" class="password-help hidden">
+          <h3>비밀번호 찾기</h3>
+          <p class="muted">1) Let's ID 입력 후 힌트(앞 2글자)를 확인하세요.</p>
+          <div class="password-help-grid">
+            <label>
+              Let's ID
+              <input
+                id="helpAccountId"
+                name="helpAccountId"
+                placeholder="예: leader01"
+                maxlength="32"
+              />
+            </label>
+            <button id="passwordHintBtn" type="button" class="ghost">힌트 보기</button>
+          </div>
+          <p id="passwordHintResult" class="muted"></p>
+          <p class="muted">2) 그래도 모르겠으면 소속 팀명으로 확인하세요.</p>
+          <div class="password-help-grid">
+            <label>
+              소속 팀명
+              <input
+                id="helpTeamName"
+                name="helpTeamName"
+                placeholder="가입 시 입력한 팀명"
+                maxlength="64"
+              />
+            </label>
+            <button id="passwordRecoverBtn" type="button" class="ghost">팀명으로 확인</button>
+          </div>
+          <p id="passwordRecoverResult" class="muted"></p>
+          <button id="closePasswordHelpBtn" type="button" class="ghost">닫기</button>
+        </section>
+
+        <datalist id="courseCodeList"></datalist>
+      </div>
+    </section>
+
+    <section id="appView" class="app-view hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AX Literacy</p>
+          <h2>AX Literacy</h2>
+        </div>
+        <div class="topbar-right">
+          <div id="currentCourseBadge" class="course-badge">코스 -</div>
+          <div id="progressBadge" class="progress-badge">진도 0%</div>
+          <div class="user-box">
+            <strong id="currentUser">-</strong>
+            <button id="accountSettingsBtn" class="ghost">계정정보</button>
+            <button id="logoutBtn" class="ghost">로그아웃</button>
+          </div>
+        </div>
+      </header>
+
+      <div id="appLayout" class="layout">
+        <aside class="sidebar">
+          <div class="sidebar-title">강의 목차</div>
+          <div id="chapterList" class="chapter-list"></div>
+        </aside>
+
+        <main class="content-area">
+          <div class="content-head">
+            <div>
+              <div id="clipBadges" class="clip-badges"></div>
+              <h1 id="clipTitle">클립을 선택하세요</h1>
+              <p id="clipOverview" class="overview"></p>
+            </div>
+            <div class="content-actions">
+              <button id="markCompleteBtn">학습 완료</button>
+              <button id="toggleTaskBtn" class="ghost">AX 과제 펼치기</button>
+              <button id="toggleNoteBtn" class="ghost">메모 펼치기</button>
+            </div>
+          </div>
+
+          <article id="clipBody" class="clip-body"></article>
+        </main>
+
+        <aside id="taskPanel" class="task-panel">
+          <h3>AX 과제</h3>
+          <p id="taskChapterContext" class="task-chapter-context">현재 챕터를 선택해 주세요.</p>
+          <p class="muted">
+            오늘 AI 실습 중 발견한 인사이트를 기반으로 조직 AX 과제를 작성하세요.
+          </p>
+          <form id="taskForm" class="task-form">
+            <label>
+              과제명
+              <input id="taskTitle" maxlength="200" required />
+            </label>
+            <label>
+              선정 이유
+              <textarea id="taskReason" rows="4" maxlength="1000" required></textarea>
+            </label>
+            <label>
+              기대효과
+              <textarea id="taskEffect" rows="4" maxlength="1000" required></textarea>
+            </label>
+            <button type="submit">저장</button>
+            <p id="taskStatus" class="muted"></p>
+          </form>
+
+          <section id="adminSection" class="admin-section hidden">
+            <div class="admin-head">
+              <h3>관리자 (root)</h3>
+              <button id="refreshUsersBtn" type="button" class="ghost">새로고침</button>
+            </div>
+            <p class="muted">등록 사용자 정보를 확인할 수 있습니다.</p>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Let's ID</th>
+                    <th>표시이름</th>
+                    <th>팀명</th>
+                    <th>PW</th>
+                    <th>진도</th>
+                    <th>과제</th>
+                    <th>노트</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersTbody"></tbody>
+              </table>
+            </div>
+            <p id="adminStatus" class="muted"></p>
+          </section>
+        </aside>
+
+        <aside id="notePanel" class="task-panel collapsed">
+          <div class="note-panel-head-row">
+            <h3>메모</h3>
+            <div class="note-head-actions">
+              <button id="saveNoteBtn" type="button">노트 저장</button>
+              <button id="copyNoteBtn" type="button" class="ghost">MD 복사</button>
+            </div>
+          </div>
+          <p id="noteClipContext" class="task-chapter-context">현재 클립</p>
+          <p class="muted">현재 섹션에 대한 개인 노트를 작성하고 저장하세요.</p>
+
+          <div class="note-md-layout">
+            <section class="note-editor-pane">
+              <p class="note-pane-label">Markdown</p>
+              <textarea
+                id="noteText"
+                rows="12"
+                maxlength="20000"
+                placeholder="이 섹션의 핵심 내용, 프롬프트, 액션 아이디어를 Markdown으로 정리하세요."
+              ></textarea>
+            </section>
+            <section class="note-preview-pane">
+              <p class="note-pane-label">미리보기</p>
+              <div id="notePreview" class="note-preview"></div>
+            </section>
+          </div>
+
+          <p id="noteStatus" class="muted"></p>
+        </aside>
+      </div>
+
+      <section id="accountModal" class="account-modal hidden">
+        <div class="account-modal-card">
+          <div class="account-modal-head">
+            <h3>계정 정보 변경</h3>
+            <button id="closeAccountModalBtn" type="button" class="ghost">닫기</button>
+          </div>
+          <form id="accountForm" class="login-form">
+            <label>
+              계정아이디 (Let's ID)
+              <input id="accountEditId" maxlength="32" required />
+            </label>
+            <label>
+              소속 팀명
+              <input id="accountEditTeamName" maxlength="64" required />
+            </label>
+            <label>
+              표시이름
+              <input id="accountEditDisplayName" maxlength="64" required />
+            </label>
+            <label>
+              현재 비밀번호
+              <input id="accountCurrentPassword" type="password" maxlength="64" required />
+            </label>
+            <label>
+              새 비밀번호 (선택)
+              <input id="accountNewPassword" type="password" maxlength="64" />
+            </label>
+            <div class="auth-actions-row">
+              <button type="submit">변경 저장</button>
+            </div>
+            <p id="accountStatus" class="error"></p>
+          </form>
+        </div>
+      </section>
+
+      <section id="slideDeckModal" class="slides-modal hidden" aria-hidden="true">
+        <div class="slides-modal-card" role="dialog" aria-modal="true" aria-labelledby="slideDeckTitle">
+          <div class="slides-modal-head">
+            <div>
+              <p id="slideDeckKicker" class="eyebrow">NotebookLM 브리핑</p>
+              <h3 id="slideDeckTitle">슬라이드</h3>
+            </div>
+            <div class="slides-modal-head-actions">
+              <a id="downloadSlideDeckBtn" class="ghost-link hidden" href="#" download>다운로드</a>
+              <span id="slideDeckCounter" class="slides-counter">1 / 1</span>
+              <button id="closeSlideDeckBtn" type="button" class="ghost">닫기</button>
+            </div>
+          </div>
+          <div id="slideDeckStage" class="slides-modal-stage"></div>
+          <div class="slides-modal-foot">
+            <button id="slidePrevBtn" type="button" class="ghost">← 이전</button>
+            <div id="slideDeckDots" class="slides-progress-dots"></div>
+            <button id="slideNextBtn" type="button" class="ghost">다음 →</button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

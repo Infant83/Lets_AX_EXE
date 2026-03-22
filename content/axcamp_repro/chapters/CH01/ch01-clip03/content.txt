@@ -1,0 +1,1 @@
+CH 01 개념 기술 활용 로드맵. NotebookLM 스튜디오 슬라이드 Enterprise AI Roadmap (2)를 내려받아 실제 deck 기준으로 정리했다. Chat UI는 Gemini와 NotebookLM으로 질문, 리서치, 초안, 수정 루프를 돌리는 단계다. API / Build는 AI Studio Build와 Gemini API로 앱을 만들고 서비스 안에서 다시 AI를 호출하는 단계다. CLI / Agent는 Codex와 Cline으로 계획, 도구 호출, 실행, 검증을 이어가는 agentic workflow를 다루는 단계다.

@@ -1,0 +1,121 @@
+<div class="clip-header">
+  <div class="clip-badges">
+    <span class="clip-badge time">~30분</span>
+    <span class="clip-badge chapter">CH 04</span>
+    <span class="clip-badge type-practice">실습</span>
+  </div>
+  <h1 class="clip-title">기업 분석 코스: Gems에서 NotebookLM까지</h1>
+</div>
+
+<div class="practice-shortcut-bar">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="library" aria-hidden="true" style="width:15px;height:15px;flex-shrink:0;" class="lucide lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg>
+  <span class="practice-shortcut-text">실습용 파일이 필요하신가요?</span>
+  <a href="#ch08-clip04" target="_blank" class="practice-shortcut-link">
+    참고자료 라이브러리 › 실습용 컨텍스트 파일
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-right" aria-hidden="true" style="width:13px;height:13px;" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+
+<div class="clip-overview">이 섹션은 특정 기업에 대한 분석 보고서를 만드는 과정을 하나의 코스로 보여준다. 먼저 Gems로 소스 수집 기준과 질문 템플릿을 만들고, NotebookLM에서 다중 소스를 분석한 뒤, 슬라이드나 인포그래픽까지 만드는 흐름이다. 삼양식품은 예시일 뿐이고, 실제 실습에서는 원하는 기업명으로 바꿔도 된다.</div>
+
+<div class="clip-section slide-preview-shell">
+  <div class="slide-preview-head">
+    <p class="slide-briefing-eyebrow">NotebookLM Infographic</p>
+    <div class="slide-preview-top">
+      <div>
+        <h2 class="slide-briefing-title">기업 분석 코스를 한 장으로 정리한 workflow infographic</h2>
+        <p class="slide-briefing-desc">Gem으로 자료 수집 기준을 만들고, NotebookLM으로 grounded analysis를 수행한 뒤, 슬라이드와 인포그래픽까지 이어지는 전체 흐름을 NotebookLM에서 인포그래픽으로 정리했다.</p>
+      </div>
+      <div class="slide-preview-actions">
+        <a class="slide-briefing-link" data-slide-deck-download="enterprise-research-workflow">다운로드</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-preview-gallery" data-slide-deck-preview="enterprise-research-workflow"></div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">코스 시나리오</div>
+  <div class="clip-section-content">
+    <table class="comparison-table">
+      <thead>
+        <tr><th>단계</th><th>도구</th><th>무엇을 만드나</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Gems</td><td>기업명을 넣으면 소스 후보와 첫 질문을 정리해 주는 리서치 비서</td></tr>
+        <tr><td><strong>2</strong></td><td>NotebookLM</td><td>공식 자료, 외부 산업 자료, 최근 뉴스, 내부 메모를 묶은 grounded notebook</td></tr>
+        <tr><td><strong>3</strong></td><td>구조화 프롬프트</td><td>XML 형식으로 요구 섹션과 출력 형식을 명확히 한 분석 요청</td></tr>
+        <tr><td><strong>4</strong></td><td>Studio 패널</td><td>경영진 브리핑용 슬라이드와 인포그래픽</td></tr>
+      </tbody>
+    </table>
+    <div class="tip-block" style="margin-top:14px">
+      <div class="tip-block-title">강의 포인트</div>
+      <div class="tip-block-content">강한 프롬프트 하나로 끝나는 게 아니라, 좋은 소스 선정과 재사용 가능한 Gem, NotebookLM의 검증 구조가 함께 가야 결과가 좋아진다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">바로 내려받아 쓰는 실습 파일</div>
+  <div class="clip-section-content">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <a href="/assets/practice/ch03/company-analysis-gem-instruction.md" download class="ref-link-item" style="display:block;background:var(--bg-white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-decoration:none">
+        <strong style="display:block;color:var(--text)">기업 분석 Gem 시스템 인스트럭션</strong>
+        <span style="display:block;margin-top:6px;font-size:0.76rem;color:var(--text-muted)">기업명만 넣어도 소스 팩을 설계하게 하는 Gem 지시문</span>
+      </a>
+      <a href="/assets/practice/ch03/company-analysis-notebooklm-prompt.xml" download class="ref-link-item" style="display:block;background:var(--bg-white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-decoration:none">
+        <strong style="display:block;color:var(--text)">NotebookLM용 XML 프롬프트</strong>
+        <span style="display:block;margin-top:6px;font-size:0.76rem;color:var(--text-muted)">필요 섹션과 출력 형식을 구조화한 분석 템플릿</span>
+      </a>
+      <a href="/assets/practice/ch03/samyang-case-notes.md" download class="ref-link-item" style="display:block;background:var(--bg-white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-decoration:none">
+        <strong style="display:block;color:var(--text)">삼양식품 예시 노트</strong>
+        <span style="display:block;margin-top:6px;font-size:0.76rem;color:var(--text-muted)">실습 목표와 후속 작업 아이디어</span>
+      </a>
+      <a href="/assets/practice/ch03/samyang-company-analysis-case.pptx" download class="ref-link-item" style="display:block;background:var(--bg-white);border:1px solid var(--border);border-radius:16px;padding:14px 16px;text-decoration:none">
+        <strong style="display:block;color:var(--text)">사례 PPT</strong>
+        <span style="display:block;margin-top:6px;font-size:0.76rem;color:var(--text-muted)">강의 예시 흐름을 설명하는 발표 자료</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">구조화 프롬프트는 XML로 명확하게</div>
+  <div class="clip-section-content">
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">기업 분석 XML 프롬프트</span><button class="copy-btn" onclick="copyPrompt(this,'ch04-company-xml')">복사</button></div>
+      <div class="prompt-content" id="ch04-company-xml">&lt;role&gt;기업 분석 연구원&lt;/role&gt;
+&lt;goal&gt;경영진 보고용 기업 분석 초안 작성&lt;/goal&gt;
+&lt;company_name&gt;[여기에 기업명을 입력]&lt;/company_name&gt;
+
+&lt;source_policy&gt;
+공식 IR 자료, 사업보고서, 신뢰할 수 있는 외부 산업 자료, 최근 동향 자료를 우선 사용한다.
+&lt;/source_policy&gt;
+
+&lt;required_sections&gt;
+  &lt;section&gt;핵심 사업&lt;/section&gt;
+  &lt;section&gt;최근 3년 매출 흐름&lt;/section&gt;
+  &lt;section&gt;해외 성장 동력&lt;/section&gt;
+  &lt;section&gt;리스크와 기회&lt;/section&gt;
+  &lt;section&gt;경영진 시사점&lt;/section&gt;
+&lt;/required_sections&gt;</div>
+    </div>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">Gem에 넣을 첫 요청</span><button class="copy-btn" onclick="copyPrompt(this,'ch04-gem-request')">복사</button></div>
+      <div class="prompt-content" id="ch04-gem-request">삼양식품에 대한 NotebookLM 분석용 소스 팩을 만들어줘. 공식 자료, 산업 및 경쟁사 자료, 최근 뉴스로 나눠서 추천해 주고, NotebookLM 첫 질문과 경영진 보고용 후속 질문도 같이 정리해줘.</div>
+    </div>
+    <div class="tip-block">
+      <div class="tip-block-title">왜 XML이 유리한가</div>
+      <div class="tip-block-content">역할, 목표, 소스 정책, 필수 섹션을 태그로 분리하면 NotebookLM과 다른 LLM이 구조를 더 안정적으로 해석한다. 나중에 기업명만 바꿔 재사용하기도 쉽다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-nav-footer">
+  <a class="clip-nav-btn" href="#ch04-clip02">
+    ← 문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑
+  </a>
+  <a class="clip-nav-btn" href="#ch05-clip01">
+    Google AI Studio 설정 →
+  </a>
+</div>

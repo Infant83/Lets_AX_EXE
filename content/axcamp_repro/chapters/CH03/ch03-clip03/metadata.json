@@ -1,0 +1,62 @@
+{
+  "route": "#ch03-clip03",
+  "clipTitle": "Gems 소개: AI 비서 만들기",
+  "overview": "반복되는 비즈니스 프롬프트와 회의 분석 흐름을 Gem 하나에 저장해, 재사용 가능한 AI 비서로 바꾸는 단계를 실습합니다.",
+  "badges": [
+    "~25분",
+    "CH 03",
+    "실습"
+  ],
+  "sections": [
+    {
+      "index": 1,
+      "title": "왜 Gems를 만드는가",
+      "text": "일반 채팅과 Gems의 차이를 통해 반복 업무를 재사용 가능한 AI 비서로 바꾸는 이유를 이해합니다."
+    },
+    {
+      "index": 2,
+      "title": "만들기 3단계",
+      "text": "Gems 메뉴 이동, 새 Gem 생성, 시스템 인스트럭션 입력과 테스트까지 이어집니다."
+    },
+    {
+      "index": 3,
+      "title": "이번 실습에서 바로 쓰는 Gem 설계",
+      "text": "경영진 회의 분석과 브리핑 작성용 시스템 인스트럭션을 다운로드해 그대로 출발할 수 있습니다."
+    }
+  ],
+  "prompts": [
+    {
+      "index": 1,
+      "label": "테스트 1: 회의 자료 요약",
+      "content": "다음 회의 안건을 정리해줘. 상반기 AI 도입률이 목표 대비 미달이었고 제조 현장 보안 이슈가 주요 원인이다."
+    },
+    {
+      "index": 2,
+      "label": "테스트 2: 경쟁사 비교",
+      "content": "우리 회사와 주요 경쟁사의 Enterprise AI 전략을 비교해줘."
+    },
+    {
+      "index": 3,
+      "label": "테스트 3: 실행 계획 수립",
+      "content": "하반기 AI 활용 인력을 확대해야 한다. 3가지 실행 옵션을 비교해줘."
+    }
+  ],
+  "links": [
+    {
+      "href": "/assets/practice/ch02/gems-system-instruction.md",
+      "text": "시스템 인스트럭션 다운로드"
+    },
+    {
+      "href": "/assets/practice/ch02/meeting-context.md",
+      "text": "회의 맥락 자료 다운로드"
+    },
+    {
+      "href": "#ch03-clip02",
+      "text": "← 프롬프팅 기초 및 비즈니스 프롬프트 연습"
+    },
+    {
+      "href": "#ch04-clip01",
+      "text": "NotebookLM 가이드 →"
+    }
+  ]
+}

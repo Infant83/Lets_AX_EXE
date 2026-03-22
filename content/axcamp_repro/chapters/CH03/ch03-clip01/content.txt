@@ -1,0 +1,37 @@
+CH 03
+플랫폼
+Gemini 플랫폼 가이드
+Google Gemini
+Google의 최신 멀티모달 AI 플랫폼
+gemini.google.com →
+Google Gemini의 핵심 기능과 최신 모델을 소개합니다.
+Gemini 최신 모델 (2026년 기준)
+모델	특징	주요 용도
+Gemini 3.1 Pro NEW	최신 프론티어 모델, 추론 2배 향상 (ARC-AGI-2: 77.1%), 1M 토큰	고난도 분석, 전략 의사결정, 에이전트 워크플로우
+Gemini 3 Pro	고성능 추론 모델, 1M 토큰 컨텍스트	복잡한 분석, 긴 문서 처리
+Gemini 3 Flash	Pro급 성능 + 3배 빠른 속도, 저비용	일상 업무, 빠른 응답이 필요한 작업
+
+Gemini 3.1 Pro는 2026.02.19 출시. LMArena 1501 (1위), SWE-bench 80.6%, GPQA Diamond 94.3%로 대부분의 벤치마크에서 최고 성능을 기록하고 있습니다.
+
+Gemini 주요 기능
+Gemini 채팅: 자연어로 AI와 대화하며 업무를 처리하는 기본 인터페이스
+Deep Research: 심층 조사 모드 — AI가 자율적으로 여러 소스를 탐색하고 종합 보고서를 작성
+Gems: 맞춤형 AI 에이전트 — 특정 역할과 지침을 설정하여 재사용 가능한 AI 전문가 생성
+Google 연동: Gmail, Drive, Docs, Sheets 등 구글 워크스페이스와 직접 연결
+멀티모달: 텍스트, 이미지, PDF, 동영상, 코드 저장소 등 다양한 입력을 동시 처리
+Thinking Level: 추론 깊이를 조절 (low / medium / high) — 속도와 품질 균형 조절 가능
+접속 방법 
+웹: gemini.google.com 접속
+Gemini Advanced(Pro/Ultra) 구독 확인 — Gemini 3.1 Pro 등 최상위 모델 사용 가능
+Google 계정 로그인 후 바로 사용 시작
+
+Gemini 홈 화면 — 프롬프트 입력란에 질문을 입력하고, 왼쪽 하단의 + 버튼으로 파일을 첨부할 수 있습니다
+
+모델 선택 — 우측 드롭다운에서 Gemini 3, 빠른 모드, 사고 모드, Pro 중 선택합니다
+
+파일 첨부 메뉴 — + 버튼을 누르면 파일 업로드, Drive 파일 추가, 코드 가져오기 옵션이 나타납니다
+
+구독 플랜 안내
+무료: Gemini 3 Flash 기본 사용. AI Pro ($20/월): Gemini 3.1 Pro, Deep Research, 확장 컨텍스트. AI Ultra ($250/월): 최고 한도 + NotebookLM Plus + 최신 기능 우선 접근. 오늘 실습에서는 Gemini 3.1 Pro를 사용합니다.
+← 프롬프트 구조화 하기
+프롬프팅 기초 →

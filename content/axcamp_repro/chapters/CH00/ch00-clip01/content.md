@@ -1,0 +1,42 @@
+---
+route: "#ch00-clip01"
+chapter: "ch00"
+title: "오늘의 시간표"
+source_url: "https://lg.cmdspace.work/axcamp#ch00-clip01"
+exported_at: "2026-02-28T01:53:39.146Z"
+---
+~10분 CH 00 개요
+
+# 오늘의 시간표
+
+하루 일정을 한눈에 확인하세요. 각 세션을 클릭하면 해당 챕터로 이동합니다.
+
+강사 소개
+
+오늘 하루 함께할 강사를 소개합니다. 자세한 소개는 강의 중 진행됩니다.
+
+LMS 사용 안내
+
+이 사이트 활용법
+
+**왼쪽 사이드바**에서 원하는 챕터와 세션을 선택하여 자유롭게 탐색할 수 있습니다. 각 세션에는 개념 설명, 실습 가이드, 참고자료가 포함되어 있으며, 강의 중에도 언제든 이전 내용을 다시 확인할 수 있습니다.
+
+메모 기능
+
+각 페이지 하단의 메모 영역에 강의 중 떠오르는 아이디어나 질문을 기록해 두세요. 작성한 메모는 이메일로 발송받을 수 있습니다.
+
+<table class="comparison-table" style="margin-top:24px"><thead><tr><th>시간</th><th>세션</th><th>내용</th><th>형태</th></tr></thead><tbody><tr><td>10:00-10:25</td><td>Extreme User Demo</td><td>강사 소개 · LMS 안내 · AI 시연</td><td>시연</td></tr><tr><td>10:25-10:35</td><td><a href="#ch01-clip01" style="color:var(--brand);text-decoration:none;font-weight:500">AI 핵심 개념</a></td><td>Assistant → Agent → <span class="glossary-term">Agentic AI<span class="glossary-tooltip"><strong>Agentic AI</strong><br>"시키면 하는 AI"가 아니라 "알아서 해내는 AI"예요. 목표만 알려주면 계획을 세우고, 필요한 도구를 골라서, 여러 작업을 자율적으로 처리합니다.</span></span></td><td>강의</td></tr><tr style="background:var(--bg-offwhite);color:var(--text-muted)"><td>10:50-11:00</td><td>휴식</td><td></td><td></td></tr><tr><td>11:00-12:00</td><td><a href="#ch03-clip01" style="color:var(--brand);text-decoration:none;font-weight:500"><span class="glossary-term">Gemini<span class="glossary-tooltip"><strong>Gemini</strong><br>Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요.</span></span></a></td><td>프롬프팅 기초 + 비즈니스 활용</td><td>실습</td></tr><tr style="background:var(--bg-offwhite);color:var(--text-muted)"><td>12:00-13:00</td><td>점심 식사</td><td></td><td>식사</td></tr><tr><td>13:00-13:45</td><td><a href="#ch04-clip01" style="color:var(--brand);text-decoration:none;font-weight:500"><span class="glossary-term">NotebookLM<span class="glossary-tooltip"><strong>NotebookLM</strong><br>Google이 만든 AI 리서치 도구예요. 내가 올린 문서만 기반으로 분석하고 답변하기 때문에 할루시네이션이 매우 적어요. 모든 답변에 출처가 표시됩니다.</span></span></a></td><td>문서 기반 AI 리서치</td><td>실습</td></tr><tr><td>13:45-13:55</td><td><a href="#ch05-clip01" style="color:var(--brand);text-decoration:none;font-weight:500">환경 설정</a></td><td>Google AI Studio + <span class="glossary-term">API Key<span class="glossary-tooltip"><strong>API Key</strong><br>API를 사용하기 위한 출입증이에요. 이 키가 있어야 AI 서비스에 접속할 수 있고, 사용량 추적과 요금 정산에도 활용됩니다.</span></span></td><td>설정</td></tr><tr><td>13:55-15:45</td><td><a href="#ch06-clip01" style="color:var(--brand);text-decoration:none;font-weight:500"><span class="glossary-term">Vibe Coding<span class="glossary-tooltip"><strong>Vibe Coding</strong><br>"분위기로 코딩한다"는 뜻이에요. 코드를 직접 쓰지 않고 "이런 앱 만들어줘"라고 자연어로 설명하면 AI가 코드를 대신 작성해줍니다. 오늘 실습의 핵심이에요!</span></span></a></td><td>AI Studio Build로 웹앱 제작</td><td>실습</td></tr><tr style="background:var(--bg-offwhite);color:var(--text-muted)"><td>15:45-16:00</td><td>휴식</td><td></td><td></td></tr><tr><td>16:00-16:50</td><td><a href="#ch07-clip01" style="color:var(--brand);text-decoration:none;font-weight:500"><span class="glossary-term">Agentic AI<span class="glossary-tooltip"><strong>Agentic AI</strong><br>"시키면 하는 AI"가 아니라 "알아서 해내는 AI"예요. 목표만 알려주면 계획을 세우고, 필요한 도구를 골라서, 여러 작업을 자율적으로 처리합니다.</span></span></a></td><td>에이전틱 AI 개념 + 시연</td><td>시연</td></tr><tr><td>17:00-17:30</td><td><a href="#ch09-clip01" style="color:var(--brand);text-decoration:none;font-weight:500">Key Takeaways &amp; Q/A</a></td><td>핵심 정리 + 질의응답</td><td>Q&amp;A</td></tr></tbody></table>
+
+Extreme User Demo
+
+참고 안내
+
+이 시연은 **전문가 수준의 AI 활용 사례**입니다. 오늘 실습과는 별개이며, 최신 AI 도구들의 가능성을 보여드리는 목적입니다. 하루 과정을 마치면 이러한 워크플로우의 원리를 이해하실 수 있습니다.
+
+강사가 실무에서 AI를 어떻게 활용하고 있는지를 라이브로 시연합니다. 오늘 하루 동안 다루게 될 도구와 개념들이 실제 업무에서 어떤 식으로 결합되는지 미리 감을 잡는 시간입니다.
+
+핵심 메시지
+
+AI를 잘 활용하면 업무 방식이 근본적으로 달라질 수 있습니다. 오늘 하루 동안 그 가능성을 직접 체험합니다.
+
+[← 처음](#) [AI 산업 지형도 →](#ch00-clip02)

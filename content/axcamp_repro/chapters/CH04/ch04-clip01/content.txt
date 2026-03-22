@@ -1,0 +1,61 @@
+CH 04
+플랫폼
+NotebookLM 가이드
+Google NotebookLM
+문서 기반 AI 연구 도우미 — 컨텍스트 엔지니어링 플랫폼
+notebooklm.google.com →
+Google NotebookLM의 최신 기능과 활용법을 소개합니다. 컨텍스트 엔지니어링의 대표적인 실습 플랫폼입니다.
+이 실습에서는
+NotebookLM의 핵심 개념(문서 기반 AI, 출처 인용, 멀티 소스)을 이해합니다
+Studio 패널의 다양한 출력 기능(Audio, Video, Mind Map, Slide, Data Tables, Reports)을 알아봅니다
+Gemini(범용)와 NotebookLM(전용)의 차이와 활용 시나리오를 구분합니다
+NotebookLM이란?
+문서 기반 AI 연구 도우미: 업로드한 문서만을 근거로 답변하는 RAG 기반 서비스
+출처 인용: 모든 답변에 원본 문서의 출처 번호가 표시 — 클릭하면 해당 부분으로 이동
+할루시네이션 최소화: 학습 데이터가 아닌, 내가 제공한 자료만으로 답변하므로 신뢰성이 높음
+멀티 소스: PDF, Google Docs, 웹 URL 등 최대 50개 소스 동시 분석 (이미지, 그래프 포함 PDF도 인식)
+Studio 패널 — 다양한 출력 기능 
+기능	설명	활용 시나리오
+Audio Overview	두 명의 AI 진행자가 문서를 팟캐스트 형태로 대화	이동 중 보고서 파악, "듣는 보고서"
+Video Overview	AI가 내레이션 + 슬라이드 영상을 자동 생성	팀 공유용 요약 영상, 교육 자료
+Mind Map	문서 내 개념 간 관계를 시각적 마인드맵으로 표현	복잡한 주제 구조 파악, 전략 맵핑
+Slide Deck	문서 내용을 프레젠테이션 슬라이드로 자동 변환	보고서 → 발표자료 즉시 생성
+Data Tables	소스 데이터를 구조화된 표로 변환, Google Sheets 내보내기 가능	데이터 비교·정리, 스프레드시트 연동 (2025.12 추가)
+Reports	브리핑 문서, 스터디 가이드, FAQ, 타임라인 등 목적별 보고서 자동 생성	회의 자료, 교육 가이드, 요약 문서 즉시 생성
+
+Studio 패널에서 Audio Overview를 들으면서 동시에 Mind Map을 탐색할 수 있습니다.
+
+Studio vs Chat — 두 가지 사용 방식
+구분	Studio (스튜디오)	Chat (채팅)
+성격	구조화된 산출물(Curated Output) — AI가 소스를 분석하여 정리된 결과물을 생성	실시간 대화(Live Conversation) — 실시간 질의응답으로 원하는 정보를 탐색
+결과물	Audio Overview, 슬라이드, 마인드맵, 보고서, 데이터 표 등	텍스트 답변 + 출처 각주 (클릭하면 원문 확인)
+용도	정리된 산출물이 필요할 때 (공유, 프레젠테이션, 요약)	자료를 깊이 탐색하거나 특정 질문에 답을 찾을 때
+접속 및 시작
+웹: notebooklm.google.com 접속
+
+NotebookLM 홈 — 기존 노트북 목록이 표시됩니다. 우측 상단의 '+ 새로 만들기'를 클릭하여 새 노트북을 생성합니다
+
+소스 추가 화면 — 파일 업로드, 웹사이트 URL, Google Drive, 복사된 텍스트 중 원하는 방식으로 소스를 추가합니다
+
+"새 노트북" 클릭 → 소스 추가 (PDF, Docs, URL 등)
+패스트 리서치(Fast Research): AI가 주제에 맞는 웹 소스를 자동으로 찾아서 노트북에 추가
+소스 업로드 후 바로 질문 시작 가능
+Fast Research vs Deep Research
+NotebookLM은 Fast Research(30~45초, 빠른 소스 수집)와 Deep Research(3~5분, 최대 50개 소스 심층 분석) 두 가지 리서치 모드를 제공합니다. 빠른 개요가 필요하면 Fast Research를, 보다 깊이 있는 조사가 필요하면 Deep Research를 활용하세요.
+Gemini vs NotebookLM
+Gemini는 AI가 학습한 전체 지식을 활용하여 답변합니다 (범용). NotebookLM은 내가 업로드한 문서만을 근거로 답변합니다 (전용). 신뢰성이 중요한 의사결정 지원에는 NotebookLM이 더 적합합니다.
+NotebookLM Plus & Enterprise
+Google Workspace Business/Enterprise 고객에게는 NotebookLM Plus가 핵심 서비스로 포함됩니다. 5배 더 많은 Audio/Video Overview, 팀 공유 노트북, 응답 스타일/길이 커스터마이징, 사용 분석 등 기업급 기능을 제공합니다.
+컨텍스트 엔지니어링이란?
+
+NotebookLM의 핵심 가치는 컨텍스트 엔지니어링에 있습니다.
+
+패러다임	GIGO	CIQO
+의미	Garbage In, Garbage Out	Context In, Quality Out
+핵심	잘못된 입력 → 잘못된 출력	풍부한 맥락 → 고품질 출력
+방법	프롬프트만으로 질문	문서·데이터를 AI에 제공한 후 질문
+NotebookLM 역할	—	소스(문서) 업로드 → 노트(분석) → 소스화(재활용)
+Note-to-Source 변환
+NotebookLM에서 AI가 분석한 노트를 다시 소스로 변환하면, AI가 자기 분석을 기반으로 더 깊은 인사이트를 생성합니다. 이것이 CIQO(Context In, Quality Out)의 핵심 기법입니다.
+← 실습 시트
+문서 기반 AI 리서치 →

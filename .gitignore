@@ -1,0 +1,16 @@
+data/
+preview/
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+.server.js.un~
+server.js~
+content/axcamp_repro/padlet/
+content/axcamp_repro/external_links/
+content/axcamp_repro/screenshots/
+content/axcamp_repro/task_check/
+content/axcamp_repro/all-discovered-links.txt
+content/axcamp_repro/links-manifest.json
+content/axcamp_repro/verification-report.json
+content/axcamp_repro/verification-summary.md

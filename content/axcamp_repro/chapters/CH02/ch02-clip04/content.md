@@ -1,0 +1,53 @@
+---
+route: "#ch02-clip04"
+chapter: "ch02"
+title: "실습 시트"
+source_url: "https://lg.cmdspace.work/axcamp#ch02-clip04"
+exported_at: "2026-02-28T01:53:50.477Z"
+---
+CH 02 실습
+
+# 실습 시트
+
+실습용 파일이 필요하신가요? [참고자료 라이브러리 › 실습용 컨텍스트 파일](#ch08-clip04)
+
+EXAONE**EXAONE**  
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다. 보안 AI 실습을 체계적으로 진행하기 위한 단계별 가이드입니다. LG 전용 보안 AI의 3단계 활용법을 순서대로 익힙니다.
+
+이 실습에서는
+
+1단계: 텍스트 대화 — EXAONE**EXAONE**  
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.의 기본 응답 품질을 확인합니다 (약 5분)  
+2단계: 컨텍스트 덤핑**컨텍스트 덤핑**  
+긴 문서를 통째로 AI에게 입력하는 기법이에요. 정교한 프롬프트 대신, 풍부한 맥락 자체로 AI의 이해도를 높이는 접근법입니다. 사내 AI에서는 안전하게 활용할 수 있어요. — 사내 기밀 문서를 첨부하여 보안 환경에서 분석합니다 (약 10분)  
+3단계: 딥 리서치 — 복합 주제를 EXAONE**EXAONE**  
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.이 자율적으로 조사합니다 (약 10분)
+
+1단계 — 텍스트 대화 (기본)
+
+<table class="comparison-table"><thead><tr><th>단계</th><th>활동</th><th>조작</th><th>소요</th></tr></thead><tbody><tr><td><strong>Step 1</strong></td><td><span class="glossary-term">EXAONE<span class="glossary-tooltip"><strong>EXAONE</strong><br>LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.</span></span> 접속</td><td>ChatEXAONE 서비스 접속 → 새 대화 시작</td><td>1분</td></tr><tr><td><strong>Step 2</strong></td><td>산업 트렌드 질문</td><td>"2026년 주요 산업의 AI 활용 트렌드 3가지를 정리해줘" 입력</td><td>2분</td></tr><tr><td><strong>Step 3</strong></td><td>후속 질문</td><td>답변 기반으로 "우리 회사(LG 그룹) 관점에서 우선순위는?" 추가 질문</td><td>2분</td></tr></tbody></table>
+
+1단계 합계: 약 **5분** — "일반 대화에서도 전문적인 답변이 나옵니다"
+
+2단계 — 컨텍스트 덤핑**컨텍스트 덤핑**  
+긴 문서를 통째로 AI에게 입력하는 기법이에요. 정교한 프롬프트 대신, 풍부한 맥락 자체로 AI의 이해도를 높이는 접근법입니다. 사내 AI에서는 안전하게 활용할 수 있어요. (파일 첨부)
+
+<table class="comparison-table"><thead><tr><th>단계</th><th>활동</th><th>조작</th><th>소요</th></tr></thead><tbody><tr><td><strong>Step 1</strong></td><td>기밀 보고서 다운로드</td><td>실습용 컨텍스트 파일에서 "가상 기밀 보고서" 다운로드</td><td>1분</td></tr><tr><td><strong>Step 2</strong></td><td>파일 첨부</td><td><span class="glossary-term">EXAONE<span class="glossary-tooltip"><strong>EXAONE</strong><br>LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.</span></span> 대화창에 PDF/MD 파일 드래그앤드롭</td><td>1분</td></tr><tr><td><strong>Step 3</strong></td><td>문서 기반 분석</td><td>"이 보고서의 핵심 전략을 3가지로 요약해줘" 입력</td><td>3분</td></tr><tr><td><strong>Step 4</strong></td><td>심화 질문</td><td>"경쟁사 대비 리스크 요인은?" 후속 질문</td><td>3분</td></tr><tr><td><strong>Step 5</strong></td><td>실행 계획</td><td>"다음 분기 실행 계획을 제안해줘"</td><td>2분</td></tr></tbody></table>
+
+2단계 합계: 약 **10분** — "사내 문서가 외부로 나가지 않는 보안 AI의 핵심"
+
+3단계 — 딥 리서치
+
+<table class="comparison-table"><thead><tr><th>단계</th><th>활동</th><th>조작</th><th>소요</th></tr></thead><tbody><tr><td><strong>Step 1</strong></td><td>딥 리서치 모드</td><td><span class="glossary-term">EXAONE<span class="glossary-tooltip"><strong>EXAONE</strong><br>LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.</span></span> 딥 리서치 기능 활성화</td><td>1분</td></tr><tr><td><strong>Step 2</strong></td><td>복합 주제 입력</td><td>"AI 기반 디지털 전환이 LG 그룹 계열사의 생산성에 미치는 영향을 분석해줘"</td><td>2분</td></tr><tr><td><strong>Step 3</strong></td><td>리서치 진행 관찰</td><td>AI가 자율적으로 조사하는 과정 확인</td><td>5분</td></tr><tr><td><strong>Step 4</strong></td><td>결과 검토</td><td>생성된 리서치 보고서의 출처와 구조 확인</td><td>2분</td></tr></tbody></table>
+
+3단계 합계: 약 **10분** — "AI가 스스로 조사하고 정리하는 에이전틱 리서치"
+
+EXAONE**EXAONE**  
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다. vs 외부 AI
+
+EXAONE**EXAONE**  
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.은 LG 전용 보안 AI로, 사내 기밀 문서를 안전하게 분석할 수 있습니다. 외부 AI(ChatGPT, Gemini**Gemini**  
+Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요. 등)에는 올릴 수 없는 전략 보고서, 재무 데이터, 인사 정보 등을 EXAONE**EXAONE**  
+LG AI Research가 만든 우리 LG의 자체 AI 모델이에요. 사내 서버에 설치할 수 있어서 기밀 데이터도 안전하게 처리할 수 있는 것이 큰 장점입니다.에서 자유롭게 활용하세요. **같은 프롬프트라도 어떤 문서를 컨텍스트로 주느냐**에 따라 결과의 구체성이 달라집니다.
+
+[← AI 모델 비교](#ch02-clip03) [Gemini 플랫폼 가이드 →](#ch03-clip01)
