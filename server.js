@@ -65,15 +65,60 @@ const MIME_MAP = {
   ".css": "text/css; charset=utf-8",
   ".js": "application/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".pdf": "application/pdf",
   ".zip": "application/zip",
   ".png": "image/png",
+  ".gif": "image/gif",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".webp": "image/webp",
   ".svg": "image/svg+xml",
+  ".ppt": "application/vnd.ms-powerpoint",
+  ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  ".doc": "application/msword",
+  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ".xls": "application/vnd.ms-excel",
+  ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  ".csv": "text/csv; charset=utf-8",
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
+  ".m4a": "audio/mp4",
+  ".mp4": "video/mp4",
   ".txt": "text/plain; charset=utf-8",
   ".md": "text/markdown; charset=utf-8"
 };
+const ADMIN_HISTORY_DIR = path.join(ROOT_DIR, ".admin-history");
+const SOURCE_CONTROL_FILES = new Set([
+  "content.html",
+  "content.md",
+  "content.txt",
+  "metadata.json",
+  "chapter.json"
+]);
+const ALLOWED_ADMIN_ASSET_EXTENSIONS = new Set([
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".webp",
+  ".svg",
+  ".gif",
+  ".pdf",
+  ".ppt",
+  ".pptx",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".csv",
+  ".txt",
+  ".md",
+  ".mp3",
+  ".wav",
+  ".m4a",
+  ".mp4"
+]);
+const MAX_ADMIN_ASSET_BYTES = 32 * 1024 * 1024;
+const MAX_REQUEST_BODY_BYTES = 48 * 1024 * 1024;
 
 const catalogPromises = new Map();
 
@@ -171,7 +216,9 @@ function sanitizeClipTitleCandidate(input) {
 }
 
 function deriveClipTitle(metadata, fallback = "") {
-  const explicit = sanitizeClipTitleCandidate(metadata?.clipTitle || fallback);
+  const explicit = sanitizeClipTitleCandidate(
+    metadata?.navTitle || metadata?.clipTitle || fallback
+  );
   if (explicit) return explicit;
 
   const sections = Array.isArray(metadata?.sections) ? metadata.sections : [];
@@ -242,6 +289,13 @@ function normalizeSectionType(type) {
   const value = normalizeWs(type);
   const allowed = new Set(["개념", "실습", "플랫폼", "설정", "참고", "개요"]);
   return allowed.has(value) ? value : "개념";
+}
+
+function normalizeSidebarClipType(type, fallback = "개념") {
+  const value = normalizeWs(type);
+  const allowed = new Set(["개념", "실습", "플랫폼", "설정", "참고", "개요"]);
+  if (allowed.has(value)) return value;
+  return normalizeWs(fallback) || "개념";
 }
 
 function normalizeBlockKind(kind) {
@@ -821,6 +875,200 @@ async function readFileSafe(filePath, fallback = "") {
   }
 }
 
+async function writeJsonFile(filePath, payload) {
+  await fs.writeFile(filePath, JSON.stringify(payload, null, 2), "utf8");
+}
+
+function formatByteSize(bytes) {
+  const size = Number(bytes || 0);
+  if (!Number.isFinite(size) || size <= 0) return "0 B";
+  const units = ["B", "KB", "MB", "GB"];
+  let value = size;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+  const precision = value >= 10 || unitIndex === 0 ? 0 : 1;
+  return `${value.toFixed(precision)} ${units[unitIndex]}`;
+}
+
+function sanitizeAssetFileName(input) {
+  const rawBase = path.basename(String(input || "").replace(/\\/g, "/"));
+  const normalized = rawBase.normalize("NFKC").trim();
+  const clean = normalized
+    .replace(/[<>:"/\\|?*\x00-\x1f]/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^\.+/, "")
+    .replace(/^-+/, "")
+    .slice(0, 140);
+  return clean || "asset";
+}
+
+function classifyAssetKind(ext) {
+  const normalized = String(ext || "").toLowerCase();
+  if ([".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"].includes(normalized)) {
+    return "image";
+  }
+  if (normalized === ".pdf") return "pdf";
+  if ([".ppt", ".pptx", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".txt", ".md"].includes(normalized)) {
+    return "document";
+  }
+  if ([".mp3", ".wav", ".m4a"].includes(normalized)) return "audio";
+  if ([".mp4"].includes(normalized)) return "video";
+  return "file";
+}
+
+function buildCourseFileUrl(courseCode, clipKey, relativePath) {
+  const safeRelative = String(relativePath || "").replace(/\\/g, "/").replace(/^\/+/, "");
+  return `/course-files/${encodeURIComponent(normalizeCourseCode(courseCode || DEFAULT_COURSE_CODE))}/${encodeURIComponent(clipKey)}/${safeRelative}`;
+}
+
+async function writeAdminHistorySnapshot(scope, filePaths) {
+  const entries = [];
+  for (const targetPath of Array.isArray(filePaths) ? filePaths : []) {
+    if (!targetPath) continue;
+    const absolute = path.resolve(targetPath);
+    if (!(await pathExists(absolute))) continue;
+    entries.push(absolute);
+  }
+
+  if (!entries.length) return;
+
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const scopeSlug = sanitizeAssetFileName(scope || "edit");
+  const snapshotRoot = path.join(ADMIN_HISTORY_DIR, `${stamp}-${scopeSlug}`);
+
+  await fs.mkdir(snapshotRoot, { recursive: true });
+
+  for (const absolute of entries) {
+    const relative = path.relative(ROOT_DIR, absolute);
+    if (!relative || relative.startsWith("..")) continue;
+    const snapshotPath = path.join(snapshotRoot, relative);
+    await fs.mkdir(path.dirname(snapshotPath), { recursive: true });
+    await fs.copyFile(absolute, snapshotPath);
+  }
+}
+
+async function collectClipAssetEntries(rootPath, clipPath, items = [], relativePrefix = "") {
+  const entries = await fs.readdir(rootPath, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.name === ".history" || entry.name === ".admin-history") continue;
+    const absolute = path.join(rootPath, entry.name);
+    const relative = relativePrefix ? `${relativePrefix}/${entry.name}` : entry.name;
+
+    if (entry.isDirectory()) {
+      await collectClipAssetEntries(absolute, clipPath, items, relative);
+      continue;
+    }
+
+    if (SOURCE_CONTROL_FILES.has(entry.name)) continue;
+
+    const stat = await fs.stat(absolute);
+    const ext = path.extname(entry.name).toLowerCase();
+    items.push({
+      name: entry.name,
+      relativePath: relative.replace(/\\/g, "/"),
+      absolutePath: absolute,
+      size: stat.size,
+      sizeLabel: formatByteSize(stat.size),
+      ext,
+      mime: MIME_MAP[ext] || "application/octet-stream",
+      kind: classifyAssetKind(ext)
+    });
+  }
+  return items;
+}
+
+async function listClipAssets(courseCode, clip) {
+  const items = await collectClipAssetEntries(clip.folderAbsolute, clip.folderAbsolute, []);
+  return items
+    .map((item) => ({
+      ...item,
+      url: buildCourseFileUrl(courseCode, clip.clipKey, item.relativePath)
+    }))
+    .sort((a, b) => a.relativePath.localeCompare(b.relativePath, "ko"));
+}
+
+function extractMediaAssetsFromHtml(html) {
+  const source = stripMetadataNoiseHtml(html);
+  const images = [];
+  const iframes = [];
+  const audios = [];
+  const videos = [];
+  const seenImages = new Set();
+  const seenFrames = new Set();
+  const seenAudios = new Set();
+  const seenVideos = new Set();
+
+  for (const match of source.matchAll(/<img\b[^>]*src=["']([^"']+)["'][^>]*>/gi)) {
+    const tag = String(match[0] || "");
+    const src = normalizeWs(match[1] || "");
+    if (!src || src.startsWith("data:") || seenImages.has(src)) continue;
+    seenImages.add(src);
+    const altMatch = tag.match(/\balt=["']([^"']*)["']/i);
+    images.push({
+      src,
+      alt: normalizeWs(decodeHtmlEntities(altMatch?.[1] || ""))
+    });
+  }
+
+  for (const match of source.matchAll(/<(iframe|embed)\b[^>]*(?:src)=["']([^"']+)["'][^>]*>/gi)) {
+    const src = normalizeWs(match[2] || "");
+    if (!src || seenFrames.has(src)) continue;
+    seenFrames.add(src);
+    iframes.push({
+      tag: String(match[1] || "").toLowerCase(),
+      src
+    });
+  }
+
+  for (const match of source.matchAll(/<object\b[^>]*data=["']([^"']+)["'][^>]*>/gi)) {
+    const src = normalizeWs(match[1] || "");
+    if (!src || seenFrames.has(src)) continue;
+    seenFrames.add(src);
+    iframes.push({
+      tag: "object",
+      src
+    });
+  }
+
+  const pushMediaFromHtml = (tagName, collection, seen, kind) => {
+    const blockRe = new RegExp(`<${tagName}\\b[^>]*>([\\s\\S]*?)<\\/${tagName}>`, "gi");
+    for (const match of source.matchAll(blockRe)) {
+      const blockHtml = String(match[0] || "");
+      const inlineSrc = normalizeWs(extractHtmlAttribute(blockHtml, "src"));
+      const nestedSrc =
+        normalizeWs(blockHtml.match(/<source\b[^>]*src=["']([^"']+)["']/i)?.[1] || "") ||
+        normalizeWs(blockHtml.match(/<track\b[^>]*src=["']([^"']+)["']/i)?.[1] || "");
+      const src = inlineSrc || nestedSrc;
+      if (!src || seen.has(src)) continue;
+      seen.add(src);
+      collection.push({
+        kind,
+        src
+      });
+    }
+
+    const selfClosingRe = new RegExp(`<${tagName}\\b[^>]*src=["']([^"']+)["'][^>]*\\/?>`, "gi");
+    for (const match of source.matchAll(selfClosingRe)) {
+      const src = normalizeWs(match[1] || "");
+      if (!src || seen.has(src)) continue;
+      seen.add(src);
+      collection.push({
+        kind,
+        src
+      });
+    }
+  };
+
+  pushMediaFromHtml("audio", audios, seenAudios, "audio");
+  pushMediaFromHtml("video", videos, seenVideos, "video");
+
+  return { images, iframes, audios, videos };
+}
+
 function rewriteRelativeUrls(html, courseCode, clipKey) {
   if (!html) return "";
   return html.replace(
@@ -911,6 +1159,472 @@ function escapeHtml(input) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function escapeRegExp(input) {
+  return String(input || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function extractHtmlAttribute(tagHtml, attrName) {
+  const match = String(tagHtml || "").match(
+    new RegExp(`\\b${escapeRegExp(attrName)}=["']([^"']*)["']`, "i")
+  );
+  return String(match?.[1] || "");
+}
+
+function stripMetadataNoiseHtml(html) {
+  return String(html || "")
+    .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(
+      /<span[^>]*class=["'][^"']*glossary-tooltip[^"']*["'][^>]*>[\s\S]*?<\/span>/gi,
+      ""
+    )
+    .replace(
+      /<div[^>]*class=["'][^"']*clip-nav-footer[^"']*["'][^>]*>[\s\S]*?<\/div>/gi,
+      " "
+    )
+    .replace(/<svg\b[^>]*>[\s\S]*?<\/svg>/gi, "");
+}
+
+function findMatchingTagRange(source, openingMatch) {
+  if (!openingMatch || openingMatch.index == null) return null;
+  const tagName = String(openingMatch[1] || "").toLowerCase();
+  if (!tagName) return null;
+
+  const tagRe = new RegExp(`<\\/?${escapeRegExp(tagName)}\\b[^>]*>`, "gi");
+  tagRe.lastIndex = openingMatch.index;
+  let depth = 0;
+  let match;
+
+  while ((match = tagRe.exec(source))) {
+    const token = match[0] || "";
+    const isClosing = /^<\//.test(token);
+    const isSelfClosing = /\/>$/.test(token);
+
+    if (!isClosing) depth += 1;
+    if (!isClosing && isSelfClosing) depth -= 1;
+    if (isClosing) depth -= 1;
+
+    if (depth === 0) {
+      return {
+        start: openingMatch.index,
+        end: tagRe.lastIndex,
+        outerHtml: source.slice(openingMatch.index, tagRe.lastIndex),
+        innerHtml: source.slice(openingMatch.index + openingMatch[0].length, match.index),
+        tagName
+      };
+    }
+  }
+
+  return null;
+}
+
+function extractElementsByClass(html, className) {
+  const source = String(html || "");
+  const targetClass = normalizeWs(className);
+  if (!source || !targetClass) return [];
+
+  const openTagRe = /<([a-z0-9:-]+)\b[^>]*>/gi;
+  const matches = [];
+  let match;
+
+  while ((match = openTagRe.exec(source))) {
+    const classAttr = String(match[0] || "").match(/\bclass=["']([^"']+)["']/i);
+    const classTokens = String(classAttr?.[1] || "")
+      .split(/\s+/)
+      .map((token) => normalizeWs(token))
+      .filter(Boolean);
+    if (!classTokens.includes(targetClass)) continue;
+
+    const range = findMatchingTagRange(source, match);
+    if (!range) continue;
+    matches.push(range);
+  }
+
+  return matches;
+}
+
+function htmlSnippetToInlineText(html) {
+  const source = stripMetadataNoiseHtml(html);
+  if (!source) return "";
+
+  return normalizeWs(
+    decodeHtmlEntities(
+      source
+        .replace(/<br\s*\/?>/gi, " ")
+        .replace(/<[^>]+>/g, "")
+    )
+  );
+}
+
+function stripHtmlToText(html) {
+  const source = stripMetadataNoiseHtml(html);
+  if (!source) return "";
+
+  return decodeHtmlEntities(
+    source
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/(td|th)>/gi, "\t")
+      .replace(/<\/tr>/gi, "\n")
+      .replace(/<li\b[^>]*>/gi, "- ")
+      .replace(/<\/(p|div|section|article|aside|header|footer|ul|ol|li|h[1-6]|table)>/gi, "\n")
+      .replace(/<[^>]+>/g, "")
+      .replace(/\r/g, "")
+      .replace(/[ \t]+\n/g, "\n")
+      .replace(/\n[ \t]+/g, "\n")
+      .replace(/\t[ \t]+/g, "\t")
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/[ \t]{2,}/g, " ")
+  ).trim();
+}
+
+function summarizeText(value, maxLength = 180) {
+  const normalized = normalizeWs(value);
+  if (!normalized) return "";
+  if (normalized.length <= maxLength) return normalized;
+  const sliced = normalized.slice(0, Math.max(0, maxLength - 1));
+  const boundary = sliced.lastIndexOf(" ");
+  const trimmed = (boundary >= 60 ? sliced.slice(0, boundary) : sliced).trim();
+  return `${trimmed}…`;
+}
+
+function parseMarkdownFrontMatter(markdown) {
+  const source = String(markdown || "");
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if (!match) return { data: {}, body: source };
+
+  const data = {};
+  for (const line of String(match[1] || "").split(/\r?\n/)) {
+    const pair = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!pair) continue;
+    const key = pair[1];
+    const rawValue = String(pair[2] || "").trim();
+    data[key] = rawValue.replace(/^"(.*)"$/, "$1");
+  }
+
+  return {
+    data,
+    body: source.slice(match[0].length)
+  };
+}
+
+function extractFirstHtmlByClass(html, className) {
+  const match = extractElementsByClass(html, className)[0];
+  if (!match) return "";
+  return htmlSnippetToInlineText(match.innerHtml);
+}
+
+function extractBadgeTextsFromHtml(html) {
+  const source = String(html || "");
+  const badges = [];
+  const seen = new Set();
+
+  for (const match of source.matchAll(
+    /<span[^>]*class=["'][^"']*clip-badge[^"']*["'][^>]*>([\s\S]*?)<\/span>/gi
+  )) {
+    const text = normalizeWs(decodeHtmlEntities(String(match[1] || "").replace(/<[^>]+>/g, " ")));
+    if (!text || seen.has(text)) continue;
+    seen.add(text);
+    badges.push(text);
+  }
+
+  return badges;
+}
+
+function extractLinksFromHtml(html, route = "") {
+  const source = stripMetadataNoiseHtml(html);
+  const links = [];
+  const seen = new Set();
+  const baseUrl = "https://lg.cmdspace.work/axcamp";
+
+  for (const match of source.matchAll(
+    /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi
+  )) {
+    const href = String(match[1] || "").trim();
+    const text = htmlSnippetToInlineText(match[2] || "");
+    if (!href || href === route || /^javascript:/i.test(href)) continue;
+    const absolute = href.startsWith("http")
+      ? href
+      : href.startsWith("#")
+        ? `${baseUrl}${href}`
+        : href.startsWith("/")
+          ? `${baseUrl}${href}`
+          : href;
+    const key = href;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    links.push({ href, absolute, text: text || href });
+  }
+
+  return links;
+}
+
+function extractSectionsFromHtml(html) {
+  const source = stripMetadataNoiseHtml(html);
+  const sections = [];
+  const seen = new Set();
+
+  for (const block of extractElementsByClass(source, "clip-section")) {
+    const titleBlock = extractElementsByClass(block.outerHtml, "clip-section-title")[0];
+    if (!titleBlock) continue;
+
+    const title = htmlSnippetToInlineText(titleBlock.innerHtml);
+    if (!title || seen.has(title)) continue;
+
+    const contentBlock = extractElementsByClass(block.outerHtml, "clip-section-content")[0];
+    const sectionHtml = String(contentBlock ? contentBlock.innerHtml : block.innerHtml).trim();
+    const media = extractMediaAssetsFromHtml(sectionHtml);
+    let text = stripHtmlToText(sectionHtml);
+
+    if (!text) {
+      const mediaSummary = [];
+      if (media.images.length) mediaSummary.push(`이미지 ${media.images.length}개`);
+      if (media.iframes.length) mediaSummary.push(`임베드 ${media.iframes.length}개`);
+      if (media.audios.length) mediaSummary.push(`오디오 ${media.audios.length}개`);
+      if (media.videos.length) mediaSummary.push(`동영상 ${media.videos.length}개`);
+      if (mediaSummary.length) text = `${title} (${mediaSummary.join(", ")})`;
+    }
+
+    if (!text) continue;
+    seen.add(title);
+    sections.push({
+      index: sections.length + 1,
+      title,
+      text,
+      html: sectionHtml,
+      images: media.images,
+      iframes: media.iframes,
+      audios: media.audios,
+      videos: media.videos
+    });
+  }
+
+  return sections;
+}
+
+function buildOverviewFromHtml(rawHtml, fallback = "") {
+  const explicit = extractFirstHtmlByClass(rawHtml, "clip-overview");
+  if (explicit) return explicit;
+
+  for (const match of String(rawHtml || "").matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)) {
+    const text = htmlSnippetToInlineText(match[1] || "");
+    if (text && text.length >= 20) return summarizeText(text, 200);
+  }
+
+  const sections = extractSectionsFromHtml(rawHtml);
+  const sectionText = sections.map((section) => normalizeWs(section.text)).find(Boolean);
+  if (sectionText) return summarizeText(sectionText, 200);
+
+  return summarizeText(fallback, 200);
+}
+
+function buildMarkdownSnapshotFromHtml(html) {
+  let source = stripMetadataNoiseHtml(html);
+  if (!source) return "";
+
+  source = source
+    .replace(/<figure\b[^>]*>([\s\S]*?)<\/figure>/gi, (_, inner) => {
+      const figureHtml = String(inner || "");
+      const imageTag = figureHtml.match(/<img\b[^>]*>/i)?.[0] || "";
+      const iframeTag = figureHtml.match(/<iframe\b[^>]*>/i)?.[0] || "";
+      const figcaption = htmlSnippetToInlineText(
+        figureHtml.match(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)?.[1] || ""
+      );
+
+      if (imageTag) {
+        const src = extractHtmlAttribute(imageTag, "src");
+        const alt = extractHtmlAttribute(imageTag, "alt") || figcaption || "image";
+        return `\n\n![${alt}](${src})${figcaption ? `\n\n*${figcaption}*` : ""}\n\n`;
+      }
+
+      if (iframeTag) {
+        const src = extractHtmlAttribute(iframeTag, "src");
+        const title = extractHtmlAttribute(iframeTag, "title") || figcaption || "embedded resource";
+        return `\n\n[${title}](${src})\n\n`;
+      }
+
+      return `\n\n${stripHtmlToText(figureHtml)}\n\n`;
+    })
+    .replace(/<img\b[^>]*>/gi, (tag) => {
+      const src = extractHtmlAttribute(tag, "src");
+      const alt = extractHtmlAttribute(tag, "alt") || "image";
+      return src ? `\n\n![${alt}](${src})\n\n` : "\n\n";
+    })
+    .replace(/<iframe\b[^>]*>/gi, (tag) => {
+      const src = extractHtmlAttribute(tag, "src");
+      const title = extractHtmlAttribute(tag, "title") || "embedded resource";
+      return src ? `\n\n[${title}](${src})\n\n` : "\n\n";
+    })
+    .replace(/<audio\b[^>]*>([\s\S]*?)<\/audio>/gi, (match, inner) => {
+      const src =
+        extractHtmlAttribute(match, "src") ||
+        String(inner || "").match(/<source\b[^>]*src=["']([^"']+)["']/i)?.[1] ||
+        "";
+      return src ? `\n\n[오디오 자료](${src})\n\n` : "\n\n";
+    })
+    .replace(/<audio\b[^>]*src=["']([^"']+)["'][^>]*\/?>/gi, (_, src) => {
+      return src ? `\n\n[오디오 자료](${src})\n\n` : "\n\n";
+    })
+    .replace(/<video\b[^>]*>([\s\S]*?)<\/video>/gi, (match, inner) => {
+      const src =
+        extractHtmlAttribute(match, "src") ||
+        String(inner || "").match(/<source\b[^>]*src=["']([^"']+)["']/i)?.[1] ||
+        "";
+      return src ? `\n\n[동영상 자료](${src})\n\n` : "\n\n";
+    })
+    .replace(/<video\b[^>]*src=["']([^"']+)["'][^>]*\/?>/gi, (_, src) => {
+      return src ? `\n\n[동영상 자료](${src})\n\n` : "\n\n";
+    })
+    .replace(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi, (_, href, inner) => {
+      const text = htmlSnippetToInlineText(inner || "") || href;
+      return `[${text}](${href})`;
+    })
+    .replace(
+      /<div\b[^>]*class=["'][^"']*clip-section-title[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi,
+      (_, inner) => {
+        const text = htmlSnippetToInlineText(inner || "");
+        return text ? `\n\n## ${text}\n\n` : "\n\n";
+      }
+    )
+    .replace(
+      /<div\b[^>]*class=["'][^"']*(info-block-title|tip-block-title|practice-step-title|practice-card-title)[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi,
+      (_, __, inner) => {
+        const text = htmlSnippetToInlineText(inner || "");
+        return text ? `\n\n### ${text}\n\n` : "\n\n";
+      }
+    )
+    .replace(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi, (_, level, inner) => {
+      const text = htmlSnippetToInlineText(inner || "");
+      const hashes = "#".repeat(Math.max(1, Number(level) || 1));
+      return text ? `\n\n${hashes} ${text}\n\n` : "\n\n";
+    })
+    .replace(/<(strong|b)\b[^>]*>([\s\S]*?)<\/\1>/gi, (_, __, inner) => {
+      return `**${htmlSnippetToInlineText(inner || "")}**`;
+    })
+    .replace(/<(em|i)\b[^>]*>([\s\S]*?)<\/\1>/gi, (_, __, inner) => {
+      return `*${htmlSnippetToInlineText(inner || "")}*`;
+    })
+    .replace(/<code\b[^>]*>([\s\S]*?)<\/code>/gi, (_, inner) => {
+      return `\`${htmlSnippetToInlineText(inner || "")}\``;
+    })
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<li\b[^>]*>/gi, "\n- ")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<tr\b[^>]*>/gi, "\n| ")
+    .replace(/<\/t[dh]>/gi, " | ")
+    .replace(/<\/tr>/gi, "\n")
+    .replace(/<\/(p|div|section|article|aside|header|footer|ul|ol|table)>/gi, "\n\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\r/g, "");
+
+  return decodeHtmlEntities(source)
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n[ \t]+/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
+}
+
+function normalizeMarkdownTables(markdown) {
+  const lines = String(markdown || "")
+    .split("\n")
+    .map((line) => line.trimEnd());
+  const output = [];
+  let inTable = false;
+  let headerAdded = false;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    const isTableRow = /^\|.+\|$/.test(line);
+
+    if (isTableRow) {
+      if (!inTable) {
+        inTable = true;
+        headerAdded = false;
+      }
+      output.push(line);
+      if (!headerAdded) {
+        const cells = line.split("|").slice(1, -1).length;
+        output.push(`| ${Array.from({ length: cells }, () => "---").join(" | ")} |`);
+        headerAdded = true;
+      }
+      continue;
+    }
+
+    if (!line && inTable) {
+      continue;
+    }
+
+    inTable = false;
+    headerAdded = false;
+    output.push(rawLine);
+  }
+
+  return output.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+function buildMarkdownDocument(clip, existingMarkdown, html) {
+  const existing = parseMarkdownFrontMatter(existingMarkdown);
+  const route = clip.route || `#${clip.clipKey}`;
+  const chapterCode = String(clip.chapterCode || chapterCodeFromId(clip.chapterId || "") || "")
+    .toLowerCase();
+  const title = extractClipTitleFromHtml(html, clip.title || clip.clipKey);
+  const frontMatter = [
+    "---",
+    `route: ${JSON.stringify(route)}`,
+    `chapter: ${JSON.stringify(chapterCode)}`,
+    `title: ${JSON.stringify(title)}`,
+    `source_url: ${JSON.stringify(`https://lg.cmdspace.work/axcamp${route}`)}`
+  ];
+
+  if (existing.data.exported_at) {
+    frontMatter.push(`exported_at: ${JSON.stringify(existing.data.exported_at)}`);
+  }
+
+  frontMatter.push("---");
+
+  const body = normalizeMarkdownTables(buildMarkdownSnapshotFromHtml(html));
+  return `${frontMatter.join("\n")}\n\n${body}\n`;
+}
+
+function buildMetadataFromHtml(clip, existingMetadata, rawHtml) {
+  const clipTitle = extractClipTitleFromHtml(
+    rawHtml,
+    existingMetadata?.clipTitle || clip.title || clip.clipKey
+  );
+  const overview = buildOverviewFromHtml(rawHtml, existingMetadata?.overview || "");
+  const badges = extractBadgeTextsFromHtml(rawHtml);
+  const text = stripHtmlToText(rawHtml);
+  const route = clip.route || `#${clip.clipKey}`;
+  const sections = extractSectionsFromHtml(rawHtml);
+  const media = extractMediaAssetsFromHtml(rawHtml);
+
+  return {
+    ...existingMetadata,
+    route,
+    url: `https://lg.cmdspace.work/axcamp${route}`,
+    pageTitle: existingMetadata?.pageTitle || "AX Camp for Leaders | LG",
+    clipTitle,
+    overview,
+    badges: badges.length
+      ? badges
+      : Array.isArray(existingMetadata?.badges)
+        ? existingMetadata.badges
+        : [],
+    html: rawHtml,
+    text,
+    links: extractLinksFromHtml(rawHtml, route),
+    sections,
+    images: media.images,
+    iframes: media.iframes,
+    audios: media.audios,
+    videos: media.videos
+  };
+}
+
+function invalidateCatalogCache(sourceRoot) {
+  const key = path.resolve(sourceRoot || SOURCE_ROOT);
+  catalogPromises.delete(key);
 }
 
 function makeAttachmentHeader(fileName) {
@@ -1146,7 +1860,7 @@ async function readRequestJson(req) {
 
   for await (const chunk of req) {
     total += chunk.length;
-    if (total > 1_000_000) {
+    if (total > MAX_REQUEST_BODY_BYTES) {
       throw new Error("Request body too large");
     }
     chunks.push(chunk);
@@ -1914,6 +2628,384 @@ async function handleAdminUsers(req, res, urlObj) {
   });
 }
 
+async function handleAdminClipSource(req, res, urlObj) {
+  const currentUser = await resolveUserFromRequest(req, urlObj);
+  if (!currentUser) {
+    return sendJson(res, 401, { ok: false, error: "로그인이 필요합니다." });
+  }
+
+  if (!currentUser.isAdmin) {
+    return sendJson(res, 403, { ok: false, error: "관리자 권한이 필요합니다." });
+  }
+
+  const activeCourse = await resolveActiveCourse(currentUser, urlObj);
+  const catalog = await getCatalog(activeCourse);
+  const pathnameParts = urlObj.pathname.split("/").filter(Boolean);
+  const clipKey = normalizeWs(decodeURIComponent(pathnameParts[pathnameParts.length - 1] || "")).toLowerCase();
+  const clip = catalog.clipsByKey.get(clipKey);
+
+  if (!clip) {
+    return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
+  }
+
+  const htmlPath = path.join(clip.folderAbsolute, "content.html");
+  const mdPath = path.join(clip.folderAbsolute, "content.md");
+  const txtPath = path.join(clip.folderAbsolute, "content.txt");
+  const metadataPath = path.join(clip.folderAbsolute, "metadata.json");
+
+  if (req.method === "GET") {
+    const contentHtml = await readFileSafe(htmlPath, "");
+    const metadata = await readJsonFileSafe(metadataPath, {});
+    return sendJson(res, 200, {
+      ok: true,
+      clip: {
+        clipKey: clip.clipKey,
+        canonicalClipKey: clip.canonicalClipKey,
+        title: clip.title,
+        route: clip.route,
+        chapterNum: clip.chapterNum,
+        chapterTitle: clip.chapterTitle
+      },
+      source: {
+        contentHtml,
+        contentPath: path.relative(ROOT_DIR, htmlPath).replace(/\\/g, "/"),
+        markdownPath: path.relative(ROOT_DIR, mdPath).replace(/\\/g, "/"),
+        metadataPath: path.relative(ROOT_DIR, metadataPath).replace(/\\/g, "/"),
+        textPath: path.relative(ROOT_DIR, txtPath).replace(/\\/g, "/")
+      },
+      metadata: {
+        clipTitle: metadata?.clipTitle || "",
+        overview: metadata?.overview || "",
+        badges: Array.isArray(metadata?.badges) ? metadata.badges : []
+      }
+    });
+  }
+
+  const payload = await readRequestJson(req);
+  const contentHtml = String(payload.contentHtml || "");
+  if (!contentHtml.trim()) {
+    return sendJson(res, 400, { ok: false, error: "contentHtml이 비어 있습니다." });
+  }
+
+  const existingMetadata = await readJsonFileSafe(metadataPath, {});
+  const existingMarkdown = await readFileSafe(mdPath, "");
+  const nextMetadata = buildMetadataFromHtml(clip, existingMetadata, contentHtml);
+  const nextMarkdown = buildMarkdownDocument(clip, existingMarkdown, contentHtml);
+  const nextText = stripHtmlToText(contentHtml);
+
+  await writeAdminHistorySnapshot(`clip-source-${clip.clipKey}`, [
+    htmlPath,
+    mdPath,
+    txtPath,
+    metadataPath
+  ]);
+  await fs.writeFile(htmlPath, contentHtml, "utf8");
+  await fs.writeFile(mdPath, nextMarkdown, "utf8");
+  await fs.writeFile(txtPath, `${nextText}\n`, "utf8");
+  await writeJsonFile(metadataPath, nextMetadata);
+  invalidateCatalogCache(activeCourse.sourceRoot);
+
+  return sendJson(res, 200, {
+    ok: true,
+    savedAt: new Date().toISOString(),
+    clip: {
+      clipKey: clip.clipKey,
+      title: nextMetadata.clipTitle || clip.title,
+      route: clip.route
+    },
+    metadata: {
+      clipTitle: nextMetadata.clipTitle || "",
+      overview: nextMetadata.overview || "",
+      badges: Array.isArray(nextMetadata.badges) ? nextMetadata.badges : []
+    }
+  });
+}
+
+async function handleAdminSidebarSource(req, res, urlObj) {
+  const currentUser = await resolveUserFromRequest(req, urlObj);
+  if (!currentUser) {
+    return sendJson(res, 401, { ok: false, error: "로그인이 필요합니다." });
+  }
+
+  if (!currentUser.isAdmin) {
+    return sendJson(res, 403, { ok: false, error: "관리자 권한이 필요합니다." });
+  }
+
+  const activeCourse = await resolveActiveCourse(currentUser, urlObj);
+  const catalog = await getCatalog(activeCourse);
+  const pathnameParts = urlObj.pathname.split("/").filter(Boolean);
+  const clipKey = normalizeWs(
+    decodeURIComponent(pathnameParts[pathnameParts.length - 1] || "")
+  ).toLowerCase();
+  const clip = catalog.clipsByKey.get(clipKey);
+
+  if (!clip) {
+    return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
+  }
+
+  const canonicalChapterId = clip.canonicalChapterId || clip.chapterId;
+  const canonicalRoute = clip.canonicalRoute || `#${clip.canonicalClipKey || clip.clipKey}`;
+  const reportFile = path.join(activeCourse.sourceRoot, "export-report.json");
+  const chapterJsonPath = path.join(path.resolve(clip.folderAbsolute, ".."), "chapter.json");
+  const metadataPath = path.join(clip.folderAbsolute, "metadata.json");
+  const report = await readJsonFileSafe(reportFile, null);
+  const chapterJson = await readJsonFileSafe(chapterJsonPath, null);
+  const metadata = await readJsonFileSafe(metadataPath, {});
+
+  if (!report || !Array.isArray(report.chapters)) {
+    return sendJson(res, 500, { ok: false, error: "카탈로그를 읽을 수 없습니다." });
+  }
+
+  const reportChapter = report.chapters.find(
+    (item) => normalizeWs(item.chapterId).toLowerCase() === canonicalChapterId
+  );
+  const reportClip = reportChapter?.clips?.find(
+    (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+  );
+  const reportFlatClip = Array.isArray(report.clips)
+    ? report.clips.find(
+        (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+      )
+    : null;
+  const chapterClip = Array.isArray(chapterJson?.clips)
+    ? chapterJson.clips.find(
+        (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+      )
+    : null;
+
+  if (!reportChapter || !reportClip || !chapterJson || !chapterClip) {
+    return sendJson(res, 500, { ok: false, error: "사이드바 메타데이터를 찾을 수 없습니다." });
+  }
+
+  if (req.method === "GET") {
+    return sendJson(res, 200, {
+      ok: true,
+      clip: {
+        clipKey: clip.clipKey,
+        canonicalClipKey: clip.canonicalClipKey,
+        route: clip.route,
+        chapterNum: clip.chapterNum
+      },
+      sidebar: {
+        chapterTitle: normalizeWs(reportChapter.title || chapterJson.title || clip.chapterTitle),
+        chapterTime: normalizeWs(reportChapter.time || chapterJson.time || ""),
+        clipTitle: normalizeWs(
+          metadata?.navTitle || reportClip.title || chapterClip.title || clip.title
+        ),
+        clipType: normalizeSidebarClipType(reportClip.type || chapterClip.type || clip.type, clip.type)
+      },
+      source: {
+        reportPath: path.relative(ROOT_DIR, reportFile).replace(/\\/g, "/"),
+        chapterPath: path.relative(ROOT_DIR, chapterJsonPath).replace(/\\/g, "/"),
+        metadataPath: path.relative(ROOT_DIR, metadataPath).replace(/\\/g, "/")
+      }
+    });
+  }
+
+  const payload = await readRequestJson(req);
+  const chapterTitle = normalizeWs(payload.chapterTitle || "");
+  const chapterTime = normalizeWs(payload.chapterTime || "");
+  const clipTitle = normalizeWs(payload.clipTitle || "");
+  const clipType = normalizeSidebarClipType(
+    payload.clipType,
+    reportClip.type || chapterClip.type || clip.type
+  );
+
+  if (!chapterTitle) {
+    return sendJson(res, 400, { ok: false, error: "챕터 제목을 입력해 주세요." });
+  }
+  if (!clipTitle) {
+    return sendJson(res, 400, { ok: false, error: "클립 제목을 입력해 주세요." });
+  }
+
+  reportChapter.title = chapterTitle;
+  reportChapter.time = chapterTime;
+  reportClip.title = clipTitle;
+  reportClip.type = clipType;
+  if (reportFlatClip) {
+    reportFlatClip.title = clipTitle;
+    reportFlatClip.type = clipType;
+  }
+
+  chapterJson.title = chapterTitle;
+  chapterJson.time = chapterTime;
+  chapterClip.title = clipTitle;
+  chapterClip.type = clipType;
+
+  const nextMetadata = { ...metadata, navTitle: clipTitle };
+
+  await writeAdminHistorySnapshot(`sidebar-${clip.clipKey}`, [
+    reportFile,
+    chapterJsonPath,
+    metadataPath
+  ]);
+  await writeJsonFile(reportFile, report);
+  await writeJsonFile(chapterJsonPath, chapterJson);
+  await writeJsonFile(metadataPath, nextMetadata);
+  invalidateCatalogCache(activeCourse.sourceRoot);
+
+  return sendJson(res, 200, {
+    ok: true,
+    savedAt: new Date().toISOString(),
+    sidebar: {
+      chapterTitle,
+      chapterTime,
+      clipTitle,
+      clipType
+    }
+  });
+}
+
+async function handleAdminClipAssets(req, res, urlObj) {
+  const currentUser = await resolveUserFromRequest(req, urlObj);
+  if (!currentUser) {
+    return sendJson(res, 401, { ok: false, error: "로그인이 필요합니다." });
+  }
+
+  if (!currentUser.isAdmin) {
+    return sendJson(res, 403, { ok: false, error: "관리자 권한이 필요합니다." });
+  }
+
+  const activeCourse = await resolveActiveCourse(currentUser, urlObj);
+  const catalog = await getCatalog(activeCourse);
+  const pathnameParts = urlObj.pathname.split("/").filter(Boolean);
+  const clipKey = normalizeWs(
+    decodeURIComponent(pathnameParts[pathnameParts.length - 1] || "")
+  ).toLowerCase();
+  const clip = catalog.clipsByKey.get(clipKey);
+
+  if (!clip) {
+    return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
+  }
+
+  if (req.method === "GET") {
+    const assets = await listClipAssets(activeCourse.courseCode, clip);
+    return sendJson(res, 200, {
+      ok: true,
+      clip: {
+        clipKey: clip.clipKey,
+        route: clip.route,
+        chapterNum: clip.chapterNum
+      },
+      assets,
+      upload: {
+        targetDir: "assets/",
+        maxBytes: MAX_ADMIN_ASSET_BYTES,
+        maxBytesLabel: formatByteSize(MAX_ADMIN_ASSET_BYTES),
+        allowedExtensions: Array.from(ALLOWED_ADMIN_ASSET_EXTENSIONS)
+      }
+    });
+  }
+
+  if (req.method === "DELETE") {
+    const payload = await readRequestJson(req);
+    const relativePath = String(payload.relativePath || "")
+      .replace(/\\/g, "/")
+      .replace(/^\/+/, "");
+
+    if (!relativePath || relativePath.includes("..")) {
+      return sendJson(res, 400, { ok: false, error: "삭제할 자산 경로가 올바르지 않습니다." });
+    }
+
+    const targetPath = path.resolve(clip.folderAbsolute, relativePath);
+    if (!targetPath.startsWith(clip.folderAbsolute)) {
+      return sendJson(res, 400, { ok: false, error: "유효하지 않은 자산 경로입니다." });
+    }
+
+    const baseName = path.basename(targetPath);
+    if (SOURCE_CONTROL_FILES.has(baseName)) {
+      return sendJson(res, 400, { ok: false, error: "교재 원본 파일은 여기서 삭제할 수 없습니다." });
+    }
+
+    if (!(await pathExists(targetPath))) {
+      return sendJson(res, 404, { ok: false, error: "삭제할 자산을 찾을 수 없습니다." });
+    }
+
+    await writeAdminHistorySnapshot(`clip-asset-delete-${clip.clipKey}`, [targetPath]);
+    await fs.unlink(targetPath);
+
+    return sendJson(res, 200, {
+      ok: true,
+      deletedAt: new Date().toISOString(),
+      relativePath
+    });
+  }
+
+  const payload = await readRequestJson(req);
+  const originalName = sanitizeAssetFileName(payload.fileName || "");
+  const ext = path.extname(originalName).toLowerCase();
+  const base64 = String(payload.contentBase64 || "").trim();
+
+  if (!originalName || !ext) {
+    return sendJson(res, 400, { ok: false, error: "파일 이름이 올바르지 않습니다." });
+  }
+
+  if (!ALLOWED_ADMIN_ASSET_EXTENSIONS.has(ext)) {
+    return sendJson(res, 400, {
+      ok: false,
+      error: `지원하지 않는 파일 형식입니다. (${ext})`
+    });
+  }
+
+  if (!base64) {
+    return sendJson(res, 400, { ok: false, error: "업로드할 파일 내용이 비어 있습니다." });
+  }
+
+  let content;
+  try {
+    content = Buffer.from(base64, "base64");
+  } catch {
+    return sendJson(res, 400, { ok: false, error: "파일 인코딩을 읽을 수 없습니다." });
+  }
+
+  if (!content.length) {
+    return sendJson(res, 400, { ok: false, error: "업로드할 파일 내용이 비어 있습니다." });
+  }
+
+  if (content.length > MAX_ADMIN_ASSET_BYTES) {
+    return sendJson(res, 400, {
+      ok: false,
+      error: `파일 용량은 ${formatByteSize(MAX_ADMIN_ASSET_BYTES)} 이하로 업로드해 주세요.`
+    });
+  }
+
+  const assetDir = path.join(clip.folderAbsolute, "assets");
+  await fs.mkdir(assetDir, { recursive: true });
+
+  const stem = path.basename(originalName, ext) || "asset";
+  let candidateName = `${stem}${ext}`;
+  let relativePath = `assets/${candidateName}`;
+  let targetPath = path.join(clip.folderAbsolute, relativePath);
+  let suffix = 2;
+
+  while (await pathExists(targetPath)) {
+    candidateName = `${stem}-${suffix}${ext}`;
+    relativePath = `assets/${candidateName}`;
+    targetPath = path.join(clip.folderAbsolute, relativePath);
+    suffix += 1;
+  }
+
+  await fs.writeFile(targetPath, content);
+
+  const stat = await fs.stat(targetPath);
+  const url = buildCourseFileUrl(activeCourse.courseCode, clip.clipKey, relativePath);
+
+  return sendJson(res, 200, {
+    ok: true,
+    uploadedAt: new Date().toISOString(),
+    asset: {
+      name: candidateName,
+      relativePath,
+      url,
+      size: stat.size,
+      sizeLabel: formatByteSize(stat.size),
+      ext,
+      mime: MIME_MAP[ext] || "application/octet-stream",
+      kind: classifyAssetKind(ext)
+    }
+  });
+}
+
 async function handleBuilderState(req, res, urlObj) {
   const currentUser = await resolveUserFromRequest(req, urlObj);
   if (!currentUser) {
@@ -2204,6 +3296,27 @@ async function route(req, res) {
     return handleAdminUsers(req, res, urlObj);
   }
 
+  if (
+    (req.method === "GET" || req.method === "POST") &&
+    urlObj.pathname.startsWith("/api/admin/clip-source/")
+  ) {
+    return handleAdminClipSource(req, res, urlObj);
+  }
+
+  if (
+    (req.method === "GET" || req.method === "POST") &&
+    urlObj.pathname.startsWith("/api/admin/sidebar-source/")
+  ) {
+    return handleAdminSidebarSource(req, res, urlObj);
+  }
+
+  if (
+    (req.method === "GET" || req.method === "POST" || req.method === "DELETE") &&
+    urlObj.pathname.startsWith("/api/admin/clip-assets/")
+  ) {
+    return handleAdminClipAssets(req, res, urlObj);
+  }
+
   if (req.method === "GET" && urlObj.pathname.startsWith("/course-files/")) {
     return handleCourseFile(req, res, urlObj);
   }
@@ -2229,6 +3342,13 @@ async function start() {
       await route(req, res);
     } catch (error) {
       console.error("[AX_Literacy] request error:", error);
+      if (String(error?.message || "").includes("Request body too large")) {
+        sendJson(res, 413, {
+          ok: false,
+          error: `요청 본문이 너무 큽니다. ${formatByteSize(MAX_REQUEST_BODY_BYTES)} 이하로 줄여 주세요.`
+        });
+        return;
+      }
       sendJson(res, 500, { ok: false, error: "서버 오류가 발생했습니다." });
     }
   });

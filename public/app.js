@@ -3,6 +3,77 @@ const STORAGE_LAST_ID_KEY = "ax_literacy_last_lets_id";
 const STORAGE_COURSE_CODE_KEY = "ax_literacy_course_code";
 const AX_TASK_BOARD_URL =
   "https://miro.com/welcomeonboard/L0kvb0JlVFVoUzBMbEoxQ2Qwb1pPMm5lczhOc0tpcGFOcGlBLy9sa3ZFYlczR2k3ekg4VDdLVGVKUVdTUTdmQUUvYUQwRzdlZFAraTRYYkxPRCsvU1RCditNWlFPbGdYZzQvYjh5RkN2UVYvMEhLY05PV2FQL0lGV3hnRHlUa3hhWWluRVAxeXRuUUgwWDl3Mk1qRGVRPT0hdjE=?share_link_id=111023574955";
+const STATIC_CONFIG = window.__AX_STATIC_CONFIG__ || null;
+const STATIC_MODE = Boolean(STATIC_CONFIG && STATIC_CONFIG.mode === "static");
+const STATIC_BASE_PATH = normalizeBasePathValue(STATIC_CONFIG?.basePath || "");
+const STATIC_DOWNLOAD_NAME_MAP = STATIC_CONFIG?.downloadFilenames || {};
+const STATIC_PROGRESS_KEY = "ax_literacy_static_progress";
+const STATIC_NOTES_KEY = "ax_literacy_static_notes";
+const STATIC_PUBLIC_USER = Object.freeze({
+  accountId: "public",
+  displayName: "Public Viewer",
+  teamName: "",
+  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP")
+});
+const STATIC_PUBLIC_COURSE = Object.freeze({
+  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP"),
+  courseName: String(STATIC_CONFIG?.courseName || "AX Camp Repro"),
+  launchUrl: STATIC_BASE_PATH || "/"
+});
+
+function normalizeBasePathValue(input) {
+  const raw = String(input || "").trim();
+  if (!raw || raw === "/") return "";
+  return `/${raw.replace(/^\/+|\/+$/g, "")}`;
+}
+
+function withBase(path) {
+  const raw = String(path || "");
+  if (!STATIC_MODE || !raw) return raw;
+  if (/^(?:https?:|data:|mailto:|tel:|javascript:|#)/i.test(raw)) return raw;
+  if (STATIC_BASE_PATH && (raw === STATIC_BASE_PATH || raw.startsWith(`${STATIC_BASE_PATH}/`))) {
+    return raw;
+  }
+  if (raw.startsWith("/")) {
+    return `${STATIC_BASE_PATH}${raw}`;
+  }
+  return raw;
+}
+
+function resolveRuntimeUrl(url) {
+  const raw = String(url || "");
+  if (!raw) return raw;
+  if (/^(?:https?:|data:|mailto:|tel:|javascript:|#)/i.test(raw)) return raw;
+  if (raw.startsWith("/")) return withBase(raw);
+  return raw;
+}
+
+function runtimePathname(url) {
+  try {
+    return new URL(String(url || ""), window.location.origin).pathname || "";
+  } catch {
+    return String(url || "");
+  }
+}
+
+function stripStaticBasePath(pathname) {
+  const value = String(pathname || "");
+  if (!STATIC_BASE_PATH) return value;
+  if (value === STATIC_BASE_PATH) return "/";
+  if (value.startsWith(`${STATIC_BASE_PATH}/`)) {
+    return value.slice(STATIC_BASE_PATH.length);
+  }
+  return value;
+}
+
+function isPracticeFileHref(href) {
+  return stripStaticBasePath(runtimePathname(href)).startsWith("/practice-files/");
+}
+
+function lookupStaticDownloadName(url) {
+  const pathname = stripStaticBasePath(runtimePathname(url));
+  return normalizeWs(STATIC_DOWNLOAD_NAME_MAP[pathname] || "");
+}
 
 const state = {
   accountId: "",
@@ -21,6 +92,18 @@ const state = {
   activeSlideIndex: 0,
   taskPanelOpen: false,
   notePanelOpen: false,
+  editModeOpen: false,
+  editorSourceClipKey: "",
+  editorSourceHtml: "",
+  editorDirty: false,
+  editorAssets: [],
+  editorAssetMap: new Map(),
+  editorActiveAssetPath: "",
+  editorEmbedSpec: null,
+  sidebarEditOpen: false,
+  sidebarDirty: false,
+  sidebarSourceClipKey: "",
+  sidebarSourceState: null,
   courses: [],
   currentCourse: null,
   mermaidReady: false
@@ -86,6 +169,56 @@ const el = {
   progressBadge: document.getElementById("progressBadge"),
   toggleTaskBtn: document.getElementById("toggleTaskBtn"),
   toggleNoteBtn: document.getElementById("toggleNoteBtn"),
+  toggleEditModeBtn: document.getElementById("toggleEditModeBtn"),
+  toggleSidebarModeBtn: document.getElementById("toggleSidebarModeBtn"),
+  contentEditorPanel: document.getElementById("contentEditorPanel"),
+  contentEditorPath: document.getElementById("contentEditorPath"),
+  contentEditorInput: document.getElementById("contentEditorInput"),
+  contentEditorPreview: document.getElementById("contentEditorPreview"),
+  contentEditorStatus: document.getElementById("contentEditorStatus"),
+  contentAssetInput: document.getElementById("contentAssetInput"),
+  contentAssetUploadHint: document.getElementById("contentAssetUploadHint"),
+  contentAssetList: document.getElementById("contentAssetList"),
+  contentAssetStatus: document.getElementById("contentAssetStatus"),
+  reloadContentAssetsBtn: document.getElementById("reloadContentAssetsBtn"),
+  uploadContentAssetsBtn: document.getElementById("uploadContentAssetsBtn"),
+  contentAssetPreviewPanel: document.getElementById("contentAssetPreviewPanel"),
+  contentAssetPreviewTitle: document.getElementById("contentAssetPreviewTitle"),
+  contentAssetPreviewMeta: document.getElementById("contentAssetPreviewMeta"),
+  contentAssetPreviewBody: document.getElementById("contentAssetPreviewBody"),
+  contentAssetSnippet: document.getElementById("contentAssetSnippet"),
+  copyContentAssetPathBtn: document.getElementById("copyContentAssetPathBtn"),
+  insertContentAssetLinkBtn: document.getElementById("insertContentAssetLinkBtn"),
+  insertContentAssetMediaBtn: document.getElementById("insertContentAssetMediaBtn"),
+  contentEmbedUrlInput: document.getElementById("contentEmbedUrlInput"),
+  contentEmbedTitleInput: document.getElementById("contentEmbedTitleInput"),
+  previewContentEmbedBtn: document.getElementById("previewContentEmbedBtn"),
+  insertContentEmbedBtn: document.getElementById("insertContentEmbedBtn"),
+  clearContentEmbedBtn: document.getElementById("clearContentEmbedBtn"),
+  contentEmbedPreviewPanel: document.getElementById("contentEmbedPreviewPanel"),
+  contentEmbedPreviewTitle: document.getElementById("contentEmbedPreviewTitle"),
+  contentEmbedPreviewMeta: document.getElementById("contentEmbedPreviewMeta"),
+  contentEmbedPreviewBody: document.getElementById("contentEmbedPreviewBody"),
+  contentEmbedSnippet: document.getElementById("contentEmbedSnippet"),
+  contentEmbedStatus: document.getElementById("contentEmbedStatus"),
+  reloadEditorBtn: document.getElementById("reloadEditorBtn"),
+  saveEditorBtn: document.getElementById("saveEditorBtn"),
+  closeEditorBtn: document.getElementById("closeEditorBtn"),
+  sidebarEditorPanel: document.getElementById("sidebarEditorPanel"),
+  sidebarEditorPath: document.getElementById("sidebarEditorPath"),
+  sidebarChapterTitleInput: document.getElementById("sidebarChapterTitleInput"),
+  sidebarChapterTimeInput: document.getElementById("sidebarChapterTimeInput"),
+  sidebarClipTitleInput: document.getElementById("sidebarClipTitleInput"),
+  sidebarClipTypeInput: document.getElementById("sidebarClipTypeInput"),
+  sidebarPreviewChapterNum: document.getElementById("sidebarPreviewChapterNum"),
+  sidebarPreviewChapterTitle: document.getElementById("sidebarPreviewChapterTitle"),
+  sidebarPreviewChapterTime: document.getElementById("sidebarPreviewChapterTime"),
+  sidebarPreviewClipTitle: document.getElementById("sidebarPreviewClipTitle"),
+  sidebarPreviewClipType: document.getElementById("sidebarPreviewClipType"),
+  sidebarEditorStatus: document.getElementById("sidebarEditorStatus"),
+  reloadSidebarEditorBtn: document.getElementById("reloadSidebarEditorBtn"),
+  saveSidebarEditorBtn: document.getElementById("saveSidebarEditorBtn"),
+  closeSidebarEditorBtn: document.getElementById("closeSidebarEditorBtn"),
   taskPanel: document.getElementById("taskPanel"),
   taskForm: document.getElementById("taskForm"),
   taskChapterContext: document.getElementById("taskChapterContext"),
@@ -123,6 +256,49 @@ function normalizeCourseCode(input) {
     .slice(0, 24);
 }
 
+function staticStorageKey(prefix) {
+  const courseCode = normalizeCourseCode(
+    state.currentCourse?.courseCode || STATIC_PUBLIC_COURSE.courseCode || "AXCAMP"
+  );
+  return `${prefix}:${courseCode}`;
+}
+
+function readStaticJson(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStaticJson(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getStaticCompletedClipKeys() {
+  const items = readStaticJson(staticStorageKey(STATIC_PROGRESS_KEY), []);
+  return Array.isArray(items) ? items.map((item) => normalizeClipKey(item)).filter(Boolean) : [];
+}
+
+function setStaticCompletedClipKeys(keys) {
+  const normalized = Array.from(new Set((keys || []).map((item) => normalizeClipKey(item)).filter(Boolean)));
+  writeStaticJson(staticStorageKey(STATIC_PROGRESS_KEY), normalized);
+  return normalized;
+}
+
+function getStaticNotesMap() {
+  const value = readStaticJson(staticStorageKey(STATIC_NOTES_KEY), {});
+  return value && typeof value === "object" ? value : {};
+}
+
+function setStaticNotesMap(notes) {
+  const payload = notes && typeof notes === "object" ? notes : {};
+  writeStaticJson(staticStorageKey(STATIC_NOTES_KEY), payload);
+  return payload;
+}
+
 function normalizeClipKey(input) {
   const key = normalizeWs(input).replace(/^#/, "");
   if (!key) return "";
@@ -140,6 +316,10 @@ function showApp() {
 }
 
 async function api(path, options = {}) {
+  if (STATIC_MODE) {
+    return apiStatic(path, options);
+  }
+
   const headers = {
     ...(options.headers || {})
   };
@@ -177,6 +357,131 @@ async function api(path, options = {}) {
   return data;
 }
 
+async function apiStatic(path, options = {}) {
+  const normalizedPath = String(path || "");
+  const method = String(options.method || "GET").toUpperCase();
+
+  const fetchJson = async (url) => {
+    const response = await fetch(resolveRuntimeUrl(url));
+    let data = {};
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+    if (!response.ok) {
+      throw new Error(data.error || `Request failed (${response.status})`);
+    }
+    return data;
+  };
+
+  if (normalizedPath === "/api/health" && method === "GET") {
+    return { ok: true, mode: "static" };
+  }
+
+  if (normalizedPath === "/api/courses" && method === "GET") {
+    return { courses: [STATIC_PUBLIC_COURSE] };
+  }
+
+  if (normalizedPath.startsWith("/api/me") && method === "GET") {
+    return {
+      user: STATIC_PUBLIC_USER,
+      sessionToken: "",
+      course: STATIC_PUBLIC_COURSE
+    };
+  }
+
+  if (normalizedPath === "/api/chapters" && method === "GET") {
+    const data = await fetchJson(withBase("/data/chapters.json"));
+    const completed = new Set(getStaticCompletedClipKeys());
+    const chapters = Array.isArray(data.chapters)
+      ? data.chapters.map((chapter) => ({
+          ...chapter,
+          clips: Array.isArray(chapter.clips)
+            ? chapter.clips.map((clip) => ({
+                ...clip,
+                completed: completed.has(clip.clipKey)
+              }))
+            : []
+        }))
+      : [];
+    return {
+      ...data,
+      chapters
+    };
+  }
+
+  if (normalizedPath.startsWith("/api/clips/") && method === "GET") {
+    const clipKey = normalizeClipKey(decodeURIComponent(normalizedPath.split("/api/clips/")[1] || ""));
+    const data = await fetchJson(withBase(`/data/clips/${encodeURIComponent(clipKey)}.json`));
+    return {
+      ...data,
+      completed: getStaticCompletedClipKeys().includes(clipKey)
+    };
+  }
+
+  if (normalizedPath === "/api/progress" && method === "POST") {
+    const clipKey = normalizeClipKey(options.body?.clipKey || "");
+    const completed = Boolean(options.body?.completed);
+    const set = new Set(getStaticCompletedClipKeys());
+    if (completed) {
+      set.add(clipKey);
+    } else {
+      set.delete(clipKey);
+    }
+    return {
+      ok: true,
+      completedClipKeys: setStaticCompletedClipKeys([...set])
+    };
+  }
+
+  if (normalizedPath.startsWith("/api/notes")) {
+    const query = normalizedPath.includes("?") ? new URLSearchParams(normalizedPath.split("?")[1]) : new URLSearchParams();
+    const clipKey = normalizeClipKey(query.get("clipKey") || "");
+    const notes = getStaticNotesMap();
+    const stored = notes[clipKey] || { clipKey, content: "", updatedAt: "" };
+
+    if (method === "GET") {
+      return {
+        ok: true,
+        note: stored
+      };
+    }
+
+    if (method === "POST") {
+      const note = {
+        clipKey,
+        content: String(options.body?.content || ""),
+        updatedAt: new Date().toISOString()
+      };
+      notes[clipKey] = note;
+      setStaticNotesMap(notes);
+      return {
+        ok: true,
+        note
+      };
+    }
+  }
+
+  if (normalizedPath === "/api/logout" && method === "POST") {
+    return { ok: true };
+  }
+
+  if (
+    normalizedPath === "/api/login" ||
+    normalizedPath === "/api/signup" ||
+    normalizedPath === "/api/password-hint" ||
+    normalizedPath === "/api/password-recover" ||
+    normalizedPath === "/api/account" ||
+    normalizedPath.startsWith("/api/admin/") ||
+    normalizedPath.startsWith("/api/ax-task")
+  ) {
+    throw new Error("이 기능은 GitHub Pages 공개판에서 비활성화됩니다.");
+  }
+
+  throw new Error(`지원되지 않는 정적 요청입니다: ${normalizedPath}`);
+}
+
 function setLoginError(message) {
   el.loginError.textContent = message || "";
 }
@@ -203,6 +508,567 @@ function setAdminStatus(message, isError = false) {
 function setAccountStatus(message, isError = false) {
   el.accountStatus.textContent = message || "";
   el.accountStatus.style.color = isError ? "#b42318" : "#138246";
+}
+
+function setEditorStatus(message, isError = false) {
+  el.contentEditorStatus.textContent = message || "";
+  el.contentEditorStatus.style.color = isError ? "#b42318" : "";
+}
+
+function setSidebarEditorStatus(message, isError = false) {
+  el.sidebarEditorStatus.textContent = message || "";
+  el.sidebarEditorStatus.style.color = isError ? "#b42318" : "";
+}
+
+function renderEditorPreview(html) {
+  el.contentEditorPreview.innerHTML = html || "<p class=\"muted\">미리보기가 없습니다.</p>";
+}
+
+function setContentAssetStatus(message, isError = false) {
+  el.contentAssetStatus.textContent = message || "";
+  el.contentAssetStatus.style.color = isError ? "#b42318" : "";
+}
+
+function setContentEmbedStatus(message, isError = false) {
+  el.contentEmbedStatus.textContent = message || "";
+  el.contentEmbedStatus.style.color = isError ? "#b42318" : "";
+}
+
+function formatBytes(bytes) {
+  const size = Number(bytes || 0);
+  if (!Number.isFinite(size) || size <= 0) return "0 B";
+  const units = ["B", "KB", "MB", "GB"];
+  let value = size;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+  const precision = value >= 10 || unitIndex === 0 ? 0 : 1;
+  return `${value.toFixed(precision)} ${units[unitIndex]}`;
+}
+
+function currentCourseCode() {
+  return normalizeCourseCode(state.currentCourse?.courseCode || "");
+}
+
+function guessAssetKind(asset = {}) {
+  const kind = normalizeWs(asset.kind || "").toLowerCase();
+  if (kind) return kind;
+  const ext = normalizeWs(asset.ext || "").toLowerCase();
+  if ([".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"].includes(ext)) return "image";
+  if (ext === ".pdf") return "pdf";
+  if ([".mp3", ".wav", ".m4a"].includes(ext)) return "audio";
+  if (ext === ".mp4") return "video";
+  return "file";
+}
+
+function getUrlPathForDetection(url) {
+  try {
+    const parsed = new URL(String(url || ""), window.location.origin);
+    return `${parsed.pathname || ""}${parsed.search || ""}`.toLowerCase();
+  } catch {
+    return String(url || "").toLowerCase();
+  }
+}
+
+function inferDirectUrlKind(url) {
+  const path = getUrlPathForDetection(url);
+  if (/\.(png|jpg|jpeg|webp|svg|gif)(?:[?#].*)?$/i.test(path)) return "image";
+  if (/\.pdf(?:[?#].*)?$/i.test(path)) return "pdf";
+  if (/\.(mp3|wav|m4a|aac|ogg)(?:[?#].*)?$/i.test(path)) return "audio";
+  if (/\.(mp4|webm|mov|m4v)(?:[?#].*)?$/i.test(path)) return "video";
+  if (/\.m3u8(?:[?#].*)?$/i.test(path)) return "stream";
+  return "link";
+}
+
+function parseYouTubeVideoId(url) {
+  try {
+    const parsed = new URL(String(url || "").trim());
+    const host = parsed.hostname.replace(/^www\./i, "").toLowerCase();
+    if (host === "youtu.be") {
+      return normalizeWs(parsed.pathname.split("/").filter(Boolean)[0] || "");
+    }
+    if (!/(^|\.)youtube\.com$/i.test(host) && host !== "youtube.com" && host !== "m.youtube.com") {
+      return "";
+    }
+    if (parsed.pathname === "/watch") {
+      return normalizeWs(parsed.searchParams.get("v") || "");
+    }
+    const segments = parsed.pathname.split("/").filter(Boolean);
+    if (["embed", "shorts", "live"].includes(segments[0])) {
+      return normalizeWs(segments[1] || "");
+    }
+  } catch {
+    return "";
+  }
+  return "";
+}
+
+function buildExternalEmbedSpec(rawUrl, rawTitle = "") {
+  const url = String(rawUrl || "").trim();
+  const caption = normalizeWs(rawTitle);
+  if (!url) {
+    return { error: "외부 URL을 입력해 주세요." };
+  }
+
+  const youtubeId = parseYouTubeVideoId(url);
+  if (youtubeId) {
+    const title = caption || "YouTube 영상";
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}`;
+    const snippet = [
+      `<div class="clip-section">`,
+      `  <div class="clip-section-title">${escapeHtml(title)}</div>`,
+      `  <div class="clip-section-content">`,
+      `    <p><a href="${escapeAttribute(url)}" target="_blank" rel="noopener">YouTube 원본 열기</a></p>`,
+      `    <iframe src="${escapeAttribute(embedUrl)}" title="${escapeAttribute(title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;min-height:420px;border:0;border-radius:18px;background:#000;"></iframe>`,
+      `  </div>`,
+      `</div>`
+    ].join("\n");
+    return {
+      kind: "youtube",
+      title,
+      meta: `YouTube · ${youtubeId}`,
+      previewHtml: `<iframe src="${escapeAttribute(embedUrl)}" title="${escapeAttribute(title)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;min-height:360px;border:0;border-radius:16px;background:#000;"></iframe>`,
+      snippet
+    };
+  }
+
+  const kind = inferDirectUrlKind(url);
+  const title = caption || (kind === "pdf"
+    ? "외부 PDF 자료"
+    : kind === "image"
+      ? "외부 이미지"
+      : kind === "audio"
+        ? "외부 오디오"
+        : kind === "video"
+          ? "외부 동영상"
+          : kind === "stream"
+            ? "스트리밍 링크"
+            : "외부 자료");
+  const safeUrl = escapeAttribute(url);
+  const safeTitle = escapeHtml(title);
+
+  if (kind === "image") {
+    return {
+      kind,
+      title,
+      meta: "이미지 URL",
+      previewHtml: `<img src="${safeUrl}" alt="${escapeAttribute(title)}" style="display:block;max-width:100%;height:auto;border-radius:16px;" />`,
+      snippet: [
+        `<figure class="clip-media">`,
+        `  <img src="${safeUrl}" alt="${escapeAttribute(title)}" style="width:100%;height:auto;border-radius:18px;" />`,
+        `  <figcaption>${safeTitle}</figcaption>`,
+        `</figure>`
+      ].join("\n")
+    };
+  }
+
+  if (kind === "pdf") {
+    return {
+      kind,
+      title,
+      meta: "PDF URL",
+      previewHtml: `<iframe src="${safeUrl}" title="${escapeAttribute(title)}" style="width:100%;min-height:420px;border:0;border-radius:12px;background:#fff;"></iframe>`,
+      snippet: [
+        `<div class="clip-section">`,
+        `  <div class="clip-section-title">${safeTitle}</div>`,
+        `  <div class="clip-section-content">`,
+        `    <p><a href="${safeUrl}" target="_blank" rel="noopener">PDF 원본 열기</a></p>`,
+        `    <iframe src="${safeUrl}" title="${escapeAttribute(title)}" loading="lazy" style="width:100%;min-height:720px;border:1px solid #d7e3f7;border-radius:18px;background:#fff;"></iframe>`,
+        `  </div>`,
+        `</div>`
+      ].join("\n")
+    };
+  }
+
+  if (kind === "audio") {
+    return {
+      kind,
+      title,
+      meta: "오디오 URL",
+      previewHtml: `<audio controls preload="metadata" style="width:100%;"><source src="${safeUrl}" /></audio>`,
+      snippet: [
+        `<div class="clip-section">`,
+        `  <div class="clip-section-title">${safeTitle}</div>`,
+        `  <div class="clip-section-content">`,
+        `    <p><a href="${safeUrl}" target="_blank" rel="noopener">오디오 원본 열기</a></p>`,
+        `    <audio controls preload="metadata" style="width:100%;">`,
+        `      <source src="${safeUrl}" />`,
+        `    </audio>`,
+        `  </div>`,
+        `</div>`
+      ].join("\n")
+    };
+  }
+
+  if (kind === "video") {
+    return {
+      kind,
+      title,
+      meta: "동영상 URL",
+      previewHtml: `<video controls preload="metadata" style="display:block;width:100%;max-height:420px;border-radius:16px;background:#000;"><source src="${safeUrl}" /></video>`,
+      snippet: [
+        `<div class="clip-section">`,
+        `  <div class="clip-section-title">${safeTitle}</div>`,
+        `  <div class="clip-section-content">`,
+        `    <p><a href="${safeUrl}" target="_blank" rel="noopener">동영상 원본 열기</a></p>`,
+        `    <video controls preload="metadata" style="width:100%;border-radius:18px;background:#000;">`,
+        `      <source src="${safeUrl}" />`,
+        `    </video>`,
+        `  </div>`,
+        `</div>`
+      ].join("\n")
+    };
+  }
+
+  if (kind === "stream") {
+    return {
+      kind,
+      title,
+      meta: "스트리밍 링크 · HLS/DASH 플레이어 연동 전",
+      previewHtml: `<div class="muted">HLS/DASH 스트림은 브라우저별 재생 지원이 다릅니다. 현재는 링크로 삽입하고, 필요하면 이후 <code>hls.js</code> 또는 전용 플레이어를 붙일 수 있습니다.</div>`,
+      snippet: [
+        `<div class="clip-section">`,
+        `  <div class="clip-section-title">${safeTitle}</div>`,
+        `  <div class="clip-section-content">`,
+        `    <p>스트리밍 주소: <a href="${safeUrl}" target="_blank" rel="noopener">${safeTitle}</a></p>`,
+        `    <p class="muted">HLS/DASH 플레이어는 필요 시 별도 스크립트로 확장합니다.</p>`,
+        `  </div>`,
+        `</div>`
+      ].join("\n")
+    };
+  }
+
+  return {
+    kind: "link",
+    title,
+    meta: "일반 링크",
+    previewHtml: `<a href="${safeUrl}" target="_blank" rel="noopener">${safeTitle}</a>`,
+    snippet: `<a href="${safeUrl}" target="_blank" rel="noopener">${safeTitle}</a>`
+  };
+}
+
+function buildAssetInsertionSnippet(asset, mode = "link") {
+  const name = String(asset?.name || "asset");
+  const url = String(asset?.url || "");
+  const safeAlt = name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim() || "자료";
+  const safeName = escapeHtml(name);
+  const safeUrl = escapeAttribute(url);
+  const safeLabel = escapeHtml(safeAlt);
+  const safeLabelAttr = escapeAttribute(safeAlt);
+  const kind = guessAssetKind(asset);
+
+  if (mode === "media" && (kind === "image" || kind === "pdf" || kind === "audio" || kind === "video")) {
+    if (kind === "image") {
+      return [
+        `<figure class="clip-media">`,
+        `  <img src="${safeUrl}" alt="${safeLabelAttr}" style="width:100%;height:auto;border-radius:18px;" />`,
+        `  <figcaption>${safeLabel}</figcaption>`,
+        `</figure>`
+      ].join("\n");
+    }
+
+    if (kind === "pdf") {
+      return [
+        `<div class="clip-section">`,
+        `  <div class="clip-section-title">${safeLabel}</div>`,
+        `  <div class="clip-section-content">`,
+        `    <p><a href="${safeUrl}" target="_blank" rel="noopener">PDF 원본 열기</a></p>`,
+        `    <iframe src="${safeUrl}" title="${safeLabelAttr}" loading="lazy" style="width:100%;min-height:720px;border:1px solid #d7e3f7;border-radius:18px;background:#fff;"></iframe>`,
+        `  </div>`,
+        `</div>`
+      ].join("\n");
+    }
+
+    if (kind === "audio") {
+      return [
+        `<div class="clip-section">`,
+        `  <div class="clip-section-title">${safeLabel}</div>`,
+        `  <div class="clip-section-content">`,
+        `    <p><a href="${safeUrl}" target="_blank" rel="noopener">오디오 원본 열기</a></p>`,
+        `    <audio controls preload="metadata" style="width:100%;">`,
+        `      <source src="${safeUrl}" />`,
+        `    </audio>`,
+        `  </div>`,
+        `</div>`
+      ].join("\n");
+    }
+
+    return [
+      `<div class="clip-section">`,
+      `  <div class="clip-section-title">${safeLabel}</div>`,
+      `  <div class="clip-section-content">`,
+      `    <p><a href="${safeUrl}" target="_blank" rel="noopener">동영상 원본 열기</a></p>`,
+      `    <video controls preload="metadata" style="width:100%;border-radius:18px;background:#000;">`,
+      `      <source src="${safeUrl}" />`,
+      `    </video>`,
+      `  </div>`,
+      `</div>`
+    ].join("\n");
+  }
+
+  return `<a href="${safeUrl}" target="_blank" rel="noopener">${safeName}</a>`;
+}
+
+function resetContentAssetPreview() {
+  state.editorActiveAssetPath = "";
+  el.contentAssetPreviewPanel.classList.add("hidden");
+  el.contentAssetPreviewTitle.textContent = "자산 미리보기";
+  el.contentAssetPreviewMeta.textContent = "-";
+  el.contentAssetPreviewBody.innerHTML = "";
+  el.contentAssetSnippet.textContent = "";
+  if (el.copyContentAssetPathBtn) el.copyContentAssetPathBtn.disabled = true;
+  if (el.insertContentAssetLinkBtn) el.insertContentAssetLinkBtn.disabled = true;
+  if (el.insertContentAssetMediaBtn) {
+    el.insertContentAssetMediaBtn.textContent = "미디어 삽입";
+    el.insertContentAssetMediaBtn.disabled = true;
+  }
+}
+
+function renderContentAssetPreview(asset) {
+  if (!asset) {
+    resetContentAssetPreview();
+    return;
+  }
+
+  state.editorActiveAssetPath = asset.relativePath || "";
+  el.contentAssetPreviewPanel.classList.remove("hidden");
+  el.contentAssetPreviewTitle.textContent = asset.name || "자산";
+  el.contentAssetPreviewMeta.textContent = `${asset.relativePath || "-"} · ${asset.sizeLabel || formatBytes(asset.size)} · ${(asset.mime || "").replace(/;.*$/, "")}`;
+  if (el.copyContentAssetPathBtn) el.copyContentAssetPathBtn.disabled = false;
+  if (el.insertContentAssetLinkBtn) el.insertContentAssetLinkBtn.disabled = false;
+
+  const kind = guessAssetKind(asset);
+  if (el.insertContentAssetMediaBtn) {
+    el.insertContentAssetMediaBtn.disabled = !(
+      kind === "image" ||
+      kind === "pdf" ||
+      kind === "audio" ||
+      kind === "video"
+    );
+    el.insertContentAssetMediaBtn.textContent =
+      kind === "image"
+        ? "이미지 삽입"
+        : kind === "pdf"
+          ? "PDF 삽입"
+          : kind === "audio"
+            ? "오디오 삽입"
+            : kind === "video"
+              ? "동영상 삽입"
+              : "미디어 삽입";
+  }
+  if (kind === "image") {
+    el.contentAssetPreviewBody.innerHTML = `<img src="${escapeAttribute(asset.url || "")}" alt="${escapeAttribute(asset.name || "asset")}" style="display:block;max-width:100%;height:auto;border-radius:16px;" />`;
+  } else if (kind === "pdf") {
+    el.contentAssetPreviewBody.innerHTML = `<iframe src="${escapeAttribute(asset.url || "")}" title="${escapeAttribute(asset.name || "asset")}" style="width:100%;min-height:420px;border:0;border-radius:12px;background:#fff;"></iframe>`;
+  } else if (kind === "audio") {
+    el.contentAssetPreviewBody.innerHTML = `<audio controls preload="metadata" style="width:100%;"><source src="${escapeAttribute(asset.url || "")}" /></audio>`;
+  } else if (kind === "video") {
+    el.contentAssetPreviewBody.innerHTML = `<video controls preload="metadata" style="display:block;width:100%;max-height:420px;border-radius:16px;background:#000;"><source src="${escapeAttribute(asset.url || "")}" /></video>`;
+  } else {
+    el.contentAssetPreviewBody.innerHTML = `<a href="${escapeAttribute(asset.url || "#")}" target="_blank" rel="noopener">${escapeHtml(asset.name || asset.url || "파일 열기")}</a>`;
+  }
+
+  el.contentAssetSnippet.textContent = buildAssetInsertionSnippet(
+    asset,
+    kind === "image" || kind === "pdf" || kind === "audio" || kind === "video"
+      ? "media"
+      : "link"
+  );
+}
+
+function resetContentEmbedPreview() {
+  state.editorEmbedSpec = null;
+  el.contentEmbedPreviewPanel.classList.add("hidden");
+  el.contentEmbedPreviewTitle.textContent = "외부 임베드 미리보기";
+  el.contentEmbedPreviewMeta.textContent = "-";
+  el.contentEmbedPreviewBody.innerHTML = "";
+  el.contentEmbedSnippet.textContent = "";
+  if (el.insertContentEmbedBtn) el.insertContentEmbedBtn.disabled = true;
+}
+
+function renderContentEmbedPreview(spec) {
+  if (!spec || spec.error) {
+    resetContentEmbedPreview();
+    return;
+  }
+
+  state.editorEmbedSpec = spec;
+  el.contentEmbedPreviewPanel.classList.remove("hidden");
+  el.contentEmbedPreviewTitle.textContent = spec.title || "외부 임베드";
+  el.contentEmbedPreviewMeta.textContent = spec.meta || "-";
+  el.contentEmbedPreviewBody.innerHTML =
+    spec.previewHtml || "<p class=\"muted\">미리보기를 생성할 수 없습니다.</p>";
+  el.contentEmbedSnippet.textContent = spec.snippet || "";
+  if (el.insertContentEmbedBtn) el.insertContentEmbedBtn.disabled = !spec.snippet;
+}
+
+function renderContentAssetList() {
+  const assets = Array.isArray(state.editorAssets) ? state.editorAssets : [];
+  state.editorAssetMap = new Map(assets.map((asset) => [asset.relativePath, asset]));
+
+  if (!assets.length) {
+    el.contentAssetList.innerHTML = "<p class=\"muted\">현재 클립에 등록된 자산이 없습니다.</p>";
+    resetContentAssetPreview();
+    return;
+  }
+
+  el.contentAssetList.innerHTML = assets
+    .map((asset) => {
+      const kind = guessAssetKind(asset);
+      const allowMedia =
+        kind === "image" || kind === "pdf" || kind === "audio" || kind === "video";
+      const mediaLabel =
+        kind === "image"
+          ? "이미지 삽입"
+          : kind === "pdf"
+            ? "PDF 삽입"
+            : kind === "audio"
+              ? "오디오 삽입"
+              : "동영상 삽입";
+      return `
+        <article class="content-asset-card">
+          <div class="content-asset-meta">
+            <strong>${escapeHtml(asset.name || "")}</strong>
+            <span>${escapeHtml(asset.relativePath || "")}</span>
+            <span>${escapeHtml(asset.sizeLabel || formatBytes(asset.size))} · ${escapeHtml(kind.toUpperCase())}</span>
+          </div>
+          <div class="asset-preview-actions">
+            <button type="button" class="practice-mini-btn ghost" data-asset-action="preview" data-asset-path="${escapeAttribute(asset.relativePath || "")}">미리보기</button>
+            <button type="button" class="practice-mini-btn ghost" data-default-label="경로 복사" data-asset-action="copy-path" data-asset-path="${escapeAttribute(asset.relativePath || "")}">경로 복사</button>
+            <button type="button" class="practice-mini-btn ghost" data-asset-action="insert-link" data-asset-path="${escapeAttribute(asset.relativePath || "")}">링크 삽입</button>
+            ${allowMedia ? `<button type="button" class="practice-mini-btn ghost" data-asset-action="insert-media" data-asset-path="${escapeAttribute(asset.relativePath || "")}">${mediaLabel}</button>` : ""}
+            <button type="button" class="practice-mini-btn ghost" data-asset-action="delete" data-asset-path="${escapeAttribute(asset.relativePath || "")}">삭제</button>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+
+  const activeAsset = state.editorAssetMap.get(state.editorActiveAssetPath) || assets[0];
+  renderContentAssetPreview(activeAsset);
+}
+
+function applyContentEditorDraft(nextValue, statusMessage = "") {
+  const value = String(nextValue || "");
+  el.contentEditorInput.value = value;
+  state.editorDirty = value !== state.editorSourceHtml;
+  renderEditorPreview(value);
+  if (statusMessage) {
+    setEditorStatus(statusMessage);
+  } else if (state.editorDirty) {
+    setEditorStatus("저장 전 미리보기 상태입니다.");
+  } else {
+    setEditorStatus("원본과 동일합니다.");
+  }
+}
+
+function insertIntoContentEditor(snippet) {
+  if (!el.contentEditorInput) return;
+  const input = el.contentEditorInput;
+  const start = Number.isFinite(input.selectionStart) ? input.selectionStart : input.value.length;
+  const end = Number.isFinite(input.selectionEnd) ? input.selectionEnd : input.value.length;
+  const prefix = input.value.slice(0, start);
+  const suffix = input.value.slice(end);
+  const joinerBefore = prefix && !prefix.endsWith("\n") ? "\n" : "";
+  const joinerAfter = suffix && !suffix.startsWith("\n") ? "\n" : "";
+  const nextValue = `${prefix}${joinerBefore}${snippet}${joinerAfter}${suffix}`;
+  applyContentEditorDraft(nextValue, "에셋 HTML이 편집기에 삽입되었습니다.");
+  const cursor = (prefix + joinerBefore + snippet).length;
+  input.focus();
+  input.setSelectionRange(cursor, cursor);
+}
+
+async function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const base64 = result.includes(",") ? result.split(",").pop() : result;
+      resolve(base64 || "");
+    };
+    reader.onerror = () => reject(new Error("파일을 읽을 수 없습니다."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function resetContentEditor() {
+  state.editModeOpen = false;
+  state.editorSourceClipKey = "";
+  state.editorSourceHtml = "";
+  state.editorDirty = false;
+  state.editorAssets = [];
+  state.editorAssetMap = new Map();
+  state.editorActiveAssetPath = "";
+  state.editorEmbedSpec = null;
+  if (el.contentEditorInput) el.contentEditorInput.value = "";
+  if (el.contentEditorPath) el.contentEditorPath.textContent = "-";
+  if (el.contentAssetInput) el.contentAssetInput.value = "";
+  if (el.contentAssetUploadHint) el.contentAssetUploadHint.textContent = "-";
+  if (el.contentEmbedUrlInput) el.contentEmbedUrlInput.value = "";
+  if (el.contentEmbedTitleInput) el.contentEmbedTitleInput.value = "";
+  if (el.contentAssetList) {
+    el.contentAssetList.innerHTML = "<p class=\"muted\">업로드된 자산을 불러오면 여기에 표시됩니다.</p>";
+  }
+  resetContentAssetPreview();
+  resetContentEmbedPreview();
+  renderEditorPreview("");
+  setEditorStatus("");
+  setContentAssetStatus("");
+  setContentEmbedStatus("");
+}
+
+function currentSidebarDraft() {
+  return {
+    chapterTitle: normalizeWs(el.sidebarChapterTitleInput?.value || ""),
+    chapterTime: normalizeWs(el.sidebarChapterTimeInput?.value || ""),
+    clipTitle: normalizeWs(el.sidebarClipTitleInput?.value || ""),
+    clipType: normalizeWs(el.sidebarClipTypeInput?.value || "")
+  };
+}
+
+function renderSidebarMetaPreview() {
+  const draft = currentSidebarDraft();
+  el.sidebarPreviewChapterNum.textContent = state.currentChapterNum
+    ? state.currentChapterNum.replace(/\s+/g, "")
+    : "CH00";
+  el.sidebarPreviewChapterTitle.textContent = draft.chapterTitle || "챕터 제목";
+  el.sidebarPreviewChapterTime.textContent = draft.chapterTime || "-";
+  el.sidebarPreviewClipTitle.textContent = draft.clipTitle || "클립 제목";
+  el.sidebarPreviewClipType.textContent = draft.clipType || "개념";
+}
+
+function resetSidebarEditor() {
+  state.sidebarEditOpen = false;
+  state.sidebarDirty = false;
+  state.sidebarSourceClipKey = "";
+  state.sidebarSourceState = null;
+  if (el.sidebarEditorPath) el.sidebarEditorPath.textContent = "-";
+  if (el.sidebarChapterTitleInput) el.sidebarChapterTitleInput.value = "";
+  if (el.sidebarChapterTimeInput) el.sidebarChapterTimeInput.value = "";
+  if (el.sidebarClipTitleInput) el.sidebarClipTitleInput.value = "";
+  if (el.sidebarClipTypeInput) el.sidebarClipTypeInput.value = "개념";
+  renderSidebarMetaPreview();
+  setSidebarEditorStatus("");
+}
+
+function updateEditorVisibility() {
+  const showEditorControls = Boolean(state.isAdmin);
+  el.toggleEditModeBtn.classList.toggle("hidden", !showEditorControls);
+  el.toggleSidebarModeBtn.classList.toggle("hidden", !showEditorControls);
+  el.contentEditorPanel.classList.toggle(
+    "hidden",
+    !showEditorControls || !state.editModeOpen
+  );
+  el.sidebarEditorPanel.classList.toggle(
+    "hidden",
+    !showEditorControls || !state.sidebarEditOpen
+  );
+  el.toggleEditModeBtn.textContent = state.editModeOpen ? "본문 수정 닫기" : "본문 수정";
+  el.toggleSidebarModeBtn.textContent = state.sidebarEditOpen
+    ? "사이드바 수정 닫기"
+    : "사이드바 수정";
 }
 
 function openAccountModal() {
@@ -358,6 +1224,12 @@ function escapeHtml(input) {
     .replace(/>/g, "&gt;");
 }
 
+function escapeAttribute(input) {
+  return escapeHtml(input)
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const INDUSTRY_LANDSCAPE_SOURCE_MAP = {
   meta: {
     label: "Digiday · 2025.01",
@@ -449,14 +1321,14 @@ function collectIndustryLandscapeStats() {
 }
 
 function buildIndustryLandscapeDeck() {
-  const basePath = "/assets/notebooklm/industry-briefing";
+  const basePath = withBase("/assets/notebooklm/industry-briefing");
 
   return {
     id: "industry-landscape",
     kicker: "NotebookLM PDF",
     title: "2026 LG AX Strategic Briefing",
     subtitle: "NotebookLM에서 생성한 슬라이드 PDF 다운로드본",
-    downloadUrl: "/assets/notebooklm/2026-lg-ax-strategic-briefing.pdf",
+    downloadUrl: withBase("/assets/notebooklm/2026-lg-ax-strategic-briefing.pdf"),
     downloadFilename: "2026-lg-ax-strategic-briefing.pdf",
     downloadLabel: "다운로드",
     slides: [
@@ -513,7 +1385,7 @@ function buildIndustryLandscapeDeck() {
 }
 
 function buildAssistantAgenticSpectrumDeck() {
-  const imagePath = "/assets/notebooklm/assistant-agentic/ai-utilization-evolution-roadmap.png";
+  const imagePath = withBase("/assets/notebooklm/assistant-agentic/ai-utilization-evolution-roadmap.png");
 
   return {
     id: "assistant-agentic-spectrum",
@@ -536,7 +1408,7 @@ function buildAssistantAgenticSpectrumDeck() {
 }
 
 function buildPromptContextWorkflowDeck() {
-  const imagePath = "/assets/notebooklm/prompt-context/prompt-context-workflow-strategy.png";
+  const imagePath = withBase("/assets/notebooklm/prompt-context/prompt-context-workflow-strategy.png");
 
   return {
     id: "prompt-context-workflow",
@@ -559,7 +1431,7 @@ function buildPromptContextWorkflowDeck() {
 }
 
 function buildTechUtilizationRoadmapDeck() {
-  const basePath = "/assets/notebooklm/tech-roadmap";
+  const basePath = withBase("/assets/notebooklm/tech-roadmap");
 
   return {
     id: "tech-utilization-roadmap",
@@ -593,7 +1465,7 @@ function buildTechUtilizationRoadmapDeck() {
 }
 
 function buildConceptFoundationGuideDeck() {
-  const imagePath = "/assets/notebooklm/concept-foundation/expert-ai-core-concepts-guide2.png";
+  const imagePath = withBase("/assets/notebooklm/concept-foundation/expert-ai-core-concepts-guide2.png");
 
   return {
     id: "concept-foundation-guide",
@@ -616,7 +1488,7 @@ function buildConceptFoundationGuideDeck() {
 }
 
 function buildGeminiAccessRoadshowDeck() {
-  const basePath = "/assets/notebooklm/ch02-structured-prompting/gemini-business-engine";
+  const basePath = withBase("/assets/notebooklm/ch02-structured-prompting/gemini-business-engine");
 
   return {
     id: "gemini-access-roadshow",
@@ -663,7 +1535,7 @@ function buildGeminiAccessRoadshowDeck() {
 
 function buildBusinessPromptingWorkshopDeck() {
   const imagePath =
-    "/assets/notebooklm/ch02-structured-prompting/business-prompting-workshop-infographic.png";
+    withBase("/assets/notebooklm/ch02-structured-prompting/business-prompting-workshop-infographic.png");
 
   return {
     id: "business-prompting-workshop",
@@ -686,7 +1558,7 @@ function buildBusinessPromptingWorkshopDeck() {
 }
 
 function buildGeminiGemsRoadshowDeck() {
-  const basePath = "/assets/notebooklm/ch02-structured-prompting/gemini-business-engine";
+  const basePath = withBase("/assets/notebooklm/ch02-structured-prompting/gemini-business-engine");
 
   return {
     id: "gemini-gems-roadshow",
@@ -720,14 +1592,14 @@ function buildGeminiGemsRoadshowDeck() {
 }
 
 function buildCiqoExecutiveBriefingDeck() {
-  const basePath = "/assets/notebooklm/ch03-notebooklm/ciqo-lg-executive-briefing";
+  const basePath = withBase("/assets/notebooklm/ch03-notebooklm/ciqo-lg-executive-briefing");
 
   return {
     id: "ciqo-executive-briefing",
     kicker: "NotebookLM Slide Deck",
     title: "Global Talent and Luxury Strategy",
     subtitle: "CIQO 기반 교차 분석을 LG 스타일로 재구성한 7장 브리핑",
-    downloadUrl: "/assets/notebooklm/ch03-notebooklm/ciqo-lg-executive-briefing.pdf",
+    downloadUrl: withBase("/assets/notebooklm/ch03-notebooklm/ciqo-lg-executive-briefing.pdf"),
     downloadFilename: "ciqo-lg-executive-briefing.pdf",
     downloadLabel: "다운로드",
     slides: [
@@ -778,7 +1650,7 @@ function buildCiqoExecutiveBriefingDeck() {
 }
 
 function buildEnterpriseResearchWorkflowDeck() {
-  const imagePath = "/assets/notebooklm/ch03-notebooklm/enterprise-research-workflow.png";
+  const imagePath = withBase("/assets/notebooklm/ch03-notebooklm/enterprise-research-workflow.png");
 
   return {
     id: "enterprise-research-workflow",
@@ -802,7 +1674,7 @@ function buildEnterpriseResearchWorkflowDeck() {
 }
 
 function buildAiStudioApiPrinciplesDeck() {
-  const basePath = "/assets/notebooklm/ch04-ai-studio-api-essentials";
+  const basePath = withBase("/assets/notebooklm/ch04-ai-studio-api-essentials");
 
   return {
     id: "ai-studio-api-principles",
@@ -860,7 +1732,7 @@ function buildAiStudioApiPrinciplesDeck() {
 }
 
 function buildVibeCodingShiftDeck() {
-  const imagePath = "/assets/notebooklm/ch05-vibe-coding/vibe-coding-shift-infographic.png";
+  const imagePath = withBase("/assets/notebooklm/ch05-vibe-coding/vibe-coding-shift-infographic.png");
 
   return {
     id: "vibe-coding-shift",
@@ -884,7 +1756,7 @@ function buildVibeCodingShiftDeck() {
 }
 
 function buildExecutiveAppBuildSprintDeck() {
-  const basePath = "/assets/notebooklm/ch05-executive-app-build-sprint";
+  const basePath = withBase("/assets/notebooklm/ch05-executive-app-build-sprint");
 
   return {
     id: "executive-app-build-sprint",
@@ -1781,13 +2653,15 @@ function enhanceClipBody() {
 }
 
 function wireClipInteractions() {
-  el.clipBody.querySelectorAll("a[href^='/practice-files/']").forEach((anchor) => {
+  el.clipBody.querySelectorAll("a[href]").forEach((anchor) => {
+    const href = anchor.getAttribute("href");
+    if (!isPracticeFileHref(href)) return;
     if (anchor.dataset.downloadBound === "1") return;
     anchor.dataset.downloadBound = "1";
     anchor.addEventListener("click", (event) => {
-      const href = anchor.getAttribute("href");
-      if (!href) return;
-      window.downloadFile(href, "", event);
+      const nextHref = anchor.getAttribute("href");
+      if (!nextHref) return;
+      window.downloadFile(nextHref, "", event);
     });
   });
 
@@ -1826,6 +2700,15 @@ function wireClipInteractions() {
 async function openClip(clipKey, updateHash = false) {
   const normalized = normalizeClipKey(clipKey);
   if (!normalized) return;
+  if (
+    normalized !== state.currentClipKey &&
+    state.currentClipKey &&
+    ((state.editModeOpen && state.editorDirty) ||
+      (state.sidebarEditOpen && state.sidebarDirty)) &&
+    !window.confirm("저장되지 않은 수정 내용이 있습니다. 다른 클립으로 이동할까요?")
+  ) {
+    return;
+  }
   closeSlideDeck();
 
   const data = await api(`/api/clips/${encodeURIComponent(normalized)}`);
@@ -1856,6 +2739,12 @@ async function openClip(clipKey, updateHash = false) {
     await loadTaskForCurrentChapter();
   }
   await loadNoteForCurrentClip();
+  if (state.editModeOpen && state.isAdmin) {
+    await loadEditorSourceForCurrentClip();
+  }
+  if (state.sidebarEditOpen && state.isAdmin) {
+    await loadSidebarSourceForCurrentClip();
+  }
 
   if (updateHash || window.location.hash !== `#${clip.clipKey}`) {
     window.location.hash = `#${clip.clipKey}`;
@@ -1959,6 +2848,12 @@ function renderCourseOptions() {
 }
 
 async function loadCourseDirectory() {
+  if (STATIC_MODE) {
+    state.courses = [STATIC_PUBLIC_COURSE];
+    renderCourseOptions();
+    return;
+  }
+
   try {
     const data = await api("/api/courses");
     state.courses = Array.isArray(data.courses) ? data.courses : [];
@@ -1993,7 +2888,7 @@ function renderCurrentCourse() {
 
 function renderCurrentUser() {
   if (!state.user) {
-    el.currentUser.textContent = "-";
+    el.currentUser.textContent = STATIC_MODE ? "Public Viewer" : "-";
     renderCurrentCourse();
     return;
   }
@@ -2002,12 +2897,22 @@ function renderCurrentUser() {
   renderCurrentCourse();
 }
 
+function applyStaticPublicModeUI() {
+  if (!STATIC_MODE) return;
+  el.accountSettingsBtn?.classList.add("hidden");
+  el.logoutBtn?.classList.add("hidden");
+  el.toggleEditModeBtn?.classList.add("hidden");
+  el.toggleSidebarModeBtn?.classList.add("hidden");
+  el.adminSection?.classList.add("hidden");
+}
+
 function updateAdminVisibility() {
   if (state.isAdmin) {
     el.adminSection.classList.remove("hidden");
   } else {
     el.adminSection.classList.add("hidden");
   }
+  updateEditorVisibility();
 }
 
 async function loadAdminUsers() {
@@ -2034,6 +2939,235 @@ async function loadAdminUsers() {
     setAdminStatus(`사용자 ${users.length}명`);
   } catch (error) {
     setAdminStatus(error.message, true);
+  }
+}
+
+async function loadEditorSourceForCurrentClip() {
+  if (!state.isAdmin || !state.currentClipKey) return;
+  setEditorStatus("원본을 불러오는 중...");
+  try {
+    const data = await api(`/api/admin/clip-source/${encodeURIComponent(state.currentClipKey)}`);
+    const rawHtml = String(data.source?.contentHtml || "");
+    state.editorSourceClipKey = data.clip?.clipKey || state.currentClipKey;
+    state.editorSourceHtml = rawHtml;
+    state.editorDirty = false;
+    el.contentEditorInput.value = rawHtml;
+    el.contentEditorPath.textContent = data.source?.contentPath || "-";
+    onClearContentEmbed();
+    renderEditorPreview(rawHtml);
+    setEditorStatus("현재 클립 원본을 불러왔습니다.");
+    await loadContentAssetsForCurrentClip();
+  } catch (error) {
+    setEditorStatus(error.message, true);
+  }
+}
+
+async function loadContentAssetsForCurrentClip() {
+  if (!state.isAdmin || !state.currentClipKey) return;
+  setContentAssetStatus("클립 자산 목록을 불러오는 중...");
+  try {
+    const data = await api(`/api/admin/clip-assets/${encodeURIComponent(state.currentClipKey)}`);
+    state.editorAssets = Array.isArray(data.assets) ? data.assets : [];
+    renderContentAssetList();
+    const upload = data.upload || {};
+    const extText = Array.isArray(upload.allowedExtensions)
+      ? upload.allowedExtensions.join(", ")
+      : "-";
+    el.contentAssetUploadHint.textContent = `허용 형식: ${extText} · 최대 ${upload.maxBytesLabel || "-"}`;
+    setContentAssetStatus(`자산 ${state.editorAssets.length}건을 불러왔습니다.`);
+  } catch (error) {
+    state.editorAssets = [];
+    renderContentAssetList();
+    setContentAssetStatus(error.message, true);
+  }
+}
+
+async function loadSidebarSourceForCurrentClip() {
+  if (!state.isAdmin || !state.currentClipKey) return;
+  setSidebarEditorStatus("사이드바 메타를 불러오는 중...");
+  try {
+    const data = await api(`/api/admin/sidebar-source/${encodeURIComponent(state.currentClipKey)}`);
+    const sidebar = data.sidebar || {};
+    state.sidebarSourceClipKey = data.clip?.clipKey || state.currentClipKey;
+    state.sidebarSourceState = {
+      chapterTitle: normalizeWs(sidebar.chapterTitle || ""),
+      chapterTime: normalizeWs(sidebar.chapterTime || ""),
+      clipTitle: normalizeWs(sidebar.clipTitle || ""),
+      clipType: normalizeWs(sidebar.clipType || "")
+    };
+    state.sidebarDirty = false;
+    el.sidebarChapterTitleInput.value = state.sidebarSourceState.chapterTitle;
+    el.sidebarChapterTimeInput.value = state.sidebarSourceState.chapterTime;
+    el.sidebarClipTitleInput.value = state.sidebarSourceState.clipTitle;
+    el.sidebarClipTypeInput.value = state.sidebarSourceState.clipType || "개념";
+    el.sidebarEditorPath.textContent =
+      [data.source?.reportPath, data.source?.chapterPath, data.source?.metadataPath]
+        .filter(Boolean)
+        .join(" | ") || "-";
+    renderSidebarMetaPreview();
+    setSidebarEditorStatus("현재 클립의 사이드바 메타를 불러왔습니다.");
+  } catch (error) {
+    setSidebarEditorStatus(error.message, true);
+  }
+}
+
+async function onToggleEditMode() {
+  if (!state.isAdmin) return;
+
+  if (state.editModeOpen) {
+    if (
+      state.editorDirty &&
+      !window.confirm("저장되지 않은 수정 내용이 있습니다. 수정 모드를 닫을까요?")
+    ) {
+      return;
+    }
+    resetContentEditor();
+    updateEditorVisibility();
+    return;
+  }
+
+  state.editModeOpen = true;
+  updateEditorVisibility();
+  await loadEditorSourceForCurrentClip();
+}
+
+async function onToggleSidebarEditMode() {
+  if (!state.isAdmin) return;
+
+  if (state.sidebarEditOpen) {
+    if (
+      state.sidebarDirty &&
+      !window.confirm("저장되지 않은 사이드바 수정 내용이 있습니다. 닫을까요?")
+    ) {
+      return;
+    }
+    resetSidebarEditor();
+    updateEditorVisibility();
+    return;
+  }
+
+  state.sidebarEditOpen = true;
+  updateEditorVisibility();
+  await loadSidebarSourceForCurrentClip();
+}
+
+async function reloadEditorSource() {
+  if (!state.isAdmin || !state.editModeOpen) return;
+  if (
+    state.editorDirty &&
+    !window.confirm("현재 입력한 수정 내용이 사라집니다. 원본을 다시 불러올까요?")
+  ) {
+    return;
+  }
+  await loadEditorSourceForCurrentClip();
+}
+
+async function reloadContentAssets() {
+  if (!state.isAdmin || !state.editModeOpen) return;
+  await loadContentAssetsForCurrentClip();
+}
+
+async function uploadContentAssets() {
+  if (!state.isAdmin || !state.currentClipKey) return;
+  const files = Array.from(el.contentAssetInput?.files || []);
+  if (!files.length) {
+    setContentAssetStatus("업로드할 파일을 먼저 선택해 주세요.", true);
+    return;
+  }
+
+  const uploaded = [];
+  setContentAssetStatus(`파일 ${files.length}건 업로드 중...`);
+
+  for (const file of files) {
+    const contentBase64 = await readFileAsBase64(file);
+    const result = await api(`/api/admin/clip-assets/${encodeURIComponent(state.currentClipKey)}`, {
+      method: "POST",
+      body: {
+        fileName: file.name,
+        contentBase64
+      }
+    });
+    if (result.asset) uploaded.push(result.asset);
+  }
+
+  if (el.contentAssetInput) {
+    el.contentAssetInput.value = "";
+  }
+  await loadContentAssetsForCurrentClip();
+  const lastUploaded = uploaded[uploaded.length - 1];
+  if (lastUploaded) {
+    renderContentAssetPreview(lastUploaded);
+  }
+  setContentAssetStatus(`업로드 완료: ${uploaded.length}건`);
+}
+
+async function reloadSidebarSource() {
+  if (!state.isAdmin || !state.sidebarEditOpen) return;
+  if (
+    state.sidebarDirty &&
+    !window.confirm("현재 입력한 사이드바 수정 내용이 사라집니다. 원본을 다시 불러올까요?")
+  ) {
+    return;
+  }
+  await loadSidebarSourceForCurrentClip();
+}
+
+async function saveEditorSource() {
+  if (!state.isAdmin || !state.currentClipKey) return;
+  const contentHtml = String(el.contentEditorInput.value || "");
+  if (!contentHtml.trim()) {
+    setEditorStatus("저장할 HTML 내용이 비어 있습니다.", true);
+    return;
+  }
+
+  setEditorStatus("저장 중...");
+  try {
+    const result = await api(`/api/admin/clip-source/${encodeURIComponent(state.currentClipKey)}`, {
+      method: "POST",
+      body: { contentHtml }
+    });
+    state.editorSourceHtml = contentHtml;
+    state.editorDirty = false;
+    await loadChaptersAndDefaultClip();
+    renderEditorPreview(contentHtml);
+    setEditorStatus(
+      `저장 완료: ${new Date(result.savedAt).toLocaleString()} · content.html, content.md, content.txt, metadata.json이 동기화되었습니다.`
+    );
+  } catch (error) {
+    setEditorStatus(error.message, true);
+  }
+}
+
+async function saveSidebarSource() {
+  if (!state.isAdmin || !state.currentClipKey) return;
+  const draft = currentSidebarDraft();
+  if (!draft.chapterTitle) {
+    setSidebarEditorStatus("챕터 제목을 입력해 주세요.", true);
+    return;
+  }
+  if (!draft.clipTitle) {
+    setSidebarEditorStatus("클립 제목을 입력해 주세요.", true);
+    return;
+  }
+
+  setSidebarEditorStatus("저장 중...");
+  try {
+    const result = await api(
+      `/api/admin/sidebar-source/${encodeURIComponent(state.currentClipKey)}`,
+      {
+        method: "POST",
+        body: draft
+      }
+    );
+    state.sidebarSourceState = { ...draft };
+    state.sidebarDirty = false;
+    await loadChaptersAndDefaultClip();
+    renderSidebarMetaPreview();
+    setSidebarEditorStatus(
+      `저장 완료: ${new Date(result.savedAt).toLocaleString()} · 사이드바 카탈로그가 갱신되었습니다.`
+    );
+  } catch (error) {
+    setSidebarEditorStatus(error.message, true);
   }
 }
 
@@ -2235,6 +3369,20 @@ async function onAccountSubmit(event) {
 }
 
 async function tryAutoLogin() {
+  if (STATIC_MODE) {
+    state.accountId = STATIC_PUBLIC_USER.accountId;
+    state.sessionToken = "";
+    state.user = STATIC_PUBLIC_USER;
+    state.isAdmin = false;
+    state.currentCourse = STATIC_PUBLIC_COURSE;
+    renderCurrentUser();
+    updateAdminVisibility();
+    applyStaticPublicModeUI();
+    showApp();
+    await loadChaptersAndDefaultClip();
+    return;
+  }
+
   const savedToken = normalizeWs(localStorage.getItem(STORAGE_SESSION_KEY));
   const savedId =
     normalizeWs(localStorage.getItem(STORAGE_LAST_ID_KEY)) ||
@@ -2321,6 +3469,103 @@ async function onCopyNote() {
   await copyTextWithUiFeedback(el.copyNoteBtn, el.noteText.value || "");
 }
 
+function activeEditorAsset() {
+  return state.editorAssetMap.get(state.editorActiveAssetPath) || null;
+}
+
+async function onCopyActiveAssetPath() {
+  const asset = activeEditorAsset();
+  if (!asset) return;
+  await copyTextWithUiFeedback(el.copyContentAssetPathBtn, asset.url || "");
+}
+
+function onInsertActiveAssetLink() {
+  const asset = activeEditorAsset();
+  if (!asset) return;
+  insertIntoContentEditor(buildAssetInsertionSnippet(asset, "link"));
+}
+
+function onInsertActiveAssetMedia() {
+  const asset = activeEditorAsset();
+  if (!asset) return;
+  insertIntoContentEditor(buildAssetInsertionSnippet(asset, "media"));
+}
+
+function onPreviewContentEmbed() {
+  const spec = buildExternalEmbedSpec(
+    el.contentEmbedUrlInput?.value || "",
+    el.contentEmbedTitleInput?.value || ""
+  );
+  if (spec.error) {
+    resetContentEmbedPreview();
+    setContentEmbedStatus(spec.error, true);
+    return;
+  }
+  renderContentEmbedPreview(spec);
+  setContentEmbedStatus(`${spec.kind === "youtube" ? "YouTube" : spec.meta || "외부 자료"} 미리보기를 준비했습니다.`);
+}
+
+function onInsertContentEmbed() {
+  if (!state.editorEmbedSpec?.snippet) {
+    setContentEmbedStatus("먼저 외부 임베드를 미리보기 해주세요.", true);
+    return;
+  }
+  insertIntoContentEditor(state.editorEmbedSpec.snippet);
+  setContentEmbedStatus("외부 임베드 HTML을 편집기에 삽입했습니다.");
+}
+
+function onClearContentEmbed() {
+  if (el.contentEmbedUrlInput) el.contentEmbedUrlInput.value = "";
+  if (el.contentEmbedTitleInput) el.contentEmbedTitleInput.value = "";
+  resetContentEmbedPreview();
+  setContentEmbedStatus("");
+}
+
+function onContentAssetListClick(event) {
+  const button = event.target.closest("[data-asset-action]");
+  if (!button) return;
+
+  const relativePath = normalizeWs(button.dataset.assetPath || "");
+  const asset = state.editorAssetMap.get(relativePath);
+  if (!asset) return;
+
+  const action = normalizeWs(button.dataset.assetAction || "");
+  if (action === "delete") {
+    if (!window.confirm(`${asset.name || asset.relativePath} 파일을 삭제할까요?`)) return;
+    if (state.editorActiveAssetPath === asset.relativePath) {
+      resetContentAssetPreview();
+    }
+    api(`/api/admin/clip-assets/${encodeURIComponent(state.currentClipKey)}`, {
+      method: "DELETE",
+      body: { relativePath: asset.relativePath }
+    })
+      .then(async () => {
+        await loadContentAssetsForCurrentClip();
+        setContentAssetStatus("자산을 삭제했습니다.");
+      })
+      .catch((error) => setContentAssetStatus(error.message, true));
+    return;
+  }
+
+  renderContentAssetPreview(asset);
+
+  if (action === "preview") return;
+  if (action === "copy-path") {
+    copyTextWithUiFeedback(button, asset.url || "").catch((error) =>
+      setContentAssetStatus(error.message, true)
+    );
+    return;
+  }
+  if (action === "insert-link") {
+    onInsertActiveAssetLink();
+    return;
+  }
+  if (action === "insert-media") {
+    onInsertActiveAssetMedia();
+    return;
+  }
+}
+
 async function onTaskSubmit(event) {
   event.preventDefault();
   setTaskStatus("");
@@ -2375,6 +3620,8 @@ async function onLogout() {
   closeSlideDeck();
   state.taskPanelOpen = false;
   state.notePanelOpen = false;
+  resetContentEditor();
+  resetSidebarEditor();
   el.adminUsersTbody.innerHTML = "";
   el.noteText.value = "";
   renderNotePreview();
@@ -2382,6 +3629,7 @@ async function onLogout() {
   closeAccountModal();
   setNoteStatus("");
   setAdminStatus("");
+  updateEditorVisibility();
 
   window.location.hash = "";
   showLogin();
@@ -2400,6 +3648,76 @@ function bindEvents() {
     saveCurrentClipNote().catch((error) => setNoteStatus(error.message, true));
   });
   el.noteText.addEventListener("input", renderNotePreview);
+  el.contentEditorInput?.addEventListener("input", () => {
+    state.editorDirty = el.contentEditorInput.value !== state.editorSourceHtml;
+    renderEditorPreview(el.contentEditorInput.value || "");
+    if (state.editorDirty) {
+      setEditorStatus("저장 전 미리보기 상태입니다.");
+    } else {
+      setEditorStatus("원본과 동일합니다.");
+    }
+  });
+  el.reloadContentAssetsBtn?.addEventListener("click", () => {
+    reloadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
+  });
+  el.uploadContentAssetsBtn?.addEventListener("click", () => {
+    uploadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
+  });
+  el.contentAssetInput?.addEventListener("change", () => {
+    const files = Array.from(el.contentAssetInput.files || []);
+    if (!files.length) return;
+    const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
+    setContentAssetStatus(`선택됨: ${files.length}건 · ${formatBytes(totalBytes)}`);
+  });
+  el.contentAssetList?.addEventListener("click", onContentAssetListClick);
+  el.copyContentAssetPathBtn?.addEventListener("click", () => {
+    onCopyActiveAssetPath().catch((error) => setContentAssetStatus(error.message, true));
+  });
+  el.insertContentAssetLinkBtn?.addEventListener("click", onInsertActiveAssetLink);
+  el.insertContentAssetMediaBtn?.addEventListener("click", onInsertActiveAssetMedia);
+  [el.contentEmbedUrlInput, el.contentEmbedTitleInput]
+    .filter(Boolean)
+    .forEach((field) => {
+      field.addEventListener("input", () => {
+        state.editorEmbedSpec = null;
+        if (el.insertContentEmbedBtn) el.insertContentEmbedBtn.disabled = true;
+        if (!el.contentEmbedPreviewPanel?.classList.contains("hidden")) {
+          resetContentEmbedPreview();
+        }
+        if (!normalizeWs(el.contentEmbedUrlInput?.value || "") && !normalizeWs(el.contentEmbedTitleInput?.value || "")) {
+          setContentEmbedStatus("");
+        } else {
+          setContentEmbedStatus("미리보기를 눌러 외부 임베드를 확인하세요.");
+        }
+      });
+    });
+  el.previewContentEmbedBtn?.addEventListener("click", onPreviewContentEmbed);
+  el.insertContentEmbedBtn?.addEventListener("click", onInsertContentEmbed);
+  el.clearContentEmbedBtn?.addEventListener("click", onClearContentEmbed);
+  [el.sidebarChapterTitleInput, el.sidebarChapterTimeInput, el.sidebarClipTitleInput, el.sidebarClipTypeInput]
+    .filter(Boolean)
+    .forEach((field) => {
+      field.addEventListener("input", () => {
+        const draft = currentSidebarDraft();
+        const source = state.sidebarSourceState || {
+          chapterTitle: "",
+          chapterTime: "",
+          clipTitle: "",
+          clipType: ""
+        };
+        state.sidebarDirty =
+          draft.chapterTitle !== source.chapterTitle ||
+          draft.chapterTime !== source.chapterTime ||
+          draft.clipTitle !== source.clipTitle ||
+          draft.clipType !== source.clipType;
+        renderSidebarMetaPreview();
+        if (state.sidebarDirty) {
+          setSidebarEditorStatus("저장 전 미리보기 상태입니다.");
+        } else {
+          setSidebarEditorStatus("원본과 동일합니다.");
+        }
+      });
+    });
   el.copyNoteBtn.addEventListener("click", () => {
     onCopyNote().catch((error) => setNoteStatus(error.message, true));
   });
@@ -2460,6 +3778,8 @@ function bindEvents() {
 
   state.taskPanelOpen = false;
   state.notePanelOpen = false;
+  renderSidebarMetaPreview();
+  updateEditorVisibility();
   updateSidePanelUI();
   renderNotePreview();
 
@@ -2522,7 +3842,8 @@ window.downloadFile = async function downloadFile(url, filename, event) {
   }
 
   try {
-    const response = await fetch(url);
+    const resolvedUrl = resolveRuntimeUrl(url);
+    const response = await fetch(resolvedUrl);
     if (!response.ok) {
       throw new Error(`download failed (${response.status})`);
     }
@@ -2530,8 +3851,9 @@ window.downloadFile = async function downloadFile(url, filename, event) {
     const blob = await response.blob();
     const resolvedName =
       normalizeWs(filename) ||
+      lookupStaticDownloadName(resolvedUrl) ||
       filenameFromContentDisposition(response.headers.get("content-disposition")) ||
-      filenameFromUrl(url) ||
+      filenameFromUrl(resolvedUrl) ||
       "download";
     const objectUrl = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -2542,7 +3864,7 @@ window.downloadFile = async function downloadFile(url, filename, event) {
     link.remove();
     URL.revokeObjectURL(objectUrl);
   } catch {
-    window.open(url, "_blank", "noopener,noreferrer");
+    window.open(resolveRuntimeUrl(url), "_blank", "noopener,noreferrer");
   }
 };
 
@@ -2555,12 +3877,16 @@ window.showAssetPreview = async function showAssetPreview(title, url) {
 
   titleEl.textContent = normalizeWs(title) || "실습 파일";
   bodyEl.textContent = "불러오는 중...";
-  downloadEl.href = url;
-  downloadEl.setAttribute("download", filenameFromUrl(url) || "");
+  const resolvedUrl = resolveRuntimeUrl(url);
+  downloadEl.href = resolvedUrl;
+  downloadEl.setAttribute(
+    "download",
+    lookupStaticDownloadName(resolvedUrl) || filenameFromUrl(resolvedUrl) || ""
+  );
   panel.classList.remove("hidden");
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(resolvedUrl);
     if (!response.ok) {
       throw new Error(`preview failed (${response.status})`);
     }
@@ -2601,6 +3927,30 @@ window.filterNews = function filterNews(category, button) {
   if (button) {
     button.classList.add("active");
   }
+};
+
+window.toggleContentEditMode = function toggleContentEditMode() {
+  onToggleEditMode().catch((error) => setEditorStatus(error.message, true));
+};
+
+window.reloadContentEditor = function reloadContentEditor() {
+  reloadEditorSource().catch((error) => setEditorStatus(error.message, true));
+};
+
+window.saveContentEditor = function saveContentEditor() {
+  saveEditorSource().catch((error) => setEditorStatus(error.message, true));
+};
+
+window.toggleSidebarEditMode = function toggleSidebarEditMode() {
+  onToggleSidebarEditMode().catch((error) => setSidebarEditorStatus(error.message, true));
+};
+
+window.reloadSidebarEditor = function reloadSidebarEditor() {
+  reloadSidebarSource().catch((error) => setSidebarEditorStatus(error.message, true));
+};
+
+window.saveSidebarEditor = function saveSidebarEditor() {
+  saveSidebarSource().catch((error) => setSidebarEditorStatus(error.message, true));
 };
 
 bindEvents();

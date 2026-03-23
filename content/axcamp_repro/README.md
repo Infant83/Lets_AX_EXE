@@ -44,7 +44,15 @@
 - `content.html`: runtime source body
 - `content.txt`: plain text snapshot
 - `metadata.json`: links, images, sections, prompts metadata
+- `assets/`: root 편집기에서 업로드한 클립 전용 이미지/PDF/오디오/동영상 자료
 - `screenshot.png`: exported representative screenshot
+
+## Root 편집기 동기화
+
+- root 계정의 `본문 수정` 저장은 `content.html`을 기준으로 `content.md`, `content.txt`, `metadata.json`을 함께 재생성한다.
+- 저장 전 원본은 `.admin-history/` 아래 자동 백업된다.
+- root 계정의 자산 업로드는 해당 클립 폴더의 `assets/` 아래 저장되며, 이미지/PDF/오디오/동영상은 미리보기와 HTML 삽입까지 지원한다.
+- root 계정의 외부 임베드 보조는 YouTube 주소, 직접 열리는 PDF/이미지/오디오/동영상 URL을 미리보기 후 HTML로 삽입할 수 있다.
 
 ## 제외된 수집 산출물
 
