@@ -174,6 +174,7 @@ const el = {
   contentEditorPanel: document.getElementById("contentEditorPanel"),
   contentEditorPath: document.getElementById("contentEditorPath"),
   contentEditorInput: document.getElementById("contentEditorInput"),
+  contentEditorHighlight: document.getElementById("contentEditorHighlight"),
   contentEditorPreview: document.getElementById("contentEditorPreview"),
   contentEditorStatus: document.getElementById("contentEditorStatus"),
   contentAssetInput: document.getElementById("contentAssetInput"),
@@ -520,8 +521,174 @@ function setSidebarEditorStatus(message, isError = false) {
   el.sidebarEditorStatus.style.color = isError ? "#b42318" : "";
 }
 
+function buildHighlightedHtmlSnippet(tagText) {
+  const token = String(tagText || "");
+  const trimmed = token.trim();
+
+  if (!trimmed) return "";
+  if (trimmed.startsWith("<!--")) {
+    return `<span class="code-token-comment">${escapeHtml(token)}</span>`;
+  }
+
+  const closing = trimmed.startsWith("</");
+  const opening = closing ? "</" : "<";
+  const ending = trimmed.endsWith("/>") ? "/>" : ">";
+  const inner = trimmed.slice(opening.length, trimmed.length - ending.length);
+  const tagMatch = inner.match(/^([^\s/>]+)([\s\S]*)$/);
+
+  if (!tagMatch) {
+    return `<span class="code-token-delimiter">${escapeHtml(opening)}</span>${escapeHtml(inner)}<span class="code-token-delimiter">${escapeHtml(ending)}</span>`;
+  }
+
+  const tagName = tagMatch[1];
+  const attrSource = tagMatch[2] || "";
+  const attrHtml = escapeHtml(attrSource).replace(
+    /([^\s=\/]+)(\s*=\s*)(&quot;.*?&quot;|&#39;.*?&#39;|[^\s"'=<>`]+)/g,
+    (_match, name, equalSign, value) =>
+      `<span class="code-token-attr">${name}</span>${equalSign}<span class="code-token-value">${value}</span>`
+  );
+
+  return [
+    `<span class="code-token-delimiter">${escapeHtml(opening)}</span>`,
+    `<span class="code-token-tag">${escapeHtml(tagName)}</span>`,
+    attrHtml,
+    `<span class="code-token-delimiter">${escapeHtml(ending)}</span>`
+  ].join("");
+}
+
+function buildHighlightedHtmlSource(input) {
+  const source = String(input || "");
+  if (!source) return "";
+
+  const tokenPattern = /<!--[\s\S]*?-->|<\/?[A-Za-z][^>]*?>/g;
+  let cursor = 0;
+  let html = "";
+
+  source.replace(tokenPattern, (match, offset) => {
+    if (offset > cursor) {
+      html += escapeHtml(source.slice(cursor, offset));
+    }
+    html += buildHighlightedHtmlSnippet(match);
+    cursor = offset + match.length;
+    return match;
+  });
+
+  if (cursor < source.length) {
+    html += escapeHtml(source.slice(cursor));
+  }
+
+  return html;
+}
+
+function syncContentEditorScroll() {
+  if (!el.contentEditorInput || !el.contentEditorHighlight) return;
+  el.contentEditorHighlight.scrollTop = el.contentEditorInput.scrollTop;
+  el.contentEditorHighlight.scrollLeft = el.contentEditorInput.scrollLeft;
+}
+
+function renderContentEditorHighlight(source) {
+  if (!el.contentEditorHighlight) return;
+  el.contentEditorHighlight.innerHTML = buildHighlightedHtmlSource(source);
+  syncContentEditorScroll();
+}
+
+function computeLineStarts(source) {
+  const starts = [0];
+  for (let index = 0; index < source.length; index += 1) {
+    if (source[index] === "\n") {
+      starts.push(index + 1);
+    }
+  }
+  return starts;
+}
+
+function lineNumberFromOffset(lineStarts, offset) {
+  const target = Math.max(0, Number(offset) || 0);
+  let low = 0;
+  let high = lineStarts.length - 1;
+
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    if (lineStarts[mid] <= target) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+
+  return Math.max(1, high + 1);
+}
+
+function buildEditorPreviewHtml(sourceHtml) {
+  const source = String(sourceHtml || "");
+  if (!source.trim()) {
+    return '<p class="muted">미리보기가 없습니다.</p>';
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(`<body>${source}</body>`, "text/html");
+  const sourceLower = source.toLowerCase();
+  const lineStarts = computeLineStarts(source);
+  let searchFrom = 0;
+
+  doc.body.querySelectorAll("*").forEach((node) => {
+    const tagName = String(node.tagName || "").toLowerCase();
+    if (!tagName) return;
+
+    const needle = `<${tagName}`;
+    let offset = sourceLower.indexOf(needle, searchFrom);
+    if (offset < 0) {
+      offset = sourceLower.indexOf(needle);
+    }
+    if (offset < 0) return;
+
+    const lineNumber = lineNumberFromOffset(lineStarts, offset);
+    node.setAttribute("data-editor-source-index", String(offset));
+    node.setAttribute("data-editor-source-line", String(lineNumber));
+    node.setAttribute("title", `소스 줄 ${lineNumber}`);
+    searchFrom = offset + needle.length;
+  });
+
+  return doc.body.innerHTML || '<p class="muted">미리보기가 없습니다.</p>';
+}
+
+function focusContentEditorSource(offset, lineHint = 0) {
+  if (!el.contentEditorInput) return;
+
+  const input = el.contentEditorInput;
+  const source = String(input.value || "");
+  const safeOffset = Math.max(0, Math.min(source.length, Number(offset) || 0));
+  const lineStart = source.lastIndexOf("\n", Math.max(0, safeOffset - 1)) + 1;
+  let lineEnd = source.indexOf("\n", safeOffset);
+  if (lineEnd < 0) lineEnd = source.length;
+
+  input.focus();
+  input.setSelectionRange(lineStart, lineEnd);
+
+  const lineNumber =
+    Number(lineHint) > 0 ? Number(lineHint) : source.slice(0, safeOffset).split("\n").length;
+  const lineHeight = parseFloat(window.getComputedStyle(input).lineHeight) || 22;
+  input.scrollTop = Math.max(0, (lineNumber - 2) * lineHeight);
+  syncContentEditorScroll();
+  setEditorStatus(`렌더 미리보기에서 선택한 요소의 소스 줄 ${lineNumber}로 이동했습니다.`);
+}
+
+function onContentEditorPreviewClick(event) {
+  const target = event.target.closest("[data-editor-source-index]");
+  if (!target) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  focusContentEditorSource(
+    Number(target.dataset.editorSourceIndex || 0),
+    Number(target.dataset.editorSourceLine || 0)
+  );
+}
+
 function renderEditorPreview(html) {
-  el.contentEditorPreview.innerHTML = html || "<p class=\"muted\">미리보기가 없습니다.</p>";
+  const source = String(html || "");
+  renderContentEditorHighlight(source);
+  el.contentEditorPreview.innerHTML = buildEditorPreviewHtml(source);
 }
 
 function setContentAssetStatus(message, isError = false) {
@@ -3657,6 +3824,8 @@ function bindEvents() {
       setEditorStatus("원본과 동일합니다.");
     }
   });
+  el.contentEditorInput?.addEventListener("scroll", syncContentEditorScroll);
+  el.contentEditorPreview?.addEventListener("click", onContentEditorPreviewClick);
   el.reloadContentAssetsBtn?.addEventListener("click", () => {
     reloadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
   });
