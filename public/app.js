@@ -21,6 +21,7 @@ const STATIC_PUBLIC_COURSE = Object.freeze({
   launchUrl: STATIC_BASE_PATH || "/"
 });
 const QUICK_EDITABLE_TAGS = new Set([
+  "div",
   "h1",
   "h2",
   "h3",
