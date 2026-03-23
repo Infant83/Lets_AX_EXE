@@ -2,116 +2,66 @@
   "route": "#ch05-clip01",
   "url": "https://lg.cmdspace.work/axcamp#ch05-clip01",
   "pageTitle": "AX Camp for Leaders | LG",
-  "clipTitle": "Google AI Studio 설정",
-  "overview": "교육 실습에 사용할 GCP(Google Cloud Platform) 무료 계정을 등록하고 AI Studio에 접속합니다.",
+  "clipTitle": "LLM 앱과 API의 동작 원리",
+  "overview": "AI Studio Build로 만든 앱을 로컬에서 실행해도 실제 추론은 원격 Gemini API에서 일어난다. 이 섹션은 API 방식, key, quota, billing이 왜 필요한지를 한 번에 이해하도록 정리한 개념 오리엔테이션이다.",
   "badges": [
-    "~10분",
     "CH 05",
-    "플랫폼"
+    "개념"
   ],
-  "html": "\n    <div class=\"clip-header\">\n      <div class=\"clip-badges\">\n        <span class=\"clip-badge time\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" data-lucide=\"timer\" aria-hidden=\"true\" style=\"width:13px;height:13px;vertical-align:-2px;\" class=\"lucide lucide-timer\"><line x1=\"10\" x2=\"14\" y1=\"2\" y2=\"2\"></line><line x1=\"12\" x2=\"15\" y1=\"14\" y2=\"11\"></line><circle cx=\"12\" cy=\"14\" r=\"8\"></circle></svg> ~10분</span>\n        <span class=\"clip-badge chapter\">CH 05</span>\n        <span class=\"clip-badge type-platform\">플랫폼</span>\n      </div>\n      <h1 class=\"clip-title\">Google AI Studio 설정</h1>\n    </div>\n    \n    <div class=\"clip-overview\">교육 실습에 사용할 GCP(Google Cloud Platform) 무료 계정을 등록하고 AI Studio에 접속합니다.</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">영상 가이드</div>\n  <div class=\"clip-section-content\">\n    <div style=\"position:relative;padding-bottom:56.25%;height:0;border-radius:var(--radius);overflow:hidden;margin-bottom:16px\">\n      <iframe src=\"https://www.youtube.com/embed/5Mh1XlUJawQ\" style=\"position:absolute;top:0;left:0;width:100%;height:100%;border:none\" allow=\"accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture\" allowfullscreen=\"\" loading=\"lazy\"></iframe>\n    </div>\n    <p style=\"font-size:0.8rem;color:var(--text-muted);text-align:center\">영상을 따라하면서 아래 단계를 진행해 주세요</p>\n  </div>\n</div>\n\n<div class=\"info-block\">\n  <div class=\"info-block-title\">비용 안내</div>\n  <div style=\"font-size:0.85rem;line-height:1.7;color:var(--text-body)\">\n    • 신규 가입 시 제공되는 <strong>$300 무료 크레딧</strong>을 사용하므로 개인 비용이 청구되지 않습니다<br>\n    • 본인 확인을 위한 신용카드 등록 과정이 있지만, <strong>유료 계정으로 직접 업그레이드하기 전까지는 자동 결제되지 않습니다</strong>\n  </div>\n</div>\n\n<!-- Step 1: GCP 접속 -->\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">Step 1. 구글 클라우드 접속</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">구글에 <strong>gcp</strong>를 검색하거나 <a href=\"https://cloud.google.com/free\" target=\"_blank\">cloud.google.com/free</a>에 접속하여 메인 화면의 '무료로 시작하기' 버튼을 클릭합니다.</p>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/sAG9723FZI.jpg\" alt=\"GCP 검색 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">구글에서 'gcp' 검색 후 최상단 Google Cloud 링크 클릭</p>\n    </div>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/fBta2607X.jpg\" alt=\"GCP 메인 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">'무료로 시작하기' 버튼 클릭</p>\n    </div>\n  </div>\n</div>\n\n<!-- Step 2: 국가 선택 및 약관 동의 -->\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">Step 2. 국가 선택 및 약관 동의 (1/2단계)</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">로그인 후 나오는 첫 번째 화면입니다.</p>\n    <ul style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px\">\n      <li><strong>국가:</strong> '대한민국' 확인 (또는 선택)</li>\n      <li><strong>약관:</strong> 서비스 약관 동의 체크 후 <strong>[계속]</strong> 클릭</li>\n    </ul>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/zvZ3830NB.jpg\" alt=\"국가 선택 및 약관 동의 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">가입 1단계: 국가 선택 및 약관 동의 체크박스</p>\n    </div>\n  </div>\n</div>\n\n<!-- Step 3: 본인 인증 및 결제 정보 -->\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">Step 3. 본인 인증 및 결제 정보 등록 (2/2단계)</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">계정 유형과 주소, 카드를 등록합니다.</p>\n    <ul style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px\">\n      <li><strong>계정 유형:</strong> 개인</li>\n      <li><strong>주소:</strong> 본인 주소 입력</li>\n      <li><strong>결제 수단:</strong> 해외 결제 가능한 카드 정보 입력</li>\n    </ul>\n    <div class=\"info-block\" style=\"margin-top:12px;margin-bottom:16px\">\n      <div class=\"info-block-title\">참고</div>\n      <div style=\"font-size:0.85rem;line-height:1.7;color:var(--text-body)\">\n        영상 가이드에서는 개인정보 보호를 위해 상세 입력 과정이 생략되었습니다.\n      </div>\n    </div>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/aQur3249eQ.jpg\" alt=\"고객 정보 입력 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">가입 2단계: 고객 정보 및 결제 정보 입력란</p>\n    </div>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/zfwb6451X.jpg\" alt=\"결제 설정 처리 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">결제 설정 처리 중 로딩 화면</p>\n    </div>\n  </div>\n</div>\n\n<!-- Step 4: 가입 완료 -->\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">Step 4. 가입 완료 및 콘솔 진입</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">설문 팝업이 뜨면 답변하거나 건너뛰세요. <strong>'My First Project'</strong>라는 문구와 함께 환영 메시지가 보이면 성공입니다.</p>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/daLH2042Y.jpg\" alt=\"GCP 환영 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">GCP 콘솔 로딩 후 환영 메시지 화면</p>\n    </div>\n  </div>\n</div>\n\n<!-- Step 5: AI Studio 접속 -->\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">Step 5. Google AI Studio 접속</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">주소창에 <a href=\"https://aistudio.google.com\" target=\"_blank\"><strong>aistudio.google.com</strong></a>을 입력하여 이동합니다.</p>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/nzDx9281SrI.jpg\" alt=\"AI Studio 접속 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">브라우저 주소창에 aistudio.google.com 입력</p>\n    </div>\n  </div>\n</div>\n\n<!-- Step 6: AI Studio 메뉴 확인 -->\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">Step 6. 좌측 메뉴에서 주요 기능 확인</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">AI Studio에 접속하면 좌측 사이드바에 다음 메뉴가 표시됩니다:</p>\n    <ul style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px\">\n      <li><strong>Home:</strong> AI Studio 대시보드 (시작 화면)</li>\n      <li><strong>Playground:</strong> AI와 대화하며 파라미터를 조절하는 실험 공간</li>\n      <li><strong>Build:</strong> 코드 기반 웹앱을 자연어로 생성하는 빌더</li>\n      <li><strong>Dashboard:</strong> <span class=\"glossary-term\">API<span class=\"glossary-tooltip\"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 사용량 및 프로젝트 관리</li>\n      <li><strong>Documentation:</strong> <span class=\"glossary-term\">API<span class=\"glossary-tooltip\"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 문서 및 가이드</li>\n    </ul>\n    <div class=\"tip-block\" style=\"margin-top:12px\">\n      <div class=\"tip-block-title\">오후 실습 안내</div>\n      <div class=\"tip-block-content\">오전에 <span class=\"glossary-term\">Gemini<span class=\"glossary-tooltip\"><strong>Gemini</strong><br>Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요.</span></span> 채팅으로 질문/답변을 했다면, 오후에는 AI Studio에서 <strong>직접 앱을 만들고 <span class=\"glossary-term\">API<span class=\"glossary-tooltip\"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span>를 연결</strong>합니다. Playground에서 파라미터를 조절해 보고, Build에서 실제 웹앱을 만들어 봅니다.</div>\n    </div>\n  </div>\n</div>\n    <div class=\"clip-nav-footer\">\n      <a class=\"clip-nav-btn \" href=\"#ch04-clip04\">\n        ← 실습 시트\n      </a>\n      <a class=\"clip-nav-btn \" href=\"#ch05-clip02\">\n        유료 API KEY 발급 →\n      </a>\n    </div>\n  ",
-  "text": "~10분\nCH 05\n플랫폼\nGoogle AI Studio 설정\n교육 실습에 사용할 GCP(Google Cloud Platform) 무료 계정을 등록하고 AI Studio에 접속합니다.\n영상 가이드\n\n영상을 따라하면서 아래 단계를 진행해 주세요\n\n비용 안내\n• 신규 가입 시 제공되는 $300 무료 크레딧을 사용하므로 개인 비용이 청구되지 않습니다\n• 본인 확인을 위한 신용카드 등록 과정이 있지만, 유료 계정으로 직접 업그레이드하기 전까지는 자동 결제되지 않습니다\nStep 1. 구글 클라우드 접속\n\n구글에 gcp를 검색하거나 cloud.google.com/free에 접속하여 메인 화면의 '무료로 시작하기' 버튼을 클릭합니다.\n\n구글에서 'gcp' 검색 후 최상단 Google Cloud 링크 클릭\n\n'무료로 시작하기' 버튼 클릭\n\nStep 2. 국가 선택 및 약관 동의 (1/2단계)\n\n로그인 후 나오는 첫 번째 화면입니다.\n\n국가: '대한민국' 확인 (또는 선택)\n약관: 서비스 약관 동의 체크 후 [계속] 클릭\n\n가입 1단계: 국가 선택 및 약관 동의 체크박스\n\nStep 3. 본인 인증 및 결제 정보 등록 (2/2단계)\n\n계정 유형과 주소, 카드를 등록합니다.\n\n계정 유형: 개인\n주소: 본인 주소 입력\n결제 수단: 해외 결제 가능한 카드 정보 입력\n참고\n영상 가이드에서는 개인정보 보호를 위해 상세 입력 과정이 생략되었습니다.\n\n가입 2단계: 고객 정보 및 결제 정보 입력란\n\n결제 설정 처리 중 로딩 화면\n\nStep 4. 가입 완료 및 콘솔 진입\n\n설문 팝업이 뜨면 답변하거나 건너뛰세요. 'My First Project'라는 문구와 함께 환영 메시지가 보이면 성공입니다.\n\nGCP 콘솔 로딩 후 환영 메시지 화면\n\nStep 5. Google AI Studio 접속\n\n주소창에 aistudio.google.com을 입력하여 이동합니다.\n\n브라우저 주소창에 aistudio.google.com 입력\n\nStep 6. 좌측 메뉴에서 주요 기능 확인\n\nAI Studio에 접속하면 좌측 사이드바에 다음 메뉴가 표시됩니다:\n\nHome: AI Studio 대시보드 (시작 화면)\nPlayground: AI와 대화하며 파라미터를 조절하는 실험 공간\nBuild: 코드 기반 웹앱을 자연어로 생성하는 빌더\nDashboard: API 사용량 및 프로젝트 관리\nDocumentation: API 문서 및 가이드\n오후 실습 안내\n오전에 Gemini 채팅으로 질문/답변을 했다면, 오후에는 AI Studio에서 직접 앱을 만들고 API를 연결합니다. Playground에서 파라미터를 조절해 보고, Build에서 실제 웹앱을 만들어 봅니다.\n← 실습 시트\n유료 API KEY 발급 →",
+  "text": "LLM 앱과 API의 동작 원리. AI Studio Build로 만든 앱을 로컬에서 실행해도 실제 추론은 원격 Gemini API에서 일어난다. 이 섹션은 API 방식, key, quota, billing이 왜 필요한지를 설명한다. Chat UI와 API 앱의 차이, Playground와 Build 화면, API key, quota, billing, environment variable 개념을 다룬다.",
   "sections": [
     {
       "index": 1,
-      "title": "영상 가이드",
-      "text": "영상 가이드 영상을 따라하면서 아래 단계를 진행해 주세요",
-      "html": "\n  <div class=\"clip-section-title\">영상 가이드</div>\n  <div class=\"clip-section-content\">\n    <div style=\"position:relative;padding-bottom:56.25%;height:0;border-radius:var(--radius);overflow:hidden;margin-bottom:16px\">\n      <iframe src=\"https://www.youtube.com/embed/5Mh1XlUJawQ\" style=\"position:absolute;top:0;left:0;width:100%;height:100%;border:none\" allow=\"accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture\" allowfullscreen=\"\" loading=\"lazy\"></iframe>\n    </div>\n    <p style=\"font-size:0.8rem;color:var(--text-muted);text-align:center\">영상을 따라하면서 아래 단계를 진행해 주세요</p>\n  </div>\n"
+      "title": "왜 이 챕터가 필요한가",
+      "text": "Chat UI에서는 모델 호출 구조가 숨겨져 있지만, API와 Build 앱에서는 API key와 quota, billing 개념이 전면으로 나온다."
     },
     {
       "index": 2,
-      "title": "Step 1. 구글 클라우드 접속",
-      "text": "Step 1. 구글 클라우드 접속 구글에 gcp를 검색하거나 cloud.google.com/free에 접속하여 메인 화면의 '무료로 시작하기' 버튼을 클릭합니다. 구글에서 'gcp' 검색 후 최상단 Google Cloud 링크 클릭 '무료로 시작하기' 버튼 클릭",
-      "html": "\n  <div class=\"clip-section-title\">Step 1. 구글 클라우드 접속</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">구글에 <strong>gcp</strong>를 검색하거나 <a href=\"https://cloud.google.com/free\" target=\"_blank\">cloud.google.com/free</a>에 접속하여 메인 화면의 '무료로 시작하기' 버튼을 클릭합니다.</p>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/sAG9723FZI.jpg\" alt=\"GCP 검색 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">구글에서 'gcp' 검색 후 최상단 Google Cloud 링크 클릭</p>\n    </div>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/fBta2607X.jpg\" alt=\"GCP 메인 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">'무료로 시작하기' 버튼 클릭</p>\n    </div>\n  </div>\n"
+      "title": "실제 AI Studio 화면으로 보기",
+      "text": "Playground는 모델과 실행 설정을 함께 보여주고, Build는 자연어로 앱을 만들되 결국 Gemini API 호출이 필요하다는 점을 보여준다."
     },
     {
       "index": 3,
-      "title": "Step 2. 국가 선택 및 약관 동의 (1/2단계)",
-      "text": "Step 2. 국가 선택 및 약관 동의 (1/2단계) 로그인 후 나오는 첫 번째 화면입니다. 국가: '대한민국' 확인 (또는 선택) 약관: 서비스 약관 동의 체크 후 [계속] 클릭 가입 1단계: 국가 선택 및 약관 동의 체크박스",
-      "html": "\n  <div class=\"clip-section-title\">Step 2. 국가 선택 및 약관 동의 (1/2단계)</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">로그인 후 나오는 첫 번째 화면입니다.</p>\n    <ul style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px\">\n      <li><strong>국가:</strong> '대한민국' 확인 (또는 선택)</li>\n      <li><strong>약관:</strong> 서비스 약관 동의 체크 후 <strong>[계속]</strong> 클릭</li>\n    </ul>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/zvZ3830NB.jpg\" alt=\"국가 선택 및 약관 동의 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">가입 1단계: 국가 선택 및 약관 동의 체크박스</p>\n    </div>\n  </div>\n"
-    },
-    {
-      "index": 4,
-      "title": "Step 3. 본인 인증 및 결제 정보 등록 (2/2단계)",
-      "text": "Step 3. 본인 인증 및 결제 정보 등록 (2/2단계) 계정 유형과 주소, 카드를 등록합니다. 계정 유형: 개인 주소: 본인 주소 입력 결제 수단: 해외 결제 가능한 카드 정보 입력 참고 영상 가이드에서는 개인정보 보호를 위해 상세 입력 과정이 생략되었습니다. 가입 2단계: 고객 정보 및 결제 정보 입력란 결제 설정 처리 중 로딩 화면",
-      "html": "\n  <div class=\"clip-section-title\">Step 3. 본인 인증 및 결제 정보 등록 (2/2단계)</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">계정 유형과 주소, 카드를 등록합니다.</p>\n    <ul style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px\">\n      <li><strong>계정 유형:</strong> 개인</li>\n      <li><strong>주소:</strong> 본인 주소 입력</li>\n      <li><strong>결제 수단:</strong> 해외 결제 가능한 카드 정보 입력</li>\n    </ul>\n    <div class=\"info-block\" style=\"margin-top:12px;margin-bottom:16px\">\n      <div class=\"info-block-title\">참고</div>\n      <div style=\"font-size:0.85rem;line-height:1.7;color:var(--text-body)\">\n        영상 가이드에서는 개인정보 보호를 위해 상세 입력 과정이 생략되었습니다.\n      </div>\n    </div>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/aQur3249eQ.jpg\" alt=\"고객 정보 입력 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">가입 2단계: 고객 정보 및 결제 정보 입력란</p>\n    </div>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/zfwb6451X.jpg\" alt=\"결제 설정 처리 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">결제 설정 처리 중 로딩 화면</p>\n    </div>\n  </div>\n"
-    },
-    {
-      "index": 5,
-      "title": "Step 4. 가입 완료 및 콘솔 진입",
-      "text": "Step 4. 가입 완료 및 콘솔 진입 설문 팝업이 뜨면 답변하거나 건너뛰세요. 'My First Project'라는 문구와 함께 환영 메시지가 보이면 성공입니다. GCP 콘솔 로딩 후 환영 메시지 화면",
-      "html": "\n  <div class=\"clip-section-title\">Step 4. 가입 완료 및 콘솔 진입</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">설문 팝업이 뜨면 답변하거나 건너뛰세요. <strong>'My First Project'</strong>라는 문구와 함께 환영 메시지가 보이면 성공입니다.</p>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/daLH2042Y.jpg\" alt=\"GCP 환영 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">GCP 콘솔 로딩 후 환영 메시지 화면</p>\n    </div>\n  </div>\n"
-    },
-    {
-      "index": 6,
-      "title": "Step 5. Google AI Studio 접속",
-      "text": "Step 5. Google AI Studio 접속 주소창에 aistudio.google.com을 입력하여 이동합니다. 브라우저 주소창에 aistudio.google.com 입력",
-      "html": "\n  <div class=\"clip-section-title\">Step 5. Google AI Studio 접속</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">주소창에 <a href=\"https://aistudio.google.com\" target=\"_blank\"><strong>aistudio.google.com</strong></a>을 입력하여 이동합니다.</p>\n    <div style=\"margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)\">\n      <img src=\"https://i.imghippo.com/files/nzDx9281SrI.jpg\" alt=\"AI Studio 접속 화면\" style=\"width:100%;display:block\" loading=\"lazy\">\n      <p style=\"font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)\">브라우저 주소창에 aistudio.google.com 입력</p>\n    </div>\n  </div>\n"
-    },
-    {
-      "index": 7,
-      "title": "Step 6. 좌측 메뉴에서 주요 기능 확인",
-      "text": "Step 6. 좌측 메뉴에서 주요 기능 확인 AI Studio에 접속하면 좌측 사이드바에 다음 메뉴가 표시됩니다: Home: AI Studio 대시보드 (시작 화면) Playground: AI와 대화하며 파라미터를 조절하는 실험 공간 Build: 코드 기반 웹앱을 자연어로 생성하는 빌더 Dashboard: API 사용량 및 프로젝트 관리 Documentation: API 문서 및 가이드 오후 실습 안내 오전에 Gemini 채팅으로 질문/답변을 했다면, 오후에는 AI Studio에서 직접 앱을 만들고 API를 연결합니다. Playground에서 파라미터를 조절해 보고, Build에서 실제 웹앱을 만들어 봅니다.",
-      "html": "\n  <div class=\"clip-section-title\">Step 6. 좌측 메뉴에서 주요 기능 확인</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px\">AI Studio에 접속하면 좌측 사이드바에 다음 메뉴가 표시됩니다:</p>\n    <ul style=\"font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px\">\n      <li><strong>Home:</strong> AI Studio 대시보드 (시작 화면)</li>\n      <li><strong>Playground:</strong> AI와 대화하며 파라미터를 조절하는 실험 공간</li>\n      <li><strong>Build:</strong> 코드 기반 웹앱을 자연어로 생성하는 빌더</li>\n      <li><strong>Dashboard:</strong> <span class=\"glossary-term\">API<span class=\"glossary-tooltip\"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 사용량 및 프로젝트 관리</li>\n      <li><strong>Documentation:</strong> <span class=\"glossary-term\">API<span class=\"glossary-tooltip\"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 문서 및 가이드</li>\n    </ul>\n    <div class=\"tip-block\" style=\"margin-top:12px\">\n      <div class=\"tip-block-title\">오후 실습 안내</div>\n      <div class=\"tip-block-content\">오전에 <span class=\"glossary-term\">Gemini<span class=\"glossary-tooltip\"><strong>Gemini</strong><br>Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요.</span></span> 채팅으로 질문/답변을 했다면, 오후에는 AI Studio에서 <strong>직접 앱을 만들고 <span class=\"glossary-term\">API<span class=\"glossary-tooltip\"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span>를 연결</strong>합니다. Playground에서 파라미터를 조절해 보고, Build에서 실제 웹앱을 만들어 봅니다.</div>\n    </div>\n  </div>\n"
+      "title": "실행 전에 이해할 4가지",
+      "text": "API key, quota와 rate limit, billing, environment variable 개념을 실습 관점에서 정리한다."
     }
   ],
   "prompts": [],
   "links": [
     {
-      "href": "https://cloud.google.com/free",
-      "absolute": "https://cloud.google.com/free",
-      "text": "cloud.google.com/free"
+      "href": "https://aistudio.google.com/prompts/new_chat",
+      "absolute": "https://aistudio.google.com/prompts/new_chat",
+      "text": "Google AI Studio Playground"
     },
     {
-      "href": "https://aistudio.google.com",
-      "absolute": "https://aistudio.google.com/",
-      "text": "aistudio.google.com"
+      "href": "https://aistudio.google.com/apps",
+      "absolute": "https://aistudio.google.com/apps",
+      "text": "Google AI Studio Build"
     },
     {
-      "href": "#ch04-clip04",
-      "absolute": "https://lg.cmdspace.work/axcamp#ch04-clip04",
-      "text": "← 실습 시트"
+      "href": "#ch04-clip03",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch04-clip03",
+      "text": "← 기업 분석 코스: Gems에서 NotebookLM까지"
     },
     {
       "href": "#ch05-clip02",
       "absolute": "https://lg.cmdspace.work/axcamp#ch05-clip02",
-      "text": "유료 API KEY 발급 →"
+      "text": "Google AI Studio API 키 발급 →"
     }
   ],
   "images": [
     {
-      "src": "https://i.imghippo.com/files/sAG9723FZI.jpg",
-      "alt": "GCP 검색 화면"
+      "src": "/assets/aistudio/ch04/api-runtime-blueprint.svg",
+      "alt": "LLM 앱과 API의 동작 원리를 설명하는 인포그래픽"
     },
     {
-      "src": "https://i.imghippo.com/files/fBta2607X.jpg",
-      "alt": "GCP 메인 화면"
+      "src": "/assets/aistudio/ch04/aistudio-playground-main.png",
+      "alt": "Google AI Studio Playground 화면"
     },
     {
-      "src": "https://i.imghippo.com/files/zvZ3830NB.jpg",
-      "alt": "국가 선택 및 약관 동의 화면"
-    },
-    {
-      "src": "https://i.imghippo.com/files/aQur3249eQ.jpg",
-      "alt": "고객 정보 입력 화면"
-    },
-    {
-      "src": "https://i.imghippo.com/files/zfwb6451X.jpg",
-      "alt": "결제 설정 처리 화면"
-    },
-    {
-      "src": "https://i.imghippo.com/files/daLH2042Y.jpg",
-      "alt": "GCP 환영 화면"
-    },
-    {
-      "src": "https://i.imghippo.com/files/nzDx9281SrI.jpg",
-      "alt": "AI Studio 접속 화면"
+      "src": "/assets/aistudio/ch04/aistudio-build-main.png",
+      "alt": "Google AI Studio Build 화면"
     }
   ],
-  "iframes": [
-    {
-      "src": "https://www.youtube.com/embed/5Mh1XlUJawQ",
-      "title": ""
-    }
-  ]
+  "iframes": []
 }

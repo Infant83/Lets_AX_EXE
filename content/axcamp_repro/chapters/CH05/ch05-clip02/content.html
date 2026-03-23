@@ -1,87 +1,81 @@
+<div class="clip-header">
+  <div class="clip-badges">
+    <span class="clip-badge chapter">CH 05</span>
+    <span class="clip-badge type-setup">설정</span>
+  </div>
+  <h1 class="clip-title">Google AI Studio API 키 발급</h1>
+</div>
 
-    <div class="clip-header">
-      <div class="clip-badges">
-        
-        <span class="clip-badge chapter">CH 05</span>
-        <span class="clip-badge type-reference">참고</span>
+<div class="clip-overview">오늘 수업에서 API 키를 깊게 쓰지는 않지만, 이후 AI Studio 앱을 내려받아 실행하거나 API 기반 실습으로 넘어갈 때를 위해 발급 위치와 보관 원칙만 간단하게 정리한다.</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">현재 UI 기준 발급 위치</div>
+  <div class="clip-section-content">
+    <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,0.85fr);gap:18px;align-items:start">
+      <div style="border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--bg-white)">
+        <img src="/assets/aistudio/ch04/aistudio-api-keys-header.png" alt="Google AI Studio API keys 상단 헤더" style="width:100%;display:block" loading="lazy">
+        <div style="padding:12px 14px;background:var(--bg-offwhite);font-size:0.8rem;line-height:1.6;color:var(--text-secondary)">현재 AI Studio에서는 <strong>Dashboard &gt; API 키</strong> 화면 상단에서 <strong>API 키 만들기</strong>로 진입한다. 키 목록 전체는 개인 정보가 섞일 수 있으므로 수업 자료에는 상단 안내 영역만 넣었다.</div>
       </div>
-      <h1 class="clip-title">유료 <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> KEY 발급</h1>
-    </div>
-    
-    <div class="clip-overview">GCP 무료 크레딧과 연동하여 유료 <span class="glossary-term">Gemini<span class="glossary-tooltip"><strong>Gemini</strong><br>Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요.</span></span> <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키를 발급받는 과정입니다. 사전 준비가 완료되지 않은 경우 아래 영상을 참고하세요.</div>
-
-<div class="clip-section">
-  <div class="clip-section-title">영상 가이드</div>
-  <div class="clip-section-content">
-    <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:var(--radius);overflow:hidden;margin-bottom:16px">
-      <iframe src="https://www.youtube.com/embed/5Mh1XlUJawQ" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen="" loading="lazy"></iframe>
-    </div>
-    <p style="font-size:0.8rem;color:var(--text-muted);text-align:center">GCP 가입부터 <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 발급까지 전체 과정 영상</p>
-  </div>
-</div>
-
-<!-- Step 1: API 키 메뉴 선택 -->
-<div class="clip-section">
-  <div class="clip-section-title">Step 1. <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 메뉴 선택</div>
-  <div class="clip-section-content">
-    <p style="font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px">화면 좌측 메뉴 중 열쇠 모양 아이콘, 혹은 <strong>[Get <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> key]</strong> 버튼을 클릭합니다.</p>
-    <div style="margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
-      <img src="https://i.imghippo.com/files/vIw6736YOs.jpg" alt="Get API key 메뉴 화면" style="width:100%;display:block" loading="lazy">
-      <p style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)">좌측 사이드바 메뉴의 'Get <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> key' 클릭</p>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:18px;padding:18px">
+        <div style="font-size:0.8rem;font-weight:800;color:var(--brand);margin-bottom:10px">Quick Path</div>
+        <ol style="margin:0;padding-left:20px;line-height:1.8;color:var(--text-body);font-size:0.85rem">
+          <li><a href="https://aistudio.google.com/prompts/new_chat" target="_blank">aistudio.google.com</a>에 로그인한다.</li>
+          <li>좌측 하단 또는 상단 메뉴의 <strong>Get API key</strong>로 이동한다.</li>
+          <li><strong>API 키 만들기</strong>를 눌러 연결할 프로젝트를 선택한다.</li>
+          <li>발급된 키는 복사만 하고, 코드에는 직접 쓰지 말고 환경 변수로 넣는다.</li>
+        </ol>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Step 2: API 키 생성 및 프로젝트 연결 -->
 <div class="clip-section">
-  <div class="clip-section-title">Step 2. <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 생성 및 프로젝트 연결</div>
+  <div class="clip-section-title">발급 후 바로 지켜야 할 규칙</div>
   <div class="clip-section-content">
-    <p style="font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px"><strong>[<span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 만들기]</strong> 버튼을 누른 뒤, 반드시 <strong>기존 프로젝트 연결</strong>을 선택해야 합니다.</p>
-    <ul style="font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px">
-      <li><strong>옵션 선택:</strong> [프로젝트 가져오기]</li>
-      <li><strong>프로젝트 선택:</strong> My First Project (GCP 가입 시 생성된 프로젝트)</li>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">1. 코드에 직접 넣지 않기</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">키를 소스 코드나 슬라이드에 그대로 적으면 유출 위험이 커진다. 문서 공유 전에는 항상 제거한다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">2. 환경 변수로 분리</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">보통은 <code>GEMINI_API_KEY</code>처럼 운영체제 환경 변수나 `.env` 파일로 연결해 앱과 비밀값을 분리한다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">3. 프로젝트와 함께 관리</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">같은 키라도 어느 프로젝트에 연결했는지에 따라 quota, billing, 접근 가능한 기능이 달라질 수 있다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">4. 유출 시 즉시 폐기</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">메신저나 공개 저장소에 노출됐다면 기존 키는 폐기하고 새 키를 발급받는 것이 원칙이다.</div>
+      </div>
+    </div>
+    <div class="tip-block" style="margin-top:16px">
+      <div class="tip-block-title">예시 연결 방식</div>
+      <div class="tip-block-content">
+        로컬에서 앱을 실행할 때는 보통 아래처럼 환경 변수로 넣는다.
+        <pre style="margin:12px 0 0;padding:14px;border-radius:14px;background:#0f172a;color:#e2e8f0;overflow:auto"><code>GEMINI_API_KEY=your_api_key_here</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">오늘 수업에서는 여기까지만</div>
+  <div class="clip-section-content">
+    <p style="margin:0 0 12px;font-size:0.88rem;line-height:1.8;color:var(--text-body)">오늘은 API 키를 여러 번 쓰는 실습을 진행하지 않는다. 대신 아래 두 가지만 기억하면 충분하다.</p>
+    <ul style="margin:0;padding-left:20px;line-height:1.8;color:var(--text-body);font-size:0.85rem">
+      <li>AI Studio Build 앱을 나중에 로컬이나 사내 환경에서 실행하려면 결국 API key 연결이 필요하다.</li>
+      <li>키는 기술 설정이면서 동시에 비용, 보안, 운영 정책의 출발점이다.</li>
     </ul>
-    <div class="tip-block warning" style="margin-top:12px;margin-bottom:16px">
-      <div class="tip-block-title">주의</div>
-      <div class="tip-block-content">'새 프로젝트에 <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 만들기'를 누르면 무료 크레딧이 연동되지 않을 수 있습니다. 반드시 <strong>[프로젝트 가져오기]</strong>를 선택하세요.</div>
-    </div>
-    <div style="margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
-      <img src="https://i.imghippo.com/files/OOGZ3739pgs.jpg" alt="프로젝트 가져오기 화면" style="width:100%;display:block" loading="lazy">
-      <p style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)">'프로젝트 가져오기' 버튼 클릭</p>
-    </div>
-    <div style="margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
-      <img src="https://i.imghippo.com/files/OEj7928OE.jpg" alt="프로젝트 선택 화면" style="width:100%;display:block" loading="lazy">
-      <p style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)">드롭다운에서 My First Project 선택</p>
-    </div>
   </div>
 </div>
 
-<!-- Step 3: 키 복사 및 보관 -->
-<div class="clip-section">
-  <div class="clip-section-title">Step 3. 키 복사 및 보관</div>
-  <div class="clip-section-content">
-    <p style="font-size:0.9rem;line-height:1.8;color:var(--text-body);margin-bottom:12px">잠시 로딩 후 생성된 <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키가 목록에 나타납니다.</p>
-    <ul style="font-size:0.9rem;line-height:1.8;color:var(--text-body);padding-left:20px;margin-bottom:12px">
-      <li>생성된 키 옆의 <strong>[Copy]</strong> 버튼을 눌러 메모장 등에 복사해 둡니다</li>
-      <li><strong>실습 당일 이 키가 없으면 진행이 불가능</strong>하니 꼭 저장해 주세요</li>
-    </ul>
-    <div style="margin:16px 0;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
-      <img src="https://i.imghippo.com/files/bKuk5007cjU.jpg" alt="API 키 리스트 화면" style="width:100%;display:block" loading="lazy">
-      <p style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-offwhite);border-top:1px solid var(--border)"><span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 생성 완료 (리스트 및 복사 아이콘)</p>
-    </div>
-  </div>
+<div class="clip-nav-footer">
+  <a class="clip-nav-btn" href="#ch05-clip01">
+    ← LLM 앱과 API의 동작 원리
+  </a>
+  <a class="clip-nav-btn" href="#ch06-clip01">
+    바이브 코딩이란 →
+  </a>
 </div>
-
-<div class="tip-block">
-  <div class="tip-block-title"><span class="glossary-term">API Key<span class="glossary-tooltip"><strong>API Key</strong><br>API를 사용하기 위한 출입증이에요. 이 키가 있어야 AI 서비스에 접속할 수 있고, 사용량 추적과 요금 정산에도 활용됩니다.</span></span> 보안 주의</div>
-  <div class="tip-block-content"><span class="glossary-term">API Key<span class="glossary-tooltip"><strong>API Key</strong><br>API를 사용하기 위한 출입증이에요. 이 키가 있어야 AI 서비스에 접속할 수 있고, 사용량 추적과 요금 정산에도 활용됩니다.</span></span>는 비밀번호와 같습니다. <strong>이메일, 메신저, 공개 문서에 절대 공유하지 마세요.</strong> 키가 유출되면 타인이 본인의 크레딧을 사용할 수 있습니다.</div>
-</div>
-    <div class="clip-nav-footer">
-      <a class="clip-nav-btn " href="#ch05-clip01">
-        ← Google AI Studio 설정
-      </a>
-      <a class="clip-nav-btn " href="#ch06-clip01">
-        바이브 코딩이란 →
-      </a>
-    </div>
-  

@@ -219,13 +219,13 @@
     {
       "chapterId": "ch05",
       "chapterNum": "CH 05",
-      "title": "환경 설정",
+      "title": "AI Studio와 API 이해",
       "time": "13:45",
       "clips": [
         {
           "route": "#ch05-clip01",
-          "title": "Google AI Studio 설정",
-          "type": "플랫폼",
+          "title": "LLM 앱과 API의 동작 원리",
+          "type": "개념",
           "folder": "chapters/CH05/ch05-clip01",
           "linkCount": 4,
           "imageCount": 7,
@@ -234,8 +234,8 @@
         },
         {
           "route": "#ch05-clip02",
-          "title": "유료 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. KEY 발급",
-          "type": "참고",
+          "title": "Google AI Studio API 키 발급",
+          "type": "설정",
           "folder": "chapters/CH05/ch05-clip02",
           "linkCount": 2,
           "imageCount": 4,
@@ -256,49 +256,29 @@
           "type": "개념",
           "folder": "chapters/CH06/ch06-clip01",
           "linkCount": 2,
-          "imageCount": 0,
-          "sectionCount": 1,
+          "imageCount": 1,
+          "sectionCount": 3,
           "promptCount": 0
         },
         {
           "route": "#ch06-clip02",
-          "title": "AI Studio 파라미터 이해",
-          "type": "개념",
+          "title": "Google AI Studio Build 시작하기",
+          "type": "실습",
           "folder": "chapters/CH06/ch06-clip02",
-          "linkCount": 3,
-          "imageCount": 1,
-          "sectionCount": 1,
+          "linkCount": 5,
+          "imageCount": 4,
+          "sectionCount": 4,
           "promptCount": 0
         },
         {
           "route": "#ch06-clip03",
-          "title": "파라미터 직접 체험",
+          "title": "실습 워크숍: 경쟁사 리서치 대시보드",
           "type": "실습",
           "folder": "chapters/CH06/ch06-clip03",
-          "linkCount": 3,
-          "imageCount": 0,
-          "sectionCount": 1,
-          "promptCount": 1
-        },
-        {
-          "route": "#ch06-clip04",
-          "title": "외부 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동",
-          "type": "참고",
-          "folder": "chapters/CH06/ch06-clip04",
-          "linkCount": 2,
-          "imageCount": 0,
-          "sectionCount": 2,
-          "promptCount": 0
-        },
-        {
-          "route": "#ch06-clip05",
-          "title": "실습 시트: 앱 만들기",
-          "type": "실습",
-          "folder": "chapters/CH06/ch06-clip05",
-          "linkCount": 3,
+          "linkCount": 9,
           "imageCount": 0,
           "sectionCount": 5,
-          "promptCount": 8
+          "promptCount": 5
         }
       ]
     },
@@ -414,6 +394,16 @@
           "linkCount": 4,
           "imageCount": 0,
           "sectionCount": 2,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch08-clip06",
+          "title": "웹 스타일 프롬프트 가이드",
+          "type": "참고",
+          "folder": "chapters/CH08/ch08-clip06",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 1,
           "promptCount": 0
         },
         {
@@ -685,7 +675,7 @@
     {
       "chapterId": "ch05",
       "route": "#ch05-clip01",
-      "title": "Google AI Studio 설정",
+      "title": "LLM 앱과 API의 동작 원리",
       "folder": "chapters/CH05/ch05-clip01",
       "textLength": 1328,
       "htmlLength": 9182,
@@ -697,7 +687,7 @@
     {
       "chapterId": "ch05",
       "route": "#ch05-clip02",
-      "title": "유료 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. KEY 발급",
+      "title": "Google AI Studio API 키 발급",
       "folder": "chapters/CH05/ch05-clip02",
       "textLength": 789,
       "htmlLength": 7265,
@@ -711,59 +701,35 @@
       "route": "#ch06-clip01",
       "title": "바이브 코딩이란",
       "folder": "chapters/CH06/ch06-clip01",
-      "textLength": 643,
-      "htmlLength": 2857,
-      "sectionCount": 1,
+      "textLength": 820,
+      "htmlLength": 5280,
+      "sectionCount": 3,
       "promptCount": 0,
       "linkCount": 2,
-      "imageCount": 0
-    },
-    {
-      "chapterId": "ch06",
-      "route": "#ch06-clip02",
-      "title": "AI Studio 파라미터 이해",
-      "folder": "chapters/CH06/ch06-clip02",
-      "textLength": 968,
-      "htmlLength": 5081,
-      "sectionCount": 1,
-      "promptCount": 0,
-      "linkCount": 3,
       "imageCount": 1
     },
     {
       "chapterId": "ch06",
-      "route": "#ch06-clip03",
-      "title": "파라미터 직접 체험",
-      "folder": "chapters/CH06/ch06-clip03",
-      "textLength": 704,
-      "htmlLength": 4767,
-      "sectionCount": 1,
-      "promptCount": 1,
-      "linkCount": 3,
-      "imageCount": 0
-    },
-    {
-      "chapterId": "ch06",
-      "route": "#ch06-clip04",
-      "title": "외부 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동",
-      "folder": "chapters/CH06/ch06-clip04",
-      "textLength": 792,
-      "htmlLength": 4026,
-      "sectionCount": 2,
+      "route": "#ch06-clip02",
+      "title": "Google AI Studio Build 시작하기",
+      "folder": "chapters/CH06/ch06-clip02",
+      "textLength": 1510,
+      "htmlLength": 9050,
+      "sectionCount": 4,
       "promptCount": 0,
-      "linkCount": 2,
-      "imageCount": 0
+      "linkCount": 5,
+      "imageCount": 4
     },
     {
       "chapterId": "ch06",
-      "route": "#ch06-clip05",
-      "title": "실습 시트: 앱 만들기",
-      "folder": "chapters/CH06/ch06-clip05",
-      "textLength": 2962,
-      "htmlLength": 12314,
+      "route": "#ch06-clip03",
+      "title": "실습 워크숍: 경쟁사 리서치 대시보드",
+      "folder": "chapters/CH06/ch06-clip03",
+      "textLength": 1910,
+      "htmlLength": 9150,
       "sectionCount": 5,
-      "promptCount": 8,
-      "linkCount": 3,
+      "promptCount": 5,
+      "linkCount": 9,
       "imageCount": 0
     },
     {
@@ -884,6 +850,18 @@
       "sectionCount": 2,
       "promptCount": 0,
       "linkCount": 4,
+      "imageCount": 0
+    },
+    {
+      "chapterId": "ch08",
+      "route": "#ch08-clip06",
+      "title": "웹 스타일 프롬프트 가이드",
+      "folder": "chapters/CH08/ch08-clip06",
+      "textLength": 0,
+      "htmlLength": 0,
+      "sectionCount": 1,
+      "promptCount": 0,
+      "linkCount": 2,
       "imageCount": 0
     },
     {

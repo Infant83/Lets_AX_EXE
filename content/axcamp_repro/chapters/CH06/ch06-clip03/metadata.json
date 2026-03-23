@@ -2,28 +2,12 @@
   "route": "#ch06-clip03",
   "url": "https://lg.cmdspace.work/axcamp#ch06-clip03",
   "pageTitle": "AX Camp for Leaders | LG",
-  "clipTitle": "파라미터 직접 체험",
-  "overview": "TemperatureTemperatureAI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!와 Top-KTop-KAI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.를 직접 조절하며 AI 응답 변화를 체험합니다. (5~10분)",
+  "clipTitle": "실습 워크숍: 경쟁사 리서치 대시보드",
+  "overview": "Gems로 앱 프롬프트 초안을 만들고, 필요하면 XML 구조화까지 보조받은 뒤, AI Studio Build에서 경쟁사 리서치 대시보드를 생성·refinement·브랜딩·API 확장하는 흐름을 실습한다.",
   "badges": [
+    "~50분",
     "CH 06",
     "실습"
-  ],
-  "html": "\n    <div class=\"clip-header\">\n      <div class=\"clip-badges\">\n        \n        <span class=\"clip-badge chapter\">CH 06</span>\n        <span class=\"clip-badge type-practice\">실습</span>\n      </div>\n      <h1 class=\"clip-title\">파라미터 직접 체험</h1>\n    </div>\n    \n    <div class=\"practice-shortcut-bar\">\n      <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" data-lucide=\"library\" aria-hidden=\"true\" style=\"width:15px;height:15px;flex-shrink:0;\" class=\"lucide lucide-library\"><path d=\"m16 6 4 14\"></path><path d=\"M12 6v14\"></path><path d=\"M8 8v12\"></path><path d=\"M4 4v16\"></path></svg>\n      <span class=\"practice-shortcut-text\">실습용 파일이 필요하신가요?</span>\n      <a href=\"#ch08-clip04\" target=\"_blank\" class=\"practice-shortcut-link\">\n        참고자료 라이브러리 › 실습용 컨텍스트 파일\n        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" data-lucide=\"chevron-right\" aria-hidden=\"true\" style=\"width:13px;height:13px;\" class=\"lucide lucide-chevron-right\"><path d=\"m9 18 6-6-6-6\"></path></svg>\n      </a>\n    </div>\n    <div class=\"clip-overview\"><span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span>와 <span class=\"glossary-term\">Top-K<span class=\"glossary-tooltip\"><strong>Top-K</strong><br>AI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.</span></span>를 직접 조절하며 AI 응답 변화를 체험합니다. (5~10분)</div>\n<div style=\"background:var(--brand-light);border-left:3px solid var(--brand);border-radius:12px;padding:20px 24px;margin-bottom:24px\">\n  <div style=\"font-weight:700;font-size:1rem;margin-bottom:12px\">이 실습에서는</div>\n  <div style=\"font-size:0.85rem;line-height:1.8;color:var(--text)\">\n    • AI Studio Chat 모드에서 파라미터를 직접 조절해봅니다<br>\n    • <span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span>와 <span class=\"glossary-term\">Top-K<span class=\"glossary-tooltip\"><strong>Top-K</strong><br>AI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.</span></span> 값 변경에 따른 응답 차이를 직접 확인합니다<br>\n    • Build 모드 진입 전, AI Studio 인터페이스에 익숙해집니다\n  </div>\n</div>\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">파라미터 체험 실습</div>\n  <div class=\"clip-section-content\">\n    <ul>\n      <li><strong>Step 1:</strong> AI Studio 접속 → Chat 모드 선택</li>\n      <li><strong>Step 2:</strong> 우측 설정 패널에서 <strong><span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span></strong> 슬라이더 확인</li>\n      <li><strong>Step 3:</strong> 같은 질문을 <span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span> 0.2 / 1.0 / 1.8로 각각 입력하여 결과 비교</li>\n      <li><strong>Step 4:</strong> <strong><span class=\"glossary-term\">Top-K<span class=\"glossary-tooltip\"><strong>Top-K</strong><br>AI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.</span></span></strong> 값을 1 / 20 / 40으로 변경하며 결과 비교</li>\n    </ul>\n  </div>\n  <div class=\"prompt-block\" style=\"margin-top:16px\">\n    <div class=\"prompt-header\"><span class=\"prompt-label\">파라미터 테스트용 프롬프트</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'param-test')\">복사</button></div>\n    <div class=\"prompt-content\" id=\"param-test\">LG그룹의 2026년 AI 전환 전략을 3가지 키워드로 요약해줘.</div>\n  </div>\n  <div class=\"tip-block\" style=\"margin-top:16px\">\n    <div class=\"tip-block-title\">실습 팁</div>\n    <div class=\"tip-block-content\">각 파라미터 값에서의 결과를 비교해보세요. <span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span>와 <span class=\"glossary-term\">Top-K<span class=\"glossary-tooltip\"><strong>Top-K</strong><br>AI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.</span></span>의 개념이 궁금하다면 이전 클립의 비교표를 참고하세요.</div>\n  </div>\n</div>\n    <div class=\"clip-nav-footer\">\n      <a class=\"clip-nav-btn \" href=\"#ch06-clip02\">\n        ← AI Studio 파라미터 이해\n      </a>\n      <a class=\"clip-nav-btn \" href=\"#ch06-clip04\">\n        외부 API 연동 →\n      </a>\n    </div>\n  ",
-  "text": "CH 06\n실습\n파라미터 직접 체험\n실습용 파일이 필요하신가요?\n참고자료 라이브러리 › 실습용 컨텍스트 파일\nTemperature와 Top-K를 직접 조절하며 AI 응답 변화를 체험합니다. (5~10분)\n이 실습에서는\n• AI Studio Chat 모드에서 파라미터를 직접 조절해봅니다\n• Temperature와 Top-K 값 변경에 따른 응답 차이를 직접 확인합니다\n• Build 모드 진입 전, AI Studio 인터페이스에 익숙해집니다\n파라미터 체험 실습\nStep 1: AI Studio 접속 → Chat 모드 선택\nStep 2: 우측 설정 패널에서 Temperature\nTemperature\nAI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!\n 슬라이더 확인\nStep 3: 같은 질문을 Temperature 0.2 / 1.0 / 1.8로 각각 입력하여 결과 비교\nStep 4: Top-K 값을 1 / 20 / 40으로 변경하며 결과 비교\n파라미터 테스트용 프롬프트\n복사\nLG그룹의 2026년 AI 전환 전략을 3가지 키워드로 요약해줘.\n실습 팁\n각 파라미터 값에서의 결과를 비교해보세요. Temperature와 Top-K의 개념이 궁금하다면 이전 클립의 비교표를 참고하세요.\n← AI Studio 파라미터 이해\n외부 API 연동 →",
-  "sections": [
-    {
-      "index": 1,
-      "title": "파라미터 체험 실습",
-      "text": "파라미터 체험 실습 Step 1: AI Studio 접속 → Chat 모드 선택 Step 2: 우측 설정 패널에서 Temperature Temperature AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게! 슬라이더 확인 Step 3: 같은 질문을 Temperature 0.2 / 1.0 / 1.8로 각각 입력하여 결과 비교 Step 4: Top-K 값을 1 / 20 / 40으로 변경하며 결과 비교 파라미터 테스트용 프롬프트 복사 LG그룹의 2026년 AI 전환 전략을 3가지 키워드로 요약해줘. 실습 팁 각 파라미터 값에서의 결과를 비교해보세요. Temperature와 Top-K의 개념이 궁금하다면 이전 클립의 비교표를 참고하세요.",
-      "html": "\n  <div class=\"clip-section-title\">파라미터 체험 실습</div>\n  <div class=\"clip-section-content\">\n    <ul>\n      <li><strong>Step 1:</strong> AI Studio 접속 → Chat 모드 선택</li>\n      <li><strong>Step 2:</strong> 우측 설정 패널에서 <strong><span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span></strong> 슬라이더 확인</li>\n      <li><strong>Step 3:</strong> 같은 질문을 <span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span> 0.2 / 1.0 / 1.8로 각각 입력하여 결과 비교</li>\n      <li><strong>Step 4:</strong> <strong><span class=\"glossary-term\">Top-K<span class=\"glossary-tooltip\"><strong>Top-K</strong><br>AI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.</span></span></strong> 값을 1 / 20 / 40으로 변경하며 결과 비교</li>\n    </ul>\n  </div>\n  <div class=\"prompt-block\" style=\"margin-top:16px\">\n    <div class=\"prompt-header\"><span class=\"prompt-label\">파라미터 테스트용 프롬프트</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'param-test')\">복사</button></div>\n    <div class=\"prompt-content\" id=\"param-test\">LG그룹의 2026년 AI 전환 전략을 3가지 키워드로 요약해줘.</div>\n  </div>\n  <div class=\"tip-block\" style=\"margin-top:16px\">\n    <div class=\"tip-block-title\">실습 팁</div>\n    <div class=\"tip-block-content\">각 파라미터 값에서의 결과를 비교해보세요. <span class=\"glossary-term\">Temperature<span class=\"glossary-tooltip\"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span>와 <span class=\"glossary-term\">Top-K<span class=\"glossary-tooltip\"><strong>Top-K</strong><br>AI가 다음 단어를 고를 때 후보 수를 정하는 설정이에요. 1이면 가장 확실한 단어 하나만, 40이면 다양한 표현 중에서 골라서 더 풍부한 문장을 만듭니다.</span></span>의 개념이 궁금하다면 이전 클립의 비교표를 참고하세요.</div>\n  </div>\n"
-    }
-  ],
-  "prompts": [
-    {
-      "index": 1,
-      "label": "파라미터 테스트용 프롬프트",
-      "content": "LG그룹의 2026년 AI 전환 전략을 3가지 키워드로 요약해줘."
-    }
   ],
   "links": [
     {
@@ -34,14 +18,14 @@
     {
       "href": "#ch06-clip02",
       "absolute": "https://lg.cmdspace.work/axcamp#ch06-clip02",
-      "text": "← AI Studio 파라미터 이해"
+      "text": "← Google AI Studio Build 시작하기"
     },
     {
-      "href": "#ch06-clip04",
-      "absolute": "https://lg.cmdspace.work/axcamp#ch06-clip04",
-      "text": "외부 API 연동 →"
+      "href": "#ch07-clip01",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch07-clip01",
+      "text": "에이전틱 AI란 →"
     }
   ],
-  "images": [],
-  "iframes": []
+  "prompts": [],
+  "sections": []
 }

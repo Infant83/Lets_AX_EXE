@@ -1,6 +1,8 @@
 const STORAGE_SESSION_KEY = "ax_literacy_session_token";
 const STORAGE_LAST_ID_KEY = "ax_literacy_last_lets_id";
 const STORAGE_COURSE_CODE_KEY = "ax_literacy_course_code";
+const AX_TASK_BOARD_URL =
+  "https://miro.com/welcomeonboard/L0kvb0JlVFVoUzBMbEoxQ2Qwb1pPMm5lczhOc0tpcGFOcGlBLy9sa3ZFYlczR2k3ekg4VDdLVGVKUVdTUTdmQUUvYUQwRzdlZFAraTRYYkxPRCsvU1RCditNWlFPbGdYZzQvYjh5RkN2UVYvMEhLY05PV2FQL0lGV3hnRHlUa3hhWWluRVAxeXRuUUgwWDl3Mk1qRGVRPT0hdjE=?share_link_id=111023574955";
 
 const state = {
   accountId: "",
@@ -250,14 +252,15 @@ function showPasswordHelpMode() {
 }
 
 function updateSidePanelUI() {
-  const open = state.taskPanelOpen || state.notePanelOpen;
+  state.taskPanelOpen = false;
+  const open = state.notePanelOpen;
   el.layout.classList.toggle("with-task-panel", open);
   el.layout.classList.toggle("no-task-panel", !open);
 
-  el.taskPanel.classList.toggle("collapsed", !state.taskPanelOpen);
+  el.taskPanel.classList.add("collapsed");
   el.notePanel.classList.toggle("collapsed", !state.notePanelOpen);
 
-  el.toggleTaskBtn.textContent = state.taskPanelOpen ? "AX 과제 닫기" : "AX 과제 펼치기";
+  el.toggleTaskBtn.textContent = "Miro.공유하기";
   el.toggleNoteBtn.textContent = state.notePanelOpen ? "메모 닫기" : "메모 펼치기";
 }
 
@@ -420,7 +423,10 @@ const SLIDE_DECK_BUILDERS = {
   "business-prompting-workshop": buildBusinessPromptingWorkshopDeck,
   "gemini-gems-roadshow": buildGeminiGemsRoadshowDeck,
   "ciqo-executive-briefing": buildCiqoExecutiveBriefingDeck,
-  "enterprise-research-workflow": buildEnterpriseResearchWorkflowDeck
+  "enterprise-research-workflow": buildEnterpriseResearchWorkflowDeck,
+  "ai-studio-api-principles": buildAiStudioApiPrinciplesDeck,
+  "vibe-coding-shift": buildVibeCodingShiftDeck,
+  "executive-app-build-sprint": buildExecutiveAppBuildSprintDeck
 };
 
 function collectIndustryLandscapeStats() {
@@ -795,6 +801,155 @@ function buildEnterpriseResearchWorkflowDeck() {
   };
 }
 
+function buildAiStudioApiPrinciplesDeck() {
+  const basePath = "/assets/notebooklm/ch04-ai-studio-api-essentials";
+
+  return {
+    id: "ai-studio-api-principles",
+    kicker: "NotebookLM Slide Deck",
+    title: "AI API Essentials",
+    subtitle: "AI Studio Build 앱, API key, quota, billing 원리를 설명하는 6장 브리핑",
+    downloadUrl: `${basePath}/ai-api-essentials.pdf`,
+    downloadFilename: "ai-api-essentials.pdf",
+    downloadLabel: "다운로드",
+    slides: [
+      {
+        eyebrow: "01 / Architecture",
+        title: "AI Studio와 API의 연결 구조",
+        imageSrc: `${basePath}/slide-1.jpg`,
+        imageAlt:
+          "AI Studio와 API가 사용자 인터페이스를 원격 구글 제미나이 모델과 연결하는 구조를 설명하는 슬라이드"
+      },
+      {
+        eyebrow: "02 / Runtime Flow",
+        title: "사용자 입력에서 응답 반환까지의 흐름",
+        imageSrc: `${basePath}/slide-2.jpg`,
+        imageAlt:
+          "사용자 입력부터 구글 인프라의 모델 추론 및 결과 반환까지의 API 기반 앱 작동 흐름을 보여주는 슬라이드"
+      },
+      {
+        eyebrow: "03 / API Key",
+        title: "API key의 역할과 보관 원칙",
+        imageSrc: `${basePath}/slide-3.jpg`,
+        imageAlt:
+          "원격 모델 접속을 위한 디지털 출입증인 API key의 주요 역할과 보관 방법을 설명하는 슬라이드"
+      },
+      {
+        eyebrow: "04 / Cost & Quota",
+        title: "왜 비용과 quota가 생기는가",
+        imageSrc: `${basePath}/slide-4.jpg`,
+        imageAlt:
+          "LLM 서비스 이용 시 토큰 처리와 추론 연산 등 자원 소모가 비용과 쿼터 제한을 발생시킴을 설명하는 슬라이드"
+      },
+      {
+        eyebrow: "05 / Setup Checklist",
+        title: "배포 전 확인해야 할 설정",
+        imageSrc: `${basePath}/slide-5.jpg`,
+        imageAlt:
+          "앱 배포 전 설정해야 할 모델 선택, API key 인증, 데이터 보안, 사용량 통제 등 필수 요소를 안내하는 슬라이드"
+      },
+      {
+        eyebrow: "06 / Operating Principle",
+        title: "로컬 앱도 결국 클라우드 호출이다",
+        imageSrc: `${basePath}/slide-6.jpg`,
+        imageAlt:
+          "로컬 앱의 클라우드 의존성, API key의 필요성, 자원 소모에 따른 비용 관리의 중요성을 강조하는 슬라이드"
+      }
+    ]
+  };
+}
+
+function buildVibeCodingShiftDeck() {
+  const imagePath = "/assets/notebooklm/ch05-vibe-coding/vibe-coding-shift-infographic.png";
+
+  return {
+    id: "vibe-coding-shift",
+    previewStyle: "immersive",
+    kicker: "NotebookLM Infographic",
+    title: "바이브 코딩과 개발 패러다임 전환",
+    subtitle: "리더가 목표를 정의하고 AI가 초안을 만들며 대화로 완성도를 끌어올리는 흐름을 설명하는 인포그래픽",
+    downloadUrl: imagePath,
+    downloadFilename: "vibe-coding-shift-infographic.png",
+    downloadLabel: "다운로드",
+    slides: [
+      {
+        eyebrow: "01 / Infographic",
+        title: "아이디어에서 앱까지, 대화형 개발 루프",
+        imageSrc: imagePath,
+        imageAlt:
+          "바이브 코딩이 기존 개발과 어떻게 다른지, 사람과 AI의 역할 분담, 반복 피드백 루프를 설명하는 NotebookLM 인포그래픽"
+      }
+    ]
+  };
+}
+
+function buildExecutiveAppBuildSprintDeck() {
+  const basePath = "/assets/notebooklm/ch05-executive-app-build-sprint";
+
+  return {
+    id: "executive-app-build-sprint",
+    kicker: "NotebookLM Slide Deck",
+    title: "임원용 경쟁사 리서치 대시보드 구축 실습",
+    subtitle: "Gems로 초안 프롬프트를 만들고 AI Studio Build에서 경쟁사 리서치 대시보드를 생성·고도화·브랜딩·확장하는 흐름을 정리한 7장 deck",
+    downloadUrl: `${basePath}/executive-ai-dashboard-sprint.pdf`,
+    downloadFilename: "executive-ai-dashboard-sprint.pdf",
+    downloadLabel: "다운로드",
+    previewColumns: 3,
+    previewSlides: [
+      { slideIndex: 1, pageLabel: "1", eyebrow: "Step 0 / Gems", title: "Gems로 Build용 초안 프롬프트 만들기" },
+      { slideIndex: 2, pageLabel: "2", eyebrow: "Step 1 / Build", title: "리서치 대시보드 초안 생성" },
+      { slideIndex: 3, pageLabel: "3", eyebrow: "Step 2 / Refinement", title: "리서치 카드와 분석 흐름 고도화" },
+      { slideIndex: 4, pageLabel: "4", eyebrow: "Step 3 / Style", title: "LG 스타일과 웹 스타일 요청 적용" },
+      { slideIndex: 5, pageLabel: "5", eyebrow: "Step 4 / API", title: "외부 API로 데이터 소스 확장" },
+      { slideIndex: 6, pageLabel: "6", eyebrow: "Step 5 / Share", title: "공유 링크와 발표 준비 마무리" }
+    ],
+    slides: [
+      {
+        eyebrow: "00 / Workshop",
+        title: "임원용 경쟁사 리서치 대시보드 구축 실습",
+        imageSrc: `${basePath}/slide-1.jpg`,
+        imageAlt: "임원용 경쟁사 리서치 대시보드 구축 실습의 주제를 소개하는 NotebookLM 표지 슬라이드"
+      },
+      {
+        eyebrow: "01 / Gems",
+        title: "Gems로 Build용 초안 프롬프트 만들기",
+        imageSrc: `${basePath}/slide-2.jpg`,
+        imageAlt: "Gems를 활용해 실습용 Build 초안 프롬프트를 만드는 흐름을 설명하는 NotebookLM 슬라이드"
+      },
+      {
+        eyebrow: "02 / Build",
+        title: "리서치 대시보드 초안 생성",
+        imageSrc: `${basePath}/slide-3.jpg`,
+        imageAlt: "경쟁사 리서치 대시보드의 첫 React 초안을 생성하는 과정을 정리한 슬라이드"
+      },
+      {
+        eyebrow: "03 / Refinement",
+        title: "리서치 카드와 분석 흐름 고도화",
+        imageSrc: `${basePath}/slide-4.jpg`,
+        imageAlt: "검색 결과 카드와 분석 흐름을 refinement하는 프롬프트 과정을 설명하는 슬라이드"
+      },
+      {
+        eyebrow: "04 / Style",
+        title: "LG 스타일과 웹 스타일 요청 적용",
+        imageSrc: `${basePath}/slide-5.jpg`,
+        imageAlt: "LG 스타일과 웹 스타일 프롬프트를 적용해 화면 위계를 정리하는 슬라이드"
+      },
+      {
+        eyebrow: "05 / API",
+        title: "외부 API로 데이터 소스 확장",
+        imageSrc: `${basePath}/slide-6.jpg`,
+        imageAlt: "Firecrawl 같은 외부 API를 붙여 데이터 수집 범위를 넓히는 실습 확장 흐름을 보여주는 슬라이드"
+      },
+      {
+        eyebrow: "06 / Share",
+        title: "공유 링크와 발표 준비 마무리",
+        imageSrc: `${basePath}/slide-7.jpg`,
+        imageAlt: "완성한 앱을 공유하고 발표 가능한 상태로 마무리하는 과정을 정리한 슬라이드"
+      }
+    ]
+  };
+}
+
 function populateSlideDeckDownloadLinks() {
   el.clipBody.querySelectorAll("[data-slide-deck-download]").forEach((anchor) => {
     const deckId = normalizeWs(anchor.dataset.slideDeckDownload || "");
@@ -837,6 +992,50 @@ function renderSlideSources(sources) {
     .join("");
 }
 
+function buildDeckPreviewEntries(deck) {
+  if (Array.isArray(deck.previewSlides) && deck.previewSlides.length) {
+    return deck.previewSlides
+      .map((entry, previewIndex) => {
+        if (typeof entry === "number") {
+          const slide = deck.slides[entry];
+          if (!slide) return null;
+          return {
+            slide,
+            slideIndex: entry,
+            pageLabel: `${previewIndex + 1}`,
+            title: slide.title,
+            eyebrow: slide.eyebrow,
+            imageAlt: slide.imageAlt
+          };
+        }
+
+        if (!entry || typeof entry !== "object") return null;
+        const slideIndex = Number.isInteger(entry.slideIndex) ? entry.slideIndex : previewIndex;
+        const slide = deck.slides[slideIndex];
+        if (!slide) return null;
+
+        return {
+          slide,
+          slideIndex,
+          pageLabel: entry.pageLabel || `${previewIndex + 1}`,
+          title: entry.title || slide.title,
+          eyebrow: entry.eyebrow || slide.eyebrow,
+          imageAlt: entry.imageAlt || slide.imageAlt
+        };
+      })
+      .filter(Boolean);
+  }
+
+  return deck.slides.map((slide, index) => ({
+    slide,
+    slideIndex: index,
+    pageLabel: `${index + 1}`,
+    title: slide.title,
+    eyebrow: slide.eyebrow,
+    imageAlt: slide.imageAlt
+  }));
+}
+
 function renderSlideDeckPreviews() {
   el.clipBody.querySelectorAll("[data-slide-deck-preview]").forEach((container) => {
     const deckId = normalizeWs(container.dataset.slideDeckPreview || "");
@@ -844,33 +1043,43 @@ function renderSlideDeckPreviews() {
     if (!deck) {
       container.classList.remove("single-slide");
       container.classList.remove("immersive-preview");
+      container.classList.remove("has-fixed-columns");
+      container.style.removeProperty("--slide-preview-columns");
       container.innerHTML = "";
       return;
     }
 
-    const isSingleSlide = deck.slides.length === 1;
+    const previewEntries = buildDeckPreviewEntries(deck);
+    const isSingleSlide = previewEntries.length === 1;
     const isImmersivePreview = isSingleSlide && deck.previewStyle === "immersive";
 
     container.classList.toggle("single-slide", isSingleSlide);
     container.classList.toggle("immersive-preview", isImmersivePreview);
+    container.classList.toggle("has-fixed-columns", Number(deck.previewColumns) > 0);
+    if (Number(deck.previewColumns) > 0) {
+      container.style.setProperty("--slide-preview-columns", String(deck.previewColumns));
+    } else {
+      container.style.removeProperty("--slide-preview-columns");
+    }
 
-    container.innerHTML = deck.slides
-      .map((slide, index) => {
+    container.innerHTML = previewEntries
+      .map((entry, index) => {
+        const slide = entry.slide;
         if (isImmersivePreview) {
           return `
             <button
               type="button"
               class="slide-preview-card slide-preview-card-wide slide-preview-card-immersive"
               data-slide-deck-card="${escapeHtml(deckId)}"
-              data-slide-index="${index}"
-              aria-label="${escapeHtml(slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
+              data-slide-index="${entry.slideIndex}"
+              aria-label="${escapeHtml(entry.title || slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
             >
-              <span class="slide-preview-page">${index + 1}</span>
+              <span class="slide-preview-page">${escapeHtml(entry.pageLabel)}</span>
               <div class="slide-preview-image-frame">
                 <img
                   class="slide-preview-image"
                   src="${escapeHtml(slide.imageSrc || "")}"
-                  alt="${escapeHtml(slide.imageAlt || slide.title || `슬라이드 ${index + 1}`)}"
+                  alt="${escapeHtml(entry.imageAlt || entry.title || slide.title || `슬라이드 ${index + 1}`)}"
                   loading="lazy"
                 />
               </div>
@@ -884,21 +1093,21 @@ function renderSlideDeckPreviews() {
             type="button"
             class="slide-preview-card${isSingleSlide ? " slide-preview-card-wide" : ""}"
             data-slide-deck-card="${escapeHtml(deckId)}"
-            data-slide-index="${index}"
-            aria-label="${escapeHtml(slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
+            data-slide-index="${entry.slideIndex}"
+            aria-label="${escapeHtml(entry.title || slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
           >
-            <span class="slide-preview-page">${index + 1}</span>
+            <span class="slide-preview-page">${escapeHtml(entry.pageLabel)}</span>
             <div class="slide-preview-image-frame">
               <img
                 class="slide-preview-image"
                 src="${escapeHtml(slide.imageSrc || "")}"
-                alt="${escapeHtml(slide.imageAlt || slide.title || `슬라이드 ${index + 1}`)}"
+                alt="${escapeHtml(entry.imageAlt || entry.title || slide.title || `슬라이드 ${index + 1}`)}"
                 loading="lazy"
               />
             </div>
             <div class="slide-preview-meta">
-              <span class="slide-preview-eyebrow">${escapeHtml(slide.eyebrow || `Slide ${index + 1}`)}</span>
-              <strong class="slide-preview-title">${escapeHtml(slide.title || "")}</strong>
+              <span class="slide-preview-eyebrow">${escapeHtml(entry.eyebrow || `Slide ${index + 1}`)}</span>
+              <strong class="slide-preview-title">${escapeHtml(entry.title || "")}</strong>
               <span class="slide-preview-cta">클릭해서 확대</span>
             </div>
           </button>
@@ -2091,18 +2300,9 @@ async function onToggleComplete() {
 }
 
 function onToggleTaskPanel() {
-  const willOpen = !state.taskPanelOpen;
-  state.taskPanelOpen = willOpen;
-  if (willOpen) {
-    state.notePanelOpen = false;
-  }
+  state.taskPanelOpen = false;
   updateSidePanelUI();
-  if (state.taskPanelOpen) {
-    loadTaskForCurrentChapter().catch((error) => setTaskStatus(error.message, true));
-    if (state.isAdmin) {
-      loadAdminUsers().catch((error) => setAdminStatus(error.message, true));
-    }
-  }
+  window.open(AX_TASK_BOARD_URL, "_blank", "noopener,noreferrer");
 }
 
 function onToggleNotePanel() {
@@ -2344,6 +2544,46 @@ window.downloadFile = async function downloadFile(url, filename, event) {
   } catch {
     window.open(url, "_blank", "noopener,noreferrer");
   }
+};
+
+window.showAssetPreview = async function showAssetPreview(title, url) {
+  const panel = document.getElementById("practiceAssetPreviewPanel");
+  const titleEl = document.getElementById("practiceAssetPreviewTitle");
+  const bodyEl = document.getElementById("practiceAssetPreviewBody");
+  const downloadEl = document.getElementById("practiceAssetPreviewDownload");
+  if (!panel || !titleEl || !bodyEl || !downloadEl) return;
+
+  titleEl.textContent = normalizeWs(title) || "실습 파일";
+  bodyEl.textContent = "불러오는 중...";
+  downloadEl.href = url;
+  downloadEl.setAttribute("download", filenameFromUrl(url) || "");
+  panel.classList.remove("hidden");
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`preview failed (${response.status})`);
+    }
+    const text = await response.text();
+    bodyEl.textContent = text;
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch {
+    bodyEl.textContent = "미리보기를 불러오지 못했습니다. 다운로드 버튼으로 파일을 열어 확인해 주세요.";
+  }
+};
+
+window.hideAssetPreview = function hideAssetPreview() {
+  const panel = document.getElementById("practiceAssetPreviewPanel");
+  const bodyEl = document.getElementById("practiceAssetPreviewBody");
+  if (!panel || !bodyEl) return;
+  panel.classList.add("hidden");
+  bodyEl.textContent = "";
+};
+
+window.copyAssetPreview = async function copyAssetPreview(button) {
+  const bodyEl = document.getElementById("practiceAssetPreviewBody");
+  if (!bodyEl) return;
+  await copyTextWithUiFeedback(button, bodyEl.textContent || "");
 };
 
 window.filterNews = function filterNews(category, button) {

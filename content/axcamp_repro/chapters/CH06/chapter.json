@@ -10,49 +10,29 @@
       "type": "개념",
       "folder": "chapters/CH06/ch06-clip01",
       "linkCount": 2,
-      "imageCount": 0,
-      "sectionCount": 1,
+      "imageCount": 1,
+      "sectionCount": 3,
       "promptCount": 0
     },
     {
       "route": "#ch06-clip02",
-      "title": "AI Studio 파라미터 이해",
-      "type": "개념",
+      "title": "Google AI Studio Build 시작하기",
+      "type": "실습",
       "folder": "chapters/CH06/ch06-clip02",
-      "linkCount": 3,
-      "imageCount": 1,
-      "sectionCount": 1,
+      "linkCount": 5,
+      "imageCount": 4,
+      "sectionCount": 4,
       "promptCount": 0
     },
     {
       "route": "#ch06-clip03",
-      "title": "파라미터 직접 체험",
+      "title": "실습 워크숍: 경쟁사 리서치 대시보드",
       "type": "실습",
       "folder": "chapters/CH06/ch06-clip03",
-      "linkCount": 3,
-      "imageCount": 0,
-      "sectionCount": 1,
-      "promptCount": 1
-    },
-    {
-      "route": "#ch06-clip04",
-      "title": "외부 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동",
-      "type": "참고",
-      "folder": "chapters/CH06/ch06-clip04",
-      "linkCount": 2,
-      "imageCount": 0,
-      "sectionCount": 2,
-      "promptCount": 0
-    },
-    {
-      "route": "#ch06-clip05",
-      "title": "실습 시트: 앱 만들기",
-      "type": "실습",
-      "folder": "chapters/CH06/ch06-clip05",
-      "linkCount": 3,
+      "linkCount": 9,
       "imageCount": 0,
       "sectionCount": 5,
-      "promptCount": 8
+      "promptCount": 5
     }
   ]
 }
