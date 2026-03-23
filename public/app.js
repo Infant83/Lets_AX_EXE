@@ -115,6 +115,7 @@ const state = {
   editorSourceClipKey: "",
   editorSourceHtml: "",
   editorDirty: false,
+  editorPreviewClickTimer: null,
   editorAssets: [],
   editorAssetMap: new Map(),
   editorActiveAssetPath: "",
@@ -685,6 +686,29 @@ function lineNumberFromOffset(lineStarts, offset) {
   return Math.max(1, high + 1);
 }
 
+function clearEditorPreviewClickTimer() {
+  if (state.editorPreviewClickTimer) {
+    window.clearTimeout(state.editorPreviewClickTimer);
+    state.editorPreviewClickTimer = null;
+  }
+}
+
+function closeInlineQuickEditor() {
+  el.contentEditorPreview?.querySelector(".content-inline-editor")?.remove();
+}
+
+function positionInlineQuickEditor(target, shell) {
+  if (!el.contentEditorPreview || !target || !shell) return;
+  const previewRect = el.contentEditorPreview.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const top =
+    targetRect.bottom - previewRect.top + el.contentEditorPreview.scrollTop + 8;
+  const left =
+    targetRect.left - previewRect.left + el.contentEditorPreview.scrollLeft;
+  shell.style.top = `${Math.max(8, top)}px`;
+  shell.style.left = `${Math.max(8, left)}px`;
+}
+
 function buildEditorPreviewHtml(sourceHtml) {
   const source = String(sourceHtml || "");
   if (!source.trim()) {
@@ -778,21 +802,105 @@ function focusContentEditorSource(offset, lineHint = 0) {
   setEditorStatus(`렌더 미리보기에서 선택한 요소의 소스 줄 ${lineNumber}로 이동했습니다.`);
 }
 
+function openInlineQuickEditor(target, offset, lineNumber) {
+  if (!el.contentEditorPreview || !target) return;
+  closeInlineQuickEditor();
+
+  const currentText = String(target.textContent || "");
+  const shell = document.createElement("div");
+  shell.className = "content-inline-editor";
+  shell.innerHTML = `
+    <textarea class="content-inline-editor-input" rows="3" spellcheck="false"></textarea>
+    <div class="content-inline-editor-actions">
+      <button type="button" class="practice-mini-btn ghost" data-inline-edit-action="cancel">취소</button>
+      <button type="button" class="practice-mini-btn" data-inline-edit-action="save">적용</button>
+    </div>
+  `;
+  el.contentEditorPreview.appendChild(shell);
+  positionInlineQuickEditor(target, shell);
+
+  const input = shell.querySelector(".content-inline-editor-input");
+  if (!input) return;
+  input.value = currentText;
+  input.focus();
+  input.setSelectionRange(0, input.value.length);
+
+  const commit = () => {
+    const nextText = input.value;
+    if (nextText === currentText) {
+      closeInlineQuickEditor();
+      setEditorStatus("변경 사항이 없어 빠른 수정을 닫았습니다.");
+      return;
+    }
+
+    const nextSource = updateQuickEditableTextInSource(
+      el.contentEditorInput?.value || "",
+      offset,
+      nextText
+    );
+
+    if (!nextSource) {
+      closeInlineQuickEditor();
+      setEditorStatus("이 요소는 빠른 수정으로 안전하게 바꿀 수 없어 소스 편집으로 이동합니다.", true);
+      focusContentEditorSource(offset, lineNumber);
+      return;
+    }
+
+    applyContentEditorDraft(nextSource, "렌더 미리보기에서 텍스트를 빠르게 수정했습니다.");
+  };
+
+  shell.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  shell.addEventListener("mousedown", (event) => {
+    event.stopPropagation();
+  });
+
+  shell.querySelector('[data-inline-edit-action="cancel"]')?.addEventListener("click", () => {
+    closeInlineQuickEditor();
+    setEditorStatus("빠른 수정을 취소했습니다.");
+  });
+
+  shell.querySelector('[data-inline-edit-action="save"]')?.addEventListener("click", commit);
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeInlineQuickEditor();
+      setEditorStatus("빠른 수정을 취소했습니다.");
+      return;
+    }
+    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+      event.preventDefault();
+      commit();
+    }
+  });
+}
+
 function onContentEditorPreviewClick(event) {
   const target = event.target.closest("[data-editor-source-index]");
   if (!target) return;
 
   event.preventDefault();
   event.stopPropagation();
-  focusContentEditorSource(
-    Number(target.dataset.editorSourceIndex || 0),
-    Number(target.dataset.editorSourceLine || 0)
-  );
+  clearEditorPreviewClickTimer();
+  state.editorPreviewClickTimer = window.setTimeout(() => {
+    focusContentEditorSource(
+      Number(target.dataset.editorSourceIndex || 0),
+      Number(target.dataset.editorSourceLine || 0)
+    );
+    state.editorPreviewClickTimer = null;
+  }, 220);
 }
 
 function onContentEditorPreviewDoubleClick(event) {
   const target = event.target.closest("[data-editor-source-index]");
   if (!target) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  clearEditorPreviewClickTimer();
 
   const offset = Number(target.dataset.editorSourceIndex || 0);
   const lineNumber = Number(target.dataset.editorSourceLine || 0);
@@ -801,30 +909,13 @@ function onContentEditorPreviewDoubleClick(event) {
     setEditorStatus("이 요소는 빠른 수정 대상이 아니라 소스 위치로 이동했습니다.");
     return;
   }
-
-  const currentText = String(target.textContent || "");
-  const nextText = window.prompt("텍스트를 수정하세요.", currentText);
-  if (nextText == null || nextText === currentText) {
-    return;
-  }
-
-  const nextSource = updateQuickEditableTextInSource(
-    el.contentEditorInput?.value || "",
-    offset,
-    nextText
-  );
-
-  if (!nextSource) {
-    setEditorStatus("이 요소는 빠른 수정으로 안전하게 바꿀 수 없어 소스 편집으로 이동합니다.", true);
-    focusContentEditorSource(offset, lineNumber);
-    return;
-  }
-
-  applyContentEditorDraft(nextSource, "렌더 미리보기에서 텍스트를 빠르게 수정했습니다.");
+  openInlineQuickEditor(target, offset, lineNumber);
 }
 
 function renderEditorPreview(html) {
   const source = String(html || "");
+  closeInlineQuickEditor();
+  clearEditorPreviewClickTimer();
   renderContentEditorHighlight(source);
   el.contentEditorPreview.innerHTML = buildEditorPreviewHtml(source);
 }
