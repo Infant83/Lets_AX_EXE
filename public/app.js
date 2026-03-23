@@ -20,6 +20,24 @@ const STATIC_PUBLIC_COURSE = Object.freeze({
   courseName: String(STATIC_CONFIG?.courseName || "AX Camp Repro"),
   launchUrl: STATIC_BASE_PATH || "/"
 });
+const QUICK_EDITABLE_TAGS = new Set([
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "p",
+  "li",
+  "td",
+  "th",
+  "strong",
+  "em",
+  "span",
+  "a",
+  "figcaption",
+  "blockquote"
+]);
 
 function normalizeBasePathValue(input) {
   const raw = String(input || "").trim();
@@ -580,6 +598,53 @@ function buildHighlightedHtmlSource(input) {
   return html;
 }
 
+function isQuickEditablePreviewNode(node) {
+  if (!(node instanceof Element)) return false;
+  const tagName = String(node.tagName || "").toLowerCase();
+  if (!QUICK_EDITABLE_TAGS.has(tagName)) return false;
+  if (node.children.length > 0) return false;
+  return normalizeWs(node.textContent || "").length > 0;
+}
+
+function annotateEditorDocNodes(doc, source, decoratePreview = false) {
+  const sourceText = String(source || "");
+  const sourceLower = sourceText.toLowerCase();
+  const lineStarts = computeLineStarts(sourceText);
+  const nodeMap = new Map();
+  let searchFrom = 0;
+
+  doc.body.querySelectorAll("*").forEach((node) => {
+    const tagName = String(node.tagName || "").toLowerCase();
+    if (!tagName) return;
+
+    const needle = `<${tagName}`;
+    let offset = sourceLower.indexOf(needle, searchFrom);
+    if (offset < 0) {
+      offset = sourceLower.indexOf(needle);
+    }
+    if (offset < 0) return;
+
+    const lineNumber = lineNumberFromOffset(lineStarts, offset);
+    nodeMap.set(offset, node);
+
+    if (decoratePreview) {
+      node.setAttribute("data-editor-source-index", String(offset));
+      node.setAttribute("data-editor-source-line", String(lineNumber));
+      node.setAttribute("data-editor-tag", tagName);
+      if (isQuickEditablePreviewNode(node)) {
+        node.setAttribute("data-editor-quick-editable", "1");
+        node.setAttribute("title", `더블클릭해서 텍스트 수정 · 소스 줄 ${lineNumber}`);
+      } else {
+        node.setAttribute("title", `소스 줄 ${lineNumber}`);
+      }
+    }
+
+    searchFrom = offset + needle.length;
+  });
+
+  return nodeMap;
+}
+
 function syncContentEditorScroll() {
   if (!el.contentEditorInput || !el.contentEditorHighlight) return;
   el.contentEditorHighlight.scrollTop = el.contentEditorInput.scrollTop;
@@ -627,29 +692,68 @@ function buildEditorPreviewHtml(sourceHtml) {
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(`<body>${source}</body>`, "text/html");
-  const sourceLower = source.toLowerCase();
-  const lineStarts = computeLineStarts(source);
-  let searchFrom = 0;
-
-  doc.body.querySelectorAll("*").forEach((node) => {
-    const tagName = String(node.tagName || "").toLowerCase();
-    if (!tagName) return;
-
-    const needle = `<${tagName}`;
-    let offset = sourceLower.indexOf(needle, searchFrom);
-    if (offset < 0) {
-      offset = sourceLower.indexOf(needle);
-    }
-    if (offset < 0) return;
-
-    const lineNumber = lineNumberFromOffset(lineStarts, offset);
-    node.setAttribute("data-editor-source-index", String(offset));
-    node.setAttribute("data-editor-source-line", String(lineNumber));
-    node.setAttribute("title", `소스 줄 ${lineNumber}`);
-    searchFrom = offset + needle.length;
-  });
-
+  annotateEditorDocNodes(doc, source, true);
   return doc.body.innerHTML || '<p class="muted">미리보기가 없습니다.</p>';
+}
+
+function escapeHtmlTextNode(input) {
+  return String(input || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function findOpeningTagEnd(source, startIndex) {
+  const text = String(source || "");
+  let quote = "";
+
+  for (let index = Math.max(0, Number(startIndex) || 0); index < text.length; index += 1) {
+    const char = text[index];
+    if (quote) {
+      if (char === quote && text[index - 1] !== "\\") {
+        quote = "";
+      }
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      quote = char;
+      continue;
+    }
+    if (char === ">") {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function replacePlainTextNodeInSource(source, offset, tagName, nextText) {
+  const rawSource = String(source || "");
+  const normalizedTag = String(tagName || "").toLowerCase();
+  if (!rawSource || !normalizedTag) return "";
+
+  const openEnd = findOpeningTagEnd(rawSource, offset);
+  if (openEnd < 0) return "";
+
+  const closeNeedle = `</${normalizedTag}`;
+  const closeStart = rawSource.toLowerCase().indexOf(closeNeedle, openEnd + 1);
+  if (closeStart < 0) return "";
+
+  return (
+    rawSource.slice(0, openEnd + 1) +
+    escapeHtmlTextNode(nextText) +
+    rawSource.slice(closeStart)
+  );
+}
+
+function updateQuickEditableTextInSource(source, offset, nextText) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(`<body>${String(source || "")}</body>`, "text/html");
+  const nodeMap = annotateEditorDocNodes(doc, source, false);
+  const target = nodeMap.get(Number(offset) || 0);
+  if (!target || !isQuickEditablePreviewNode(target)) return "";
+  const tagName = String(target.tagName || "").toLowerCase();
+  return replacePlainTextNodeInSource(source, offset, tagName, nextText);
 }
 
 function focusContentEditorSource(offset, lineHint = 0) {
@@ -683,6 +787,39 @@ function onContentEditorPreviewClick(event) {
     Number(target.dataset.editorSourceIndex || 0),
     Number(target.dataset.editorSourceLine || 0)
   );
+}
+
+function onContentEditorPreviewDoubleClick(event) {
+  const target = event.target.closest("[data-editor-source-index]");
+  if (!target) return;
+
+  const offset = Number(target.dataset.editorSourceIndex || 0);
+  const lineNumber = Number(target.dataset.editorSourceLine || 0);
+  if (target.dataset.editorQuickEditable !== "1") {
+    focusContentEditorSource(offset, lineNumber);
+    setEditorStatus("이 요소는 빠른 수정 대상이 아니라 소스 위치로 이동했습니다.");
+    return;
+  }
+
+  const currentText = String(target.textContent || "");
+  const nextText = window.prompt("텍스트를 수정하세요.", currentText);
+  if (nextText == null || nextText === currentText) {
+    return;
+  }
+
+  const nextSource = updateQuickEditableTextInSource(
+    el.contentEditorInput?.value || "",
+    offset,
+    nextText
+  );
+
+  if (!nextSource) {
+    setEditorStatus("이 요소는 빠른 수정으로 안전하게 바꿀 수 없어 소스 편집으로 이동합니다.", true);
+    focusContentEditorSource(offset, lineNumber);
+    return;
+  }
+
+  applyContentEditorDraft(nextSource, "렌더 미리보기에서 텍스트를 빠르게 수정했습니다.");
 }
 
 function renderEditorPreview(html) {
@@ -3826,6 +3963,7 @@ function bindEvents() {
   });
   el.contentEditorInput?.addEventListener("scroll", syncContentEditorScroll);
   el.contentEditorPreview?.addEventListener("click", onContentEditorPreviewClick);
+  el.contentEditorPreview?.addEventListener("dblclick", onContentEditorPreviewDoubleClick);
   el.reloadContentAssetsBtn?.addEventListener("click", () => {
     reloadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
   });

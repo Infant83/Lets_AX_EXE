@@ -1074,6 +1074,12 @@ button.ghost {
   background-color: rgba(61, 114, 214, 0.04);
 }
 
+.content-editor-preview [data-editor-quick-editable="1"]:hover {
+  cursor: text;
+  box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.28);
+  background-color: rgba(22, 163, 74, 0.05);
+}
+
 .code-token-comment {
   color: #6b7d96;
 }
