@@ -1690,6 +1690,7 @@ const SLIDE_DECK_BUILDERS = {
   "gemini-access-roadshow": buildGeminiAccessRoadshowDeck,
   "business-prompting-workshop": buildBusinessPromptingWorkshopDeck,
   "gemini-gems-roadshow": buildGeminiGemsRoadshowDeck,
+  "gems-create-steps": buildGemsCreateStepsDeck,
   "ciqo-executive-briefing": buildCiqoExecutiveBriefingDeck,
   "enterprise-research-workflow": buildEnterpriseResearchWorkflowDeck,
   "ai-studio-api-principles": buildAiStudioApiPrinciplesDeck,
@@ -1982,6 +1983,38 @@ function buildGeminiGemsRoadshowDeck() {
         title: "직접 구조화된 프롬프팅을 시작하는 단계",
         imageSrc: `${basePath}/slide-11.png`,
         imageAlt: "구조화된 프롬프팅을 통해 직접 비즈니스 분석을 시작하도록 독려하는 실습 시작 안내 슬라이드입니다."
+      }
+    ]
+  };
+}
+
+function buildGemsCreateStepsDeck() {
+  const basePath = withBase("/assets/gems/ch03-clip03");
+
+  return {
+    id: "gems-create-steps",
+    previewColumns: 3,
+    kicker: "Gemini Practice",
+    title: "Gems 만들기 3단계",
+    subtitle: "세 장의 이미지를 클릭하면 확대되어 보이며, 좌우 가장자리나 화살표 키로 넘길 수 있습니다.",
+    slides: [
+      {
+        eyebrow: "Step 1 / 탐색",
+        title: "Gems 메뉴로 이동",
+        imageSrc: `${basePath}/step-1-gems-menu.png`,
+        imageAlt: "Gemini 사이드바에서 Gems 메뉴로 이동하는 화면"
+      },
+      {
+        eyebrow: "Step 2 / 생성",
+        title: "새 Gem 만들기",
+        imageSrc: `${basePath}/step-2-new-gem.png`,
+        imageAlt: "새 Gem을 만드는 설정 화면"
+      },
+      {
+        eyebrow: "Step 3 / 검증",
+        title: "인스트럭션 붙여넣기와 테스트",
+        imageSrc: `${basePath}/step-3-system-instruction.png`,
+        imageAlt: "시스템 인스트럭션을 붙여넣고 저장하는 화면"
       }
     ]
   };
