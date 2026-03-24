@@ -2,11 +2,11 @@
   "chapterId": "ch01",
   "chapterNum": "CH 01",
   "title": "AI 핵심 개념",
-  "time": "10:25",
+  "time": "08:40",
   "clips": [
     {
       "route": "#ch01-clip01",
-      "title": "AI AssistantAI Assistant우리가 흔히 쓰는 ChatGPT, Gemini 같은 대화형 AI예요. 질문하면 답해주는 \"1문 1답\" 방식이 기본이고, 사람이 하나씩 지시해야 움직입니다. → Agent → Agentic AIAgentic AI\"시키면 하는 AI\"가 아니라 \"알아서 해내는 AI\"예요. 목표만 알려주면 계획을 세우고, 필요한 도구를 골라서, 여러 작업을 자율적으로 처리합니다.",
+      "title": "AI Assistant → Agent → Agentic AI",
       "type": "개념",
       "folder": "chapters/CH01/ch01-clip01",
       "linkCount": 2,
@@ -36,7 +36,7 @@
     },
     {
       "route": "#ch01-clip04",
-      "title": "개념 암기 카드",
+      "title": "개념 다지기",
       "type": "참고",
       "folder": "chapters/CH01/ch01-clip04",
       "linkCount": 2,

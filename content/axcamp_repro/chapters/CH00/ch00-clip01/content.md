@@ -22,37 +22,28 @@ CH 00
 | 시간 | 세션 | 내용 | 형태 |
 | --- | --- | --- | --- |
 | 08:30-08:40 | CH00: 오늘의 여정 | 강사 소개 · AI 트렌드 | 개요 |
-| 08:40-09:20 | [AI 핵심 개념](#ch01-clip01) | Assistant → Agent → Agentic AI | 강의 |
-| 09:30-10:50 |
-[CH02: 구조화된 프롬프팅 (1)](#ch03-clip01)
+| 08:40-09:20 | [CH01: AI 핵심 개념](#ch01-clip01) | Assistant → Agent → Agentic AI | 강의 |
+| 09:30-12:00 |
+[CH02: Gemini & ChatGPT](#ch03-clip01)
 |
 
-- Gemini 소개 및 접속방법
+- Gemini &amp ChatGPT 소개 및 접속방법
 
-- 프롬프팅 기초 비즈니스 활용
+- 프롬프팅 기초 및 비즈니스 프롬프트 연습
 
-- Gems 소개: AI 비서 만들기
-
-|
-실습 |
-
-| 11:00-12:00 |
-| --- |
-[CH02: 구조화된 프롬프팅 (2)](#ch03-clip01)
-|
-
-- ChatGPT 소개 및 접속방법
-
-- 심층 리서치 및 보고서 작성
-
-- Pulse & GPTs 소개: AI 동향 보고서 만들기
+- Gems & GPTs 소개: AI 비서 만들기
 
 |
 실습 |
 
 | 12:00-13:00 | 점심 식사 | | 식사 |
 | --- | --- | --- | --- |
-| 13:00-14:00 | [CH03: NotebookLM](#ch04-clip01) |
+|
+13:00-14:00 |
+
+[CH03: NotebookLM](#ch04-clip01)
+|
+
 - NotebookLM 소개 및 접속방법
 
 - 문서 기반 AI 리서치
@@ -60,35 +51,34 @@ CH 00
 - 기업분석 실습: Gems + NotebookLM
 
 |
-|
-
-| 14:10-14:20 |
-| --- |
-[CH04: Google AI Studio](#ch03-clip01)
-|
-Google AI Studio 소개 및 접속방법 |
-개념 |
-
-| 14:20-16:00 | [CH05: Vibe Coding](#ch06-clip01) |
-| --- | --- |
-- AI Studio Build로 웹앱 제작
-
-- 경쟁사 리서치 대시보드 만들기
-
-|
-
 실습 |
 
-| 16:10-17:10 |
+| 14:10-16:00 |
 | --- |
-[CH06: Agentic AI](#ch03-clip01)
+[CH04: Google AI Studio & Vibe Coding](#ch05-clip02)
 |
+
+- Google AI Studio 소개 및 접속 방법
+
+- 바이브 코딩이란
+
+- 바이브 코딩으로 웹앱 제작하기
+
+- 경쟁사 리서치 대시보드
+
+|
+실습 |
+
+| 16:10-17:10 | [CH05: Hi-D Code](#ch05-clip01) |
+| --- | --- |
 Hi-D Code 소개 및 시연
-(최남석, Agentic AI 팀) |
+(최남석, Agentic AI 팀)
+|
 강의 |
 
-| 17:10-17:20 | [Key Takeaways & Q/A](#ch09-clip01) | 핵심 정리 + 질의응답 | Q&A |
+| 17:10-17:20 | [CH06: Key Takeaways & Q/A](#ch09-clip01) | 핵심 정리 + 질의응답 | Q&A |
 | --- | --- | --- | --- |
+| 17:20-17:30 | [CH07: 참고자료 라이브러리](#ch07-clip01) | Agentic AI 자료 + 추가 읽을거리 | 참고 |
 ### 이 사이트 활용법
 
 -

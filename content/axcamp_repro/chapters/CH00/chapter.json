@@ -2,7 +2,7 @@
   "chapterId": "ch00",
   "chapterNum": "CH 00",
   "title": "오늘의 여정",
-  "time": "10:00",
+  "time": "08:30",
   "clips": [
     {
       "route": "#ch00-clip01",
@@ -16,7 +16,7 @@
     },
     {
       "route": "#ch00-clip02",
-      "title": "AI 산업 지형도",
+      "title": "AI 트렌드",
       "type": "참고",
       "folder": "chapters/CH00/ch00-clip02",
       "linkCount": 15,
