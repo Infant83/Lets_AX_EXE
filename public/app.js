@@ -2059,6 +2059,7 @@ function buildWebStylePromptSlide(entry, index) {
 
 
 const SLIDE_DECK_BUILDERS = {
+  "agentic-physical-ecosystem": buildAgenticPhysicalEcosystemDeck,
   "industry-landscape": buildIndustryLandscapeDeck,
   "assistant-agentic-spectrum": buildAssistantAgenticSpectrumDeck,
   "prompt-context-workflow": buildPromptContextWorkflowDeck,
@@ -2155,6 +2156,385 @@ function buildIndustryLandscapeDeck() {
         imageSrc: `${basePath}/slide-8.jpg`,
         imageAlt: "Next 90 Days 슬라이드"
       }
+    ]
+  };
+}
+
+function buildAgenticPhysicalEcosystemDeck() {
+  const basePath = withBase("/assets/notebooklm/ch00-ai-ecosystem");
+  const accent = "#a50034";
+  const accentSoft = "rgba(165, 0, 52, 0.16)";
+
+  const sources = {
+    reutersShow: {
+      label: "Reuters | 춘절 로봇 공연",
+      url: "https://www.reuters.com/business/media-telecom/chinas-humanoid-robots-ready-lunar-new-year-showtime-2026-02-16/"
+    },
+    reutersVideo: {
+      label: "Reuters Video | 춘절 로봇 영상",
+      url: "https://www.reuters.com/video/watch/idRW638718022026RP1/"
+    },
+    youtubeSpring: {
+      label: "YouTube | 춘절 갈라",
+      url: "https://www.youtube.com/watch?v=XYAbHFcq5yw"
+    },
+    googleGemini: {
+      label: "Google | Gemini 3.1 Pro",
+      url: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/"
+    },
+    googleFlow: {
+      label: "Google | Flow + Veo",
+      url: "https://blog.google/innovation-and-ai/products/google-flow-veo-ai-filmmaking-tool/"
+    },
+    nvidiaGr00t: {
+      label: "NVIDIA | Isaac GR00T N1",
+      url: "https://nvidianews.nvidia.com/news/nvidia-isaac-gr00t-n1-open-humanoid-robot-foundation-model-simulation-frameworks"
+    },
+    nvidiaRobotics: {
+      label: "NVIDIA | Physical AI 생태계",
+      url: "https://nvidianews.nvidia.com/news/nvidia-and-global-robotics-leaders-take-physical-ai-to-the-real-world"
+    },
+    nvidiaCosmos: {
+      label: "NVIDIA | Cosmos World Foundation Models",
+      url: "https://developer.nvidia.com/blog/scale-synthetic-data-and-physical-ai-reasoning-with-nvidia-cosmos-world-foundation-models/"
+    },
+    mckinseyGenai: {
+      label: "McKinsey | GenAI 경제성",
+      url: "https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier"
+    },
+    walmartAgentic: {
+      label: "Walmart | Agentic Future",
+      url: "https://corporate.walmart.com/news/2025/05/29/inside-walmarts-strategy-for-building-an-agentic-future"
+    },
+    walmartGoogle: {
+      label: "Walmart x Google",
+      url: "https://corporate.walmart.com/news/2026/01/11/walmart-and-google-turn-ai-discovery-into-effortless-shopping-experiences"
+    },
+    eyCeo: {
+      label: "EY | CEO Outlook 2026",
+      url: "https://www.ey.com/en_no/ceo/ceo-outlook-global-report"
+    },
+    eyAgentic: {
+      label: "EY | Agentic AI in Retail",
+      url: "https://www.ey.com/en_id/insights/retail/how-consumer-products-and-retail-players-can-lead-with-agentic-ai"
+    },
+    koreaHeraldExaone: {
+      label: "Korea Herald | EXAONE",
+      url: "https://www.koreaherald.com/article/10652980"
+    },
+    digitalCommerceLg: {
+      label: "Digital Commerce 360 | LG B2B AI",
+      url: "https://www.digitalcommerce360.com/2026/01/08/lg-electronics-b2b-ai-growth-2026/"
+    },
+    tcVibeAcquisition: {
+      label: "TechCrunch | Base44",
+      url: "https://techcrunch.com/2025/06/18/6-month-old-solo-owned-vibe-coder-base44-sells-to-wix-for-80m-cash/"
+    },
+    tcYcAiCode: {
+      label: "TechCrunch | YC AI Codebases",
+      url: "https://techcrunch.com/2025/03/06/a-quarter-of-startups-in-ycs-current-cohort-have-codebases-that-are-almost-entirely-ai-generated/"
+    },
+    builderCli: {
+      label: "Builder.io | AI coding tools",
+      url: "https://www.builder.io/blog/cursor-vs-claude-code"
+    },
+    menloGenai: {
+      label: "Menlo Ventures | Enterprise GenAI",
+      url: "https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/"
+    }
+  };
+
+  const slide = (eyebrow, title, summary, bullets, slideSources, infoBlocks = []) => ({
+    eyebrow,
+    title,
+    summary,
+    bullets,
+    sources: slideSources,
+    infoBlocks,
+    accent,
+    accentSoft
+  });
+
+  return {
+    id: "agentic-physical-ecosystem",
+    kicker: "NotebookLM Source-Grounded Deck",
+    title: "AI로 진화하는 산업 생태계",
+    subtitle: "Agentic에서 Physical까지, 2026년 초 산업 변화를 리더 관점으로 읽는 22장 브리핑",
+    downloadUrl: `${basePath}/agentic-to-physical-ai.pdf`,
+    downloadFilename: "agentic-to-physical-ai.pdf",
+    downloadLabel: "다운로드",
+    previewColumns: 1,
+    previewClass: "preview-theme-lg-ecosystem",
+    sheetClass: "deck-theme-lg-ecosystem",
+    previewSlides: [
+      {
+        slideIndex: 0,
+        pageLabel: "22장",
+        eyebrow: "리더 브리핑",
+        title: "AI로 진화하는 산업 생태계: Agentic에서 Physical까지",
+        imageAlt: "AI로 진화하는 산업 생태계 슬라이드 표지"
+      }
+    ],
+    slides: [
+      {
+        eyebrow: "01 / Cover",
+        title: "AI로 진화하는 산업 생태계",
+        imageSrc: `${basePath}/slide-01.jpg`,
+        imageAlt: "NotebookLM에서 내려받은 AI로 진화하는 산업 생태계 표지 슬라이드"
+      },
+      slide(
+        "02 / Why Now",
+        "왜 지금 리더가 이 흐름을 읽어야 할까요",
+        "AI는 더 이상 모델 성능 경쟁만의 이슈가 아닙니다. 제품, 조직, 고객 접점, 물리 세계까지 산업의 운영체계를 다시 쓰고 있습니다.",
+        [
+          "2026년 초 신호는 Agentic AI와 Physical AI가 동시에 전면화되고 있음을 보여줍니다.",
+          "차별화 포인트는 범용 모델 그 자체보다 데이터, 도메인 지식, 실행력으로 이동하고 있습니다.",
+          "지금 필요한 결정은 도입 여부가 아니라 무엇을 내재화하고 어디서 속도를 낼지입니다."
+        ],
+        [sources.mckinseyGenai, sources.eyCeo],
+        [{ title: "리더 질문", items: ["우리는 어디에서 AI를 비용 절감이 아닌 구조 혁신에 연결할 것인가", "우리 데이터와 현장 지식은 어디까지 전략 자산으로 보호되고 있는가"] }]
+      ),
+      slide(
+        "03 / February 2026",
+        "2026년 2월, AI는 어떤 장면으로 등장했을까요",
+        "한 달 안에 휴머노이드 공연, 고도화된 추론 모델, 멀티모달 제작 도구, 에이전트형 업무 재설계가 한 화면에 겹쳐 나타났습니다.",
+        [
+          "Physical AI는 공연과 시연을 통해 대중 전면으로 올라왔습니다.",
+          "멀티모달 모델은 영화와 콘텐츠 생산방식을 다시 묻기 시작했습니다.",
+          "기업 현장에서는 Agentic AI를 업무 흐름에 넣으려는 압력이 동시에 커졌습니다."
+        ],
+        [sources.reutersShow, sources.googleGemini, sources.googleFlow],
+        [{ title: "핵심 시그널", items: ["보여주기 단계가 아니라 사업 운영 단계로 이동 중입니다", "소프트웨어와 로보틱스가 같은 서사로 묶이기 시작했습니다"] }]
+      ),
+      slide(
+        "04 / Humanoid Moment",
+        "춘절 공연의 휴머노이드는 왜 상징적일까요",
+        "중국 춘절 무대에서 인간 공연자와 자연스럽게 어우러지는 휴머노이드 장면은 Physical AI가 대중의 상상에서 현실의 제품 경험으로 넘어가고 있음을 상징합니다.",
+        [
+          "로봇은 더 이상 공장 안 기계가 아니라 미디어 이벤트의 주연으로 등장했습니다.",
+          "사람은 로봇의 성능보다 자연스러운 협업 장면에 더 크게 반응했습니다.",
+          "리더에게 중요한 것은 기술 그 자체보다 사회가 받아들이는 임계점입니다."
+        ],
+        [sources.reutersShow, sources.reutersVideo, sources.youtubeSpring],
+        [{ title: "리더 포인트", items: ["시장 전환은 성능 수치보다 경험 장면이 만듭니다", "Physical AI는 브랜드와 서비스 전략까지 바꿀 수 있습니다"] }]
+      ),
+      slide(
+        "05 / Long Arc",
+        "하지만 이것은 갑자기 생긴 일이 아닙니다",
+        "휴머노이드 장면은 10년 이상 누적된 로보틱스 투자, 시뮬레이션, 제어, 센서, 데이터 축적의 결과입니다.",
+        [
+          "Physical AI의 도약은 긴 투자 주기를 견딘 기업에게 먼저 돌아갑니다.",
+          "로보틱스는 시연이 반복될수록 실제 활용을 위한 데이터와 운영 노하우가 쌓입니다.",
+          "지속 투자와 기술 내재화가 결국 진입장벽이 됩니다."
+        ],
+        [sources.nvidiaGr00t, sources.nvidiaRobotics],
+        [{ title: "보는 관점", items: ["화려한 데모보다 축적된 인프라를 보셔야 합니다", "10년을 견딘 투자만이 Physical AI의 출발점이 됩니다"] }]
+      ),
+      slide(
+        "06 / CES to Ecosystem",
+        "CES와 NVIDIA가 보여준 것은 제품이 아니라 생태계입니다",
+        "휴머노이드 로봇, 월드 모델, 시뮬레이터, 합성 데이터가 한 세트로 묶이면서 Physical AI는 단일 제품이 아니라 학습 생태계로 진화하고 있습니다.",
+        [
+          "Foundation model과 simulator, synthetic data가 함께 움직입니다.",
+          "로보틱스 경쟁력은 하드웨어 단독이 아니라 학습 파이프라인에서 나옵니다.",
+          "Physical AI는 제조, 물류, 서비스 현장을 연결하는 플랫폼 경쟁이 됩니다."
+        ],
+        [sources.nvidiaGr00t, sources.nvidiaRobotics, sources.nvidiaCosmos],
+        [{ title: "산업 해석", items: ["하드웨어 기업도 데이터 기업이 되어야 합니다", "디지털 인프라와 물리 인프라가 같은 전략 언어로 묶입니다"] }]
+      ),
+      slide(
+        "07 / Agentic Shock",
+        "Agentic AI는 소프트웨어 산업에 어떤 충격을 주고 있을까요",
+        "AI가 답변을 넘어서 계획하고 실행하는 단계로 가면서, 기존 SaaS의 일부는 기능이 아니라 워크플로 자체를 다시 증명해야 하는 상황에 놓였습니다.",
+        [
+          "단순 기능형 소프트웨어는 에이전트 안으로 흡수될 위험이 커지고 있습니다.",
+          "기업 고객은 툴 하나보다 목표 달성형 자동화를 기대하기 시작했습니다.",
+          "SaaS의 경쟁축은 화면 수가 아니라 업무 대행 수준으로 이동합니다."
+        ],
+        [sources.walmartAgentic, sources.eyAgentic, sources.menloGenai],
+        [{ title: "리더 질문", items: ["우리 서비스는 기능을 제공하는가, 결과를 내는가", "고객이 AI 에이전트로 대체할 수 있는 영역은 어디인가"] }]
+      ),
+      slide(
+        "08 / Vibe Coding",
+        "바이브 코딩은 개발자의 역할을 어떻게 바꾸고 있을까요",
+        "비전문가도 언어 모델과 대화하며 코드를 만들기 시작했고, 개발자의 역할은 구현자만이 아니라 방향 설정자, 품질 판단자, 최종 책임자로 더 선명해지고 있습니다.",
+        [
+          "속도는 비약적으로 빨라졌지만 품질 판단과 책임은 더 중요해졌습니다.",
+          "아이디어를 바로 앱으로 검증하는 조직이 실험 속도에서 앞서갑니다.",
+          "개발자는 코드를 모두 쓰는 사람이 아니라 좋은 시스템을 설계하는 사람으로 이동합니다."
+        ],
+        [sources.tcVibeAcquisition, sources.tcYcAiCode, sources.builderCli],
+        [{ title: "조직 변화", items: ["업무와 개발의 경계가 빠르게 낮아집니다", "리더는 실험 수를 늘리되 품질 게이트를 더 명확히 해야 합니다"] }]
+      ),
+      slide(
+        "09 / Multimodal Content",
+        "멀티모달 생성은 영화와 콘텐츠 산업을 왜 긴장시키고 있을까요",
+        "짧은 자연어 명령만으로 영상 장면을 설계하고 제작하는 흐름이 현실화되면서, 제작 프로세스의 비용 구조와 역할 분담이 빠르게 재편되고 있습니다.",
+        [
+          "콘텐츠 제작의 병목이 촬영보다 기획과 판단으로 이동합니다.",
+          "소규모 팀도 이전보다 훨씬 큰 표현력을 확보할 수 있습니다.",
+          "브랜드는 제작 능력보다 세계관과 품질 기준을 더 분명히 가져야 합니다."
+        ],
+        [sources.googleFlow],
+        [{ title: "임원 관점", items: ["콘텐츠 조직은 제작 인력 구조보다 편집 판단 체계를 먼저 재정의해야 합니다", "생성 속도가 빨라질수록 브랜드 리스크 관리가 중요해집니다"] }]
+      ),
+      slide(
+        "10 / Model Ecosystem",
+        "모델 생태계는 경쟁만이 아니라 협력도 함께 커지고 있습니다",
+        "기업들은 자체 모델을 강화하는 동시에 타사 모델을 제품 안에 넣는 협력도 병행하고 있습니다. 전략은 단일 모델 승부보다 조합 설계로 이동합니다.",
+        [
+          "자체 모델은 주권과 차별화의 수단이 됩니다.",
+          "외부 모델 협력은 속도와 시장 대응력을 높여줍니다.",
+          "결국 중요한 것은 모델 하나보다 어떤 경험과 운영체계를 조합하느냐입니다."
+        ],
+        [sources.googleGemini, sources.walmartGoogle, sources.koreaHeraldExaone],
+        [{ title: "핵심 포인트", items: ["경쟁과 협력이 동시에 일어나는 구조입니다", "리더는 무엇을 직접 만들고 무엇을 연결할지 정해야 합니다"] }]
+      ),
+      slide(
+        "11 / Early Field Adoption",
+        "산업 현장의 AI Agent 적용은 아직 초기 단계입니다",
+        "열기는 크지만 실제 현장에서는 여전히 PoC, 파일럿, 제한된 워크플로 도입이 중심입니다. 그래서 지금이 표준을 선점할 기회가 됩니다.",
+        [
+          "많은 조직이 아직 업무 재설계보다 실험 검증 단계에 머물러 있습니다.",
+          "현장 확산을 막는 요인은 기술보다 데이터, 책임 구조, 운영 설계입니다.",
+          "초기 단계이기 때문에 지금의 실행 경험이 곧 내일의 격차가 됩니다."
+        ],
+        [sources.menloGenai, sources.eyCeo, sources.walmartAgentic],
+        [{ title: "실행 포인트", items: ["PoC를 끝내고 업무 단위 확장 기준을 만드세요", "도입 속도보다 적용 책임과 성과 정의가 중요합니다"] }]
+      ),
+      slide(
+        "12 / Human Intent",
+        "인간의 의지는 어떻게 AI 단계로 번역될까요",
+        "인간은 사물을 인식하고, 무언가를 만들고, 대신 행동하게 하고, 결국 현실 세계에서 물리적 결과를 기대합니다. AI의 진화도 같은 순서로 이어집니다.",
+        [
+          "인식형 AI는 무엇인지 말합니다.",
+          "생성형 AI는 무언가를 만듭니다.",
+          "에이전트형 AI는 다음 행동을 대신 수행합니다."
+        ],
+        [sources.googleGemini, sources.nvidiaRobotics],
+        [{ title: "다음 단계", items: ["Physical AI는 현실의 물체와 환경까지 다룹니다", "이 단계 구분은 투자 우선순위를 정리하는 데 유용합니다"] }]
+      ),
+      slide(
+        "13 / Evolution Ladder",
+        "인식 → 생성 → 에이전트 → Physical",
+        "AI는 점점 더 많은 의사결정과 실행 책임을 맡아가고 있습니다. 이 사다리를 이해하면 어디서 어떤 데이터와 제어가 필요한지 선명해집니다.",
+        [
+          "인식: 무엇을 보는지 이해합니다.",
+          "생성: 결과물을 만들어냅니다.",
+          "에이전트: 도구를 써서 목표를 수행합니다.",
+          "Physical: 실제 환경에서 움직이고 조작합니다."
+        ],
+        [sources.googleGemini, sources.nvidiaGr00t, sources.nvidiaCosmos],
+        [{ title: "리더 질문", items: ["우리 조직은 지금 어느 단계의 AI를 쓰고 있는가", "다음 단계로 가기 위해 부족한 데이터와 제어는 무엇인가"] }]
+      ),
+      slide(
+        "14 / Data First",
+        "데이터가 모델을 만듭니다",
+        "원하는 AI는 원하는 데이터에서 나옵니다. 학습 데이터는 모델의 지식과 경험이며, 결국 무엇을 보게 했는지가 무엇을 하게 하는지를 결정합니다.",
+        [
+          "좋은 모델은 좋은 데이터에서만 나옵니다.",
+          "데이터 설계 없이 모델만 바꿔서는 원하는 성능이 나오지 않습니다.",
+          "AI 전략의 출발점은 모델 선정이 아니라 데이터 전략이어야 합니다."
+        ],
+        [sources.mckinseyGenai, sources.nvidiaCosmos],
+        [{ title: "한 줄 메시지", items: ["콩 심은 데 콩 납니다", "학습 데이터의 수준이 AI 모델의 수준을 결정합니다"] }]
+      ),
+      slide(
+        "15 / Manufacturing Data",
+        "제조 현장의 데이터는 왜 특별할까요",
+        "제조 AI는 범용 웹 데이터만으로는 완성되지 않습니다. 공정, 품질, 설비, 검사, 운영 맥락이 담긴 현장 데이터가 성능 차이를 만듭니다.",
+        [
+          "제조 데이터는 희소하고 맥락 의존적이며, 수집 난도가 높습니다.",
+          "품질 예측, 불량 검출, 공정 운영 최적화는 현장 데이터 없이는 고도화되기 어렵습니다.",
+          "현장 데이터는 AI 경쟁력과 직결되는 전략 자산입니다."
+        ],
+        [sources.koreaHeraldExaone, sources.digitalCommerceLg],
+        [{ title: "현장 의미", items: ["제조 AI는 일반 LLM 적용보다 데이터 준비가 더 중요합니다", "협력사와 현장 조직을 포함한 데이터 생태계가 필요합니다"] }]
+      ),
+      slide(
+        "16 / Expert Knowledge",
+        "좋은 모델은 결국 좋은 전문가를 키우는 과정과 닮아 있습니다",
+        "데이터 수집, 정답 정의, 반복 학습, 테스트를 완성도 있게 가져가려면 현장을 이해하고 좋은 기준을 제시할 수 있는 전문가가 필요합니다.",
+        [
+          "데이터는 AI의 지식과 경험입니다.",
+          "전문가의 기준이 없으면 모델은 그럴듯하지만 신뢰하기 어려운 결과를 냅니다.",
+          "암묵지를 디지털 학습 자산으로 바꾸는 과정이 AX의 핵심입니다."
+        ],
+        [sources.koreaHeraldExaone, sources.mckinseyGenai],
+        [{ title: "비유", items: ["학습용 데이터는 횟감입니다", "최종 요리보다 싱싱하고 다양한 원재료가 먼저 중요합니다"] }]
+      ),
+      slide(
+        "17 / Digital Twin vs World Model",
+        "Digital Twin과 World Model은 무엇이 다를까요",
+        "Digital Twin은 현실을 복제하는 데 강하고, World Model은 세상을 이해하고 다음 행동의 결과를 예측하는 데 강합니다. Physical AI는 이 둘을 연결하며 성장합니다.",
+        [
+          "Digital Twin은 상태를 비추는 거울에 가깝습니다.",
+          "World Model은 보이지 않는 변화와 다음 결과를 추론합니다.",
+          "리더는 복제형 투자와 행동형 투자 중 어디를 강화할지 구분해야 합니다."
+        ],
+        [sources.nvidiaCosmos, sources.nvidiaRobotics],
+        [{ title: "전략 포인트", items: ["운영 가시화만으로는 부족합니다", "예측과 행동까지 연결될 때 Physical AI의 가치가 커집니다"] }]
+      ),
+      slide(
+        "18 / Physical AI Learning",
+        "Physical AI는 어떻게 학습될까요",
+        "Physical AI는 real-world teleoperation, robot trajectory, simulator, synthetic data를 함께 써서 실제 행동 능력을 끌어올립니다.",
+        [
+          "현실 데이터는 비싸지만 반드시 필요합니다.",
+          "시뮬레이터와 합성 데이터는 학습 규모를 빠르게 키워줍니다.",
+          "핵심은 현실과 가상의 학습 루프를 어떻게 연결하느냐입니다."
+        ],
+        [sources.nvidiaGr00t, sources.nvidiaCosmos],
+        [{ title: "산업 의미", items: ["데이터 수집 체계가 곧 경쟁력입니다", "로봇 학습은 설비 투자와 데이터 투자가 동시에 필요합니다"] }]
+      ),
+      slide(
+        "19 / LG AI",
+        "LG의 AI는 왜 자체 모델과 산업 특화 전략을 함께 가져가야 할까요",
+        "EXAONE은 단순한 범용 모델 경쟁이 아니라 데이터 주권과 산업 적용을 위한 전략 자산입니다. 동시에 LG는 전문 영역별 AI 포트폴리오를 넓혀야 합니다.",
+        [
+          "자체 모델은 데이터와 노하우를 지키는 기반이 됩니다.",
+          "산업 특화 AI는 실행 가능한 가치를 만들고 차별화를 만듭니다.",
+          "범용 fast follower를 넘어 산업형 Agentic AI 리더로 가야 합니다."
+        ],
+        [sources.koreaHeraldExaone, sources.digitalCommerceLg],
+        [{ title: "메시지", items: ["범용 모델 하나보다 산업 실행 포트폴리오가 중요합니다", "AI 주권은 기술과 데이터 모두를 포함합니다"] }]
+      ),
+      slide(
+        "20 / LG Use Cases",
+        "LG의 산업 적용 사례는 무엇을 시사할까요",
+        "제조, 소재, 바이오, 운영 최적화처럼 현장 문제를 풀기 위해서는 범용 LLM보다 산업 데이터와 업무 맥락을 결합한 AI가 더 중요합니다.",
+        [
+          "품질 예측, 검사 자동화, 스케줄링 최적화, 신물질 탐색은 모두 도메인 데이터가 핵심입니다.",
+          "현장 문제를 푸는 AI는 조직 안의 지식 구조를 함께 바꿉니다.",
+          "실제 가치 창출은 현장 워크플로에 들어갈 때 시작됩니다."
+        ],
+        [sources.digitalCommerceLg, sources.koreaHeraldExaone],
+        [{ title: "리더 포인트", items: ["AX는 도구 도입보다 업무 재설계 프로젝트입니다", "현장 팀과 데이터 팀의 공동 설계가 필요합니다"] }]
+      ),
+      slide(
+        "21 / AX Questions",
+        "AX 시대, 리더가 고민해야 할 방향은 무엇일까요",
+        "모델 학습 과정에서 데이터가 넘어가면 장기적으로 노하우도 함께 넘어갈 수 있습니다. 그래서 데이터 주권, 기술 내재화, 실행 속도의 균형이 중요합니다.",
+        [
+          "범용 모델 활용만으로는 차별화가 점점 어려워집니다.",
+          "무엇을 자체화하고 무엇을 연결할지 명확한 원칙이 필요합니다.",
+          "늦어 보이는 지금도 AI 개화기이기 때문에 후발 기회는 여전히 존재합니다."
+        ],
+        [sources.koreaHeraldExaone, sources.eyCeo, sources.mckinseyGenai],
+        [{ title: "오늘의 질문", items: ["우리에게 꼭 남겨야 할 데이터와 노하우는 무엇인가", "속도를 내면서도 주권을 지키는 운영 원칙은 무엇인가"] }]
+      ),
+      slide(
+        "22 / Conclusion",
+        "새로운 기회는 대부분 혼란한 상황 속에서 열립니다",
+        "2030년까지 연구개발, 제조, 조직, 업무 분장, 산업 구조는 크게 바뀔 가능성이 높습니다. 다크 팩토리, 연구개발 자동화, 조직 역할 재설계는 이미 시작된 흐름입니다.",
+        [
+          "소멸하는 역할과 지속되는 역할, 새로 생기는 역할이 동시에 나타날 것입니다.",
+          "AI 전환의 핵심은 기술 채택이 아니라 사업 운영 방식을 다시 설계하는 것입니다.",
+          "지금의 혼란은 뒤처짐의 신호가 아니라 새로운 기회의 창이기도 합니다."
+        ],
+        [sources.mckinseyGenai, sources.eyCeo, sources.nvidiaRobotics],
+        [{ title: "마무리 메시지", items: ["Agentic에서 Physical까지 흐름을 읽는 것이 곧 전략입니다", "리더의 역할은 기술 선택보다 방향 설정과 실행 설계입니다"] }]
+      )
     ]
   };
 }
@@ -2807,11 +3187,12 @@ function renderSlideDeckPreviews() {
     container.innerHTML = previewEntries
       .map((entry, index) => {
         const slide = entry.slide;
+        const previewClass = normalizeWs(deck.previewClass || "");
         if (isImmersivePreview) {
           return `
             <button
               type="button"
-              class="slide-preview-card slide-preview-card-wide slide-preview-card-immersive"
+              class="slide-preview-card slide-preview-card-wide slide-preview-card-immersive${previewClass ? ` ${escapeHtml(previewClass)}` : ""}"
               data-slide-deck-card="${escapeHtml(deckId)}"
               data-slide-index="${entry.slideIndex}"
               aria-label="${escapeHtml(entry.title || slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
@@ -2833,7 +3214,7 @@ function renderSlideDeckPreviews() {
         return `
           <button
             type="button"
-            class="slide-preview-card${isSingleSlide ? " slide-preview-card-wide" : ""}"
+            class="slide-preview-card${isSingleSlide ? " slide-preview-card-wide" : ""}${previewClass ? ` ${escapeHtml(previewClass)}` : ""}"
             data-slide-deck-card="${escapeHtml(deckId)}"
             data-slide-index="${entry.slideIndex}"
             aria-label="${escapeHtml(entry.title || slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
@@ -2911,9 +3292,10 @@ function renderActiveSlideDeck() {
   }
   el.slidePrevBtn.disabled = currentIndex === 0;
   el.slideNextBtn.disabled = currentIndex === slides.length - 1;
+  const sheetClass = normalizeWs(slide.sheetClass || deck.sheetClass || "");
   if (slide.imageSrc) {
     el.slideDeckStage.innerHTML = `
-      <article class="slide-image-sheet">
+      <article class="slide-image-sheet${sheetClass ? ` ${escapeHtml(sheetClass)}` : ""}">
         <button
           type="button"
           class="slide-hitbox prev${currentIndex === 0 ? " disabled" : ""}"
@@ -2968,7 +3350,7 @@ function renderActiveSlideDeck() {
 
     el.slideDeckStage.innerHTML = `
       <article
-        class="slide-sheet${slide.themeTone ? ` style-tone-${escapeHtml(slide.themeTone)}` : ""}${slide.themeGrammar ? ` style-grammar-${escapeHtml(slide.themeGrammar)}` : ""}${slide.stylePreview ? " slide-sheet-style-preview" : ""}"
+        class="slide-sheet${sheetClass ? ` ${escapeHtml(sheetClass)}` : ""}${slide.themeTone ? ` style-tone-${escapeHtml(slide.themeTone)}` : ""}${slide.themeGrammar ? ` style-grammar-${escapeHtml(slide.themeGrammar)}` : ""}${slide.stylePreview ? " slide-sheet-style-preview" : ""}"
         style="--slide-accent:${slide.accent || "#245fca"};--slide-accent-soft:${slide.accentSoft || "rgba(58, 126, 242, 0.22)"}"
       >
         <button
