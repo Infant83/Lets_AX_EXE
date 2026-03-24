@@ -3,27 +3,27 @@
   "url": "https://lg.cmdspace.work/axcamp#ch05-clip02",
   "pageTitle": "AX Camp for Leaders | LG",
   "clipTitle": "Google AI Studio API 키 발급",
-  "overview": "오늘 수업에서 API 키를 깊게 쓰지는 않지만, 이후 AI Studio 앱을 내려받아 실행하거나 API 기반 실습으로 넘어갈 때를 위해 발급 위치와 보관 원칙만 간단하게 정리한다.",
+  "overview": "오늘 수업에서 API 키를 깊게 쓰지는 않지만, 이후 AI Studio 앱을 내려받아 실행하거나 API 기반 실습으로 넘어갈 때를 위해 발급 위치와 보관 원칙만 간단하게 정리합니다.",
   "badges": [
     "CH 05",
     "설정"
   ],
-  "text": "Google AI Studio API 키 발급. Dashboard의 API 키 화면에서 키 만들기로 진입하고, 프로젝트를 선택한 뒤 키를 환경 변수로 보관한다. 오늘 수업에서는 발급 위치와 보관 규칙만 다룬다.",
+  "text": "Google AI Studio API 키 발급. Dashboard의 API 키 화면에서 키 만들기로 진입하고, 프로젝트를 선택한 뒤 키를 환경 변수로 보관합니다. 오늘 수업에서는 발급 위치와 보관 규칙만 다룹니다.",
   "sections": [
     {
       "index": 1,
       "title": "현재 UI 기준 발급 위치",
-      "text": "AI Studio의 Dashboard > API 키 화면에서 API 키 만들기로 진입한다."
+      "text": "AI Studio의 Dashboard > API 키 화면에서 API 키 만들기로 진입합니다."
     },
     {
       "index": 2,
       "title": "발급 후 바로 지켜야 할 규칙",
-      "text": "키는 코드에 직접 넣지 않고, GEMINI_API_KEY 같은 환경 변수로 분리하며, 유출 시 즉시 폐기한다."
+      "text": "키는 코드에 직접 넣지 않고, GEMINI_API_KEY 같은 환경 변수로 분리하며, 유출 시 즉시 폐기합니다."
     },
     {
       "index": 3,
       "title": "오늘 수업에서는 여기까지만",
-      "text": "오늘은 복잡한 설정 실습보다, 나중에 Build 앱과 API 실습으로 넘어갈 때 필요한 최소 개념만 기억한다."
+      "text": "오늘은 복잡한 설정 실습보다, 나중에 Build 앱과 API 실습으로 넘어갈 때 필요한 최소 개념만 기억합니다."
     }
   ],
   "prompts": [],

@@ -6,7 +6,7 @@
   <h1 class="clip-title">Google AI Studio API 키 발급</h1>
 </div>
 
-<div class="clip-overview">오늘 수업에서 API 키를 깊게 쓰지는 않지만, 이후 AI Studio 앱을 내려받아 실행하거나 API 기반 실습으로 넘어갈 때를 위해 발급 위치와 보관 원칙만 간단하게 정리한다.</div>
+<div class="clip-overview">오늘 수업에서 API 키를 깊게 쓰지는 않지만, 이후 AI Studio 앱을 내려받아 실행하거나 API 기반 실습으로 넘어갈 때를 위해 발급 위치와 보관 원칙만 간단하게 정리합니다.</div>
 
 <div class="clip-section">
   <div class="clip-section-title">현재 UI 기준 발급 위치</div>
@@ -14,14 +14,14 @@
     <div style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,0.85fr);gap:18px;align-items:start">
       <div style="border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--bg-white)">
         <img src="/assets/aistudio/ch04/aistudio-api-keys-header.png" alt="Google AI Studio API keys 상단 헤더" style="width:100%;display:block" loading="lazy">
-        <div style="padding:12px 14px;background:var(--bg-offwhite);font-size:0.8rem;line-height:1.6;color:var(--text-secondary)">현재 AI Studio에서는 <strong>Dashboard &gt; API 키</strong> 화면 상단에서 <strong>API 키 만들기</strong>로 진입한다. 키 목록 전체는 개인 정보가 섞일 수 있으므로 수업 자료에는 상단 안내 영역만 넣었다.</div>
+        <div style="padding:12px 14px;background:var(--bg-offwhite);font-size:0.8rem;line-height:1.6;color:var(--text-secondary)">현재 AI Studio에서는 <strong>Dashboard &gt; API 키</strong> 화면 상단에서 <strong>API 키 만들기</strong>로 진입합니다. 키 목록 전체는 개인 정보가 섞일 수 있으므로 수업 자료에는 상단 안내 영역만 넣었다.</div>
       </div>
       <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:18px;padding:18px">
         <div style="font-size:0.8rem;font-weight:800;color:var(--brand);margin-bottom:10px">Quick Path</div>
         <ol style="margin:0;padding-left:20px;line-height:1.8;color:var(--text-body);font-size:0.85rem">
-          <li><a href="https://aistudio.google.com/prompts/new_chat" target="_blank">aistudio.google.com</a>에 로그인한다.</li>
-          <li>좌측 하단 또는 상단 메뉴의 <strong>Get API key</strong>로 이동한다.</li>
-          <li><strong>API 키 만들기</strong>를 눌러 연결할 프로젝트를 선택한다.</li>
+          <li><a href="https://aistudio.google.com/prompts/new_chat" target="_blank">aistudio.google.com</a>에 로그인합니다.</li>
+          <li>좌측 하단 또는 상단 메뉴의 <strong>Get API key</strong>로 이동합니다.</li>
+          <li><strong>API 키 만들기</strong>를 눌러 연결할 프로젝트를 선택합니다.</li>
           <li>발급된 키는 복사만 하고, 코드에는 직접 쓰지 말고 환경 변수로 넣는다.</li>
         </ol>
       </div>
@@ -35,11 +35,11 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
       <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
         <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">1. 코드에 직접 넣지 않기</div>
-        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">키를 소스 코드나 슬라이드에 그대로 적으면 유출 위험이 커진다. 문서 공유 전에는 항상 제거한다.</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">키를 소스 코드나 슬라이드에 그대로 적으면 유출 위험이 커집니다. 문서 공유 전에는 항상 제거합니다.</div>
       </div>
       <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
         <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">2. 환경 변수로 분리</div>
-        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">보통은 <code>GEMINI_API_KEY</code>처럼 운영체제 환경 변수나 `.env` 파일로 연결해 앱과 비밀값을 분리한다.</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">보통은 <code>GEMINI_API_KEY</code>처럼 운영체제 환경 변수나 `.env` 파일로 연결해 앱과 비밀값을 분리합니다.</div>
       </div>
       <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
         <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">3. 프로젝트와 함께 관리</div>
@@ -47,7 +47,7 @@
       </div>
       <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
         <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">4. 유출 시 즉시 폐기</div>
-        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">메신저나 공개 저장소에 노출됐다면 기존 키는 폐기하고 새 키를 발급받는 것이 원칙이다.</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">메신저나 공개 저장소에 노출됐다면 기존 키는 폐기하고 새 키를 발급받는 것이 원칙입니다.</div>
       </div>
     </div>
     <div class="tip-block" style="margin-top:16px">
@@ -65,8 +65,8 @@
   <div class="clip-section-content">
     <p style="margin:0 0 12px;font-size:0.88rem;line-height:1.8;color:var(--text-body)">오늘은 API 키를 여러 번 쓰는 실습을 진행하지 않는다. 대신 아래 두 가지만 기억하면 충분하다.</p>
     <ul style="margin:0;padding-left:20px;line-height:1.8;color:var(--text-body);font-size:0.85rem">
-      <li>AI Studio Build 앱을 나중에 로컬이나 사내 환경에서 실행하려면 결국 API key 연결이 필요하다.</li>
-      <li>키는 기술 설정이면서 동시에 비용, 보안, 운영 정책의 출발점이다.</li>
+      <li>AI Studio Build 앱을 나중에 로컬이나 사내 환경에서 실행하려면 결국 API key 연결이 필요합니다.</li>
+      <li>키는 기술 설정이면서 동시에 비용, 보안, 운영 정책의 출발점입니다.</li>
     </ul>
   </div>
 </div>

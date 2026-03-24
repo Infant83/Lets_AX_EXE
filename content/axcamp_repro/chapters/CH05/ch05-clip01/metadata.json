@@ -3,27 +3,27 @@
   "url": "https://lg.cmdspace.work/axcamp#ch05-clip01",
   "pageTitle": "AX Camp for Leaders | LG",
   "clipTitle": "LLM 앱과 API의 동작 원리",
-  "overview": "AI Studio Build로 만든 앱을 로컬에서 실행해도 실제 추론은 원격 Gemini API에서 일어난다. 이 섹션은 API 방식, key, quota, billing이 왜 필요한지를 한 번에 이해하도록 정리한 개념 오리엔테이션이다.",
+  "overview": "AI Studio Build로 만든 앱을 로컬에서 실행해도 실제 추론은 원격 Gemini API에서 일어납니다. 이 섹션은 API 방식, key, quota, billing이 왜 필요한지를 한 번에 이해하시도록 정리한 개념 오리엔테이션입니다.",
   "badges": [
     "CH 05",
     "개념"
   ],
-  "text": "LLM 앱과 API의 동작 원리. AI Studio Build로 만든 앱을 로컬에서 실행해도 실제 추론은 원격 Gemini API에서 일어난다. 이 섹션은 API 방식, key, quota, billing이 왜 필요한지를 설명한다. Chat UI와 API 앱의 차이, Playground와 Build 화면, API key, quota, billing, environment variable 개념을 다룬다.",
+  "text": "LLM 앱과 API의 동작 원리. AI Studio Build로 만든 앱을 로컬에서 실행해도 실제 추론은 원격 Gemini API에서 일어납니다. 이 섹션은 API 방식, key, quota, billing이 왜 필요한지를 친절하게 설명합니다. Chat UI와 API 앱의 차이, Playground와 Build 화면, API key, quota, billing, environment variable 개념을 다룹니다.",
   "sections": [
     {
       "index": 1,
       "title": "왜 이 챕터가 필요한가",
-      "text": "Chat UI에서는 모델 호출 구조가 숨겨져 있지만, API와 Build 앱에서는 API key와 quota, billing 개념이 전면으로 나온다."
+      "text": "Chat UI에서는 모델 호출 구조가 숨겨져 있지만, API와 Build 앱에서는 API key와 quota, billing 개념이 전면으로 나옵니다."
     },
     {
       "index": 2,
       "title": "실제 AI Studio 화면으로 보기",
-      "text": "Playground는 모델과 실행 설정을 함께 보여주고, Build는 자연어로 앱을 만들되 결국 Gemini API 호출이 필요하다는 점을 보여준다."
+      "text": "Playground는 모델과 실행 설정을 함께 보여주고, Build는 자연어로 앱을 만들되 결국 Gemini API 호출이 필요하다는 점을 보여줍니다."
     },
     {
       "index": 3,
       "title": "실행 전에 이해할 4가지",
-      "text": "API key, quota와 rate limit, billing, environment variable 개념을 실습 관점에서 정리한다."
+      "text": "API key, quota와 rate limit, billing, environment variable 개념을 실습 관점에서 정리합니다."
     }
   ],
   "prompts": [],

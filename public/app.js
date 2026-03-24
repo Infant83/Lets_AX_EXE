@@ -1789,6 +1789,275 @@ const INDUSTRY_LANDSCAPE_SOURCE_MAP = {
   }
 };
 
+const STYLE_TONE_PRESETS = {
+  minimal: {
+    label: "Minimal",
+    accent: "#35517f",
+    accentSoft: "rgba(53, 81, 127, 0.18)",
+    identity: "절제된 무채색, 얇은 선, 조용한 업무용 화면",
+    defaultPalette: "white, off-white, blue gray, muted navy",
+    colorTip:
+      "색을 따로 요청하지 않으면 white / off-white / blue-gray 기반의 절제된 팔레트를 쓰고, 포인트는 1개만 둔다."
+  },
+  scandinavian: {
+    label: "Scandinavian",
+    accent: "#b58957",
+    accentSoft: "rgba(181, 137, 87, 0.22)",
+    identity: "웜 뉴트럴, 부드러운 카드, 생활 브랜드 같은 안정감",
+    defaultPalette: "warm white, oatmeal, sand, muted brown",
+    colorTip:
+      "색을 따로 지정하지 않으면 warm white / sand / muted brown 중심으로 간다. 브랜드 색을 넣더라도 톤은 부드럽게 유지합니다."
+  },
+  brutal: {
+    label: "Neo Brutal",
+    accent: "#111111",
+    accentSoft: "rgba(255, 87, 179, 0.22)",
+    identity: "두꺼운 보더, 평면 색 블록, 공격적인 대비",
+    defaultPalette: "yellow, cyan, lime, black, hot pink",
+    colorTip:
+      "Neo Brutal은 기본적으로 원색 대비를 전제합니다. 색을 따로 말하지 않으면 yellow / cyan / lime / black 계열을 과감하게 쓴다."
+  },
+  poster: {
+    label: "Poster",
+    accent: "#f2f2f2",
+    accentSoft: "rgba(255, 255, 255, 0.16)",
+    identity: "다크 바탕, 에디토리얼 타이포, 강한 명암과 장면 연출",
+    defaultPalette: "black, charcoal, white, one bold accent",
+    colorTip:
+      "Poster 계열은 다크 배경과 강한 명암이 기본입니다. 색을 별도 요청하지 않으면 black / charcoal / white 중심에 포인트 1개만 얹는다."
+  }
+};
+
+const STYLE_GRAMMAR_PRESETS = {
+  grid: {
+    label: "Grid",
+    structure: "strict aligned grid, table-like sections, even gutters, disciplined spacing",
+    outcome: "숫자와 비교표가 많은 보고서형 화면"
+  },
+  system: {
+    label: "System",
+    structure: "modular cards, side navigation or utility rail, panels that feel like a real work tool",
+    outcome: "사내 포털과 업무 앱에 가까운 도구형 화면"
+  },
+  pop: {
+    label: "Pop",
+    structure: "high-emphasis hero, CTA-led blocks, obvious focal points, quick demo readability",
+    outcome: "데모, 프로토타입, 이벤트형 앱에 강한 강조형 화면"
+  },
+  stage: {
+    label: "Stage",
+    structure: "large editorial type, scene-like composition, dramatic section breaks, presentation-first hierarchy",
+    outcome: "메시지와 장면 연출이 먼저 읽히는 발표형 화면"
+  }
+};
+
+const STYLE_PROMPT_MATRIX_LIBRARY = [
+  {
+    title: "Minimal Grid",
+    tone: "minimal",
+    grammar: "grid",
+    useCase: "임원용 경쟁사 대시보드",
+    cues: ["흰 배경", "얇은 규칙선", "정렬된 KPI와 표"],
+    avoid: ["장식용 일러스트", "과한 그라데이션"]
+  },
+  {
+    title: "Minimal System",
+    tone: "minimal",
+    grammar: "system",
+    useCase: "사내 분석 도구와 운영 포털",
+    cues: ["모듈 카드", "조용한 내비게이션", "기능 중심 패널"],
+    avoid: ["불필요한 모션", "과도한 브랜드 장식"]
+  },
+  {
+    title: "Minimal Pop",
+    tone: "minimal",
+    grammar: "pop",
+    useCase: "핵심 KPI를 빠르게 보여주는 데모 앱",
+    cues: ["포인트 CTA 1개", "절제된 배경", "핵심 카드 강조"],
+    avoid: ["색상 남용", "복잡한 장식 패턴"]
+  },
+  {
+    title: "Minimal Stage",
+    tone: "minimal",
+    grammar: "stage",
+    useCase: "발표 첫 화면과 비전 소개용 웹 화면",
+    cues: ["큰 타이포", "넓은 여백", "담백한 히어로"],
+    avoid: ["과장된 3D 그래픽", "잡다한 보조 정보"]
+  },
+  {
+    title: "Scandinavian Grid",
+    tone: "scandinavian",
+    grammar: "grid",
+    useCase: "따뜻한 톤의 리서치 보드",
+    cues: ["웜 뉴트럴", "소프트 룰", "리포트 감성"],
+    avoid: ["차가운 네온톤", "딱딱한 금속 질감"]
+  },
+  {
+    title: "Scandinavian System",
+    tone: "scandinavian",
+    grammar: "system",
+    useCase: "생활 브랜드 같은 내부 업무 도구",
+    cues: ["부드러운 카드", "자연스러운 간격", "편안한 사용감"],
+    avoid: ["위협적인 대비", "공격적 CTA"]
+  },
+  {
+    title: "Scandinavian Pop",
+    tone: "scandinavian",
+    grammar: "pop",
+    useCase: "온화하지만 산뜻한 서비스 소개형 앱",
+    cues: ["웜 포인트 컬러", "친근한 버튼", "부드러운 대비"],
+    avoid: ["브루탈식 검은 보더", "광고 같은 과장 문구"]
+  },
+  {
+    title: "Scandinavian Stage",
+    tone: "scandinavian",
+    grammar: "stage",
+    useCase: "브랜드 비전과 스토리텔링 발표 화면",
+    cues: ["따뜻한 히어로", "넓은 숨", "차분한 서사"],
+    avoid: ["극단적 명암", "딱딱한 데이터 보드"]
+  },
+  {
+    title: "Neo Brutal Grid",
+    tone: "brutal",
+    grammar: "grid",
+    useCase: "교육용 실습 대시보드",
+    cues: ["두꺼운 경계", "선명한 블록", "데이터 펀치감"],
+    avoid: ["얇은 회색 선", "무난한 회사 템플릿"]
+  },
+  {
+    title: "Neo Brutal System",
+    tone: "brutal",
+    grammar: "system",
+    useCase: "데모용 관리 앱과 운영 콘솔",
+    cues: ["굵은 유틸리티", "평면 색", "강한 CTA"],
+    avoid: ["잔잔한 뉴트럴", "은은한 그림자 중심 UI"]
+  },
+  {
+    title: "Neo Brutal Pop",
+    tone: "brutal",
+    grammar: "pop",
+    useCase: "짧고 강한 메시지의 이벤트형 앱",
+    cues: ["검은 보더", "강한 대비", "직설적 CTA"],
+    avoid: ["얌전한 톤다운", "세밀한 장식"]
+  },
+  {
+    title: "Neo Brutal Stage",
+    tone: "brutal",
+    grammar: "stage",
+    useCase: "런칭형 히어로와 충격적인 첫 화면",
+    cues: ["대문짝 타이포", "굵은 프레임", "무대감"],
+    avoid: ["잔잔한 정보 위계", "작은 본문 위주 구성"]
+  },
+  {
+    title: "Poster Grid",
+    tone: "poster",
+    grammar: "grid",
+    useCase: "시연용 브리핑 보드",
+    cues: ["큰 대비", "구조화된 정보 보드", "포스터형 제목"],
+    avoid: ["밋밋한 중간톤", "평범한 SaaS 카드"]
+  },
+  {
+    title: "Poster System",
+    tone: "poster",
+    grammar: "system",
+    useCase: "기능과 메시지를 함께 밀어야 하는 에디토리얼 앱",
+    cues: ["에디토리얼 UI", "다크 베이스", "서사형 블록"],
+    avoid: ["흔한 관리도구 느낌", "밝은 저대비 테마"]
+  },
+  {
+    title: "Poster Pop",
+    tone: "poster",
+    grammar: "pop",
+    useCase: "제품 데모와 이벤트용 마이크로 앱",
+    cues: ["광고형 문구", "강한 포인트 색", "빠른 임팩트"],
+    avoid: ["설명 위주 장문", "조용한 화면 전개"]
+  },
+  {
+    title: "Poster Stage",
+    tone: "poster",
+    grammar: "stage",
+    useCase: "런칭형 마이크로사이트와 강한 시연 화면",
+    cues: ["대형 타이포", "강한 블록", "몰입형 장면"],
+    avoid: ["잔잔한 비즈니스 카드", "얇은 보고서형 배치"]
+  }
+];
+
+function buildWebStylePromptSlide(entry, index) {
+  const tone = STYLE_TONE_PRESETS[entry.tone];
+  const grammar = STYLE_GRAMMAR_PRESETS[entry.grammar];
+  const cuesText = entry.cues.join(", ");
+  const avoidText = entry.avoid.join(", ");
+  const quickPrompt = `${entry.title} 스타일로 ${entry.useCase} 웹 화면을 만들어줘. ${cuesText}를 먼저 보이게 하고, ${avoidText}는 피해서 정리해줘. 색은 따로 지정하지 않으면 ${tone.defaultPalette} 톤으로 잡아줘.`;
+  const fullPrompt = [
+    `Create a polished responsive web interface for ${entry.useCase}.`,
+    "",
+    `Style direction`,
+    `- Overall style: ${entry.title}`,
+    `- Tone family: ${tone.label} (${tone.identity})`,
+    `- Layout grammar: ${grammar.label} (${grammar.structure})`,
+    `- Visual cues to emphasize: ${cuesText}`,
+    `- Avoid: ${avoidText}`,
+    "",
+    `Layout requirements`,
+    `- Keep the page usable as a realistic web app, not a poster-only mockup.`,
+    `- Use a clear header, one main working area, and support panels that match ${grammar.outcome}.`,
+    `- Make the hierarchy obvious within 3 seconds when the screen first loads.`,
+    `- Keep copy concise and executive-friendly.`,
+    "",
+    `Color guidance`,
+    `- If I do not specify brand colors, use the default ${tone.label} palette: ${tone.defaultPalette}.`,
+    `- If brand colors are required, keep them constrained so the ${tone.label} mood still survives.`,
+    "",
+    `Output guidance`,
+    `- Return a production-minded web UI concept that could be implemented in HTML/CSS/JS or React.`,
+    `- Make the interface feel intentional and visually distinctive instead of generic SaaS.`,
+    `- The first impression should clearly read as ${entry.title}.`
+  ].join("\n");
+
+  return {
+    eyebrow: `${String(index + 1).padStart(2, "0")} / ${entry.title}`,
+    title: entry.title,
+    summary: `${entry.useCase}에 바로 적용할 수 있는 ${tone.label} × ${grammar.label} prompt. 카드에서 보이는 프리뷰 구성을 실제 화면 프롬프트로 풀어쓴 버전입니다.`,
+    themeTone: entry.tone,
+    themeGrammar: entry.grammar,
+    stylePreview: {
+      toneLabel: tone.label,
+      grammarLabel: grammar.label,
+      useCase: entry.useCase
+    },
+    bullets: [
+      `Tone family: ${tone.label} — ${tone.identity}`,
+      `Layout grammar: ${grammar.label} — ${grammar.outcome}`,
+      `Visual cues: ${cuesText}`,
+      `Avoid: ${avoidText}`
+    ],
+    signals: [tone.label, grammar.label, ...entry.cues],
+    infoBlocks: [
+      {
+        title: "색상 팁",
+        items: [
+          tone.colorTip,
+          "브랜드 컬러를 강하게 써야 할 때만 추가로 색을 지정하고, 그렇지 않으면 톤 패밀리 기본 팔레트를 믿는 편이 안정적입니다."
+        ]
+      },
+      {
+        title: "언제 쓰나",
+        items: [
+          `${entry.useCase}처럼 화면 목적이 분명할 때`,
+          `${grammar.label} 문법을 먼저 고르고 톤은 ${tone.label}로 확정하고 싶을 때`
+        ]
+      }
+    ],
+    promptBlocks: [
+      { label: "바로 써보는 예제 프롬프트", body: quickPrompt },
+      { label: "Gemini / ChatGPT Full Prompt", body: fullPrompt }
+    ],
+    accent: tone.accent,
+    accentSoft: tone.accentSoft
+  };
+}
+
+
 const SLIDE_DECK_BUILDERS = {
   "industry-landscape": buildIndustryLandscapeDeck,
   "assistant-agentic-spectrum": buildAssistantAgenticSpectrumDeck,
@@ -1803,7 +2072,8 @@ const SLIDE_DECK_BUILDERS = {
   "enterprise-research-workflow": buildEnterpriseResearchWorkflowDeck,
   "ai-studio-api-principles": buildAiStudioApiPrinciplesDeck,
   "vibe-coding-shift": buildVibeCodingShiftDeck,
-  "executive-app-build-sprint": buildExecutiveAppBuildSprintDeck
+  "executive-app-build-sprint": buildExecutiveAppBuildSprintDeck,
+  "web-style-prompt-library": buildWebStylePromptLibraryDeck
 };
 
 function collectIndustryLandscapeStats() {
@@ -1951,19 +2221,19 @@ function buildTechUtilizationRoadmapDeck() {
         eyebrow: "01 / Chat UI",
         title: "질문-리서치-초안-수정의 협업 루프",
         imageSrc: `${basePath}/slide-1.png`,
-        imageAlt: "Enterprise AI Roadmap 슬라이드 1장. Chat UI 단계에서 질문, 리서치, 초안 작성, 수정 요청을 반복하는 흐름을 설명한다."
+        imageAlt: "Enterprise AI Roadmap 슬라이드 1장. Chat UI 단계에서 질문, 리서치, 초안 작성, 수정 요청을 반복하는 흐름을 설명합니다."
       },
       {
         eyebrow: "02 / API / Build",
         title: "AI가 개발을 돕고 앱이 다시 AI를 호출하는 구조",
         imageSrc: `${basePath}/slide-2.png`,
-        imageAlt: "Enterprise AI Roadmap 슬라이드 2장. AI Studio Build와 API를 활용해 앱을 만들고 서비스가 다시 AI를 호출하는 구조를 설명한다."
+        imageAlt: "Enterprise AI Roadmap 슬라이드 2장. AI Studio Build와 API를 활용해 앱을 만들고 서비스가 다시 AI를 호출하는 구조를 설명합니다."
       },
       {
         eyebrow: "03 / CLI / Agent",
         title: "Codex와 Cline으로 시연하는 에이전틱 워크플로우",
         imageSrc: `${basePath}/slide-3.png`,
-        imageAlt: "Enterprise AI Roadmap 슬라이드 3장. Codex와 Cline을 통해 계획, 도구 호출, 실행, 검증을 잇는 CLI Agent 단계를 설명한다."
+        imageAlt: "Enterprise AI Roadmap 슬라이드 3장. Codex와 Cline을 통해 계획, 도구 호출, 실행, 검증을 잇는 CLI Agent 단계를 설명합니다."
       }
     ]
   };
@@ -1986,7 +2256,7 @@ function buildConceptFoundationGuideDeck() {
         eyebrow: "01 / Infographic",
         title: "오늘 수업을 관통하는 AI 핵심 용어 지도",
         imageSrc: imagePath,
-        imageAlt: "전문가용 AI 핵심 개념 가이드 세로 인포그래픽. 멀티모달, 컨텍스트 엔지니어링, RAG, MCP, Agentic AI 등 핵심 개념을 한 장으로 정리한다."
+        imageAlt: "전문가용 AI 핵심 개념 가이드 세로 인포그래픽. 멀티모달, 컨텍스트 엔지니어링, RAG, MCP, Agentic AI 등 핵심 개념을 한 장으로 정리합니다."
       }
     ]
   };
@@ -2259,7 +2529,7 @@ function buildAiStudioApiPrinciplesDeck() {
       },
       {
         eyebrow: "06 / Operating Principle",
-        title: "로컬 앱도 결국 클라우드 호출이다",
+        title: "로컬 앱도 결국 클라우드 호출입니다",
         imageSrc: `${basePath}/slide-6.jpg`,
         imageAlt:
           "로컬 앱의 클라우드 의존성, API key의 필요성, 자원 소모에 따른 비용 관리의 중요성을 강조하는 슬라이드"
@@ -2359,6 +2629,17 @@ function buildExecutiveAppBuildSprintDeck() {
   };
 }
 
+function buildWebStylePromptLibraryDeck() {
+  return {
+    id: "web-style-prompt-library",
+    kicker: "Prompt Deck",
+    title: "웹 스타일 Prompt Library",
+    subtitle: "Gemini / ChatGPT에 바로 붙여 넣을 수 있는 스타일별 full prompt 예제",
+    downloadUrl: "",
+    slides: STYLE_PROMPT_MATRIX_LIBRARY.map((entry, index) => buildWebStylePromptSlide(entry, index))
+  };
+}
+
 function populateSlideDeckDownloadLinks() {
   el.clipBody.querySelectorAll("[data-slide-deck-download]").forEach((anchor) => {
     const deckId = normalizeWs(anchor.dataset.slideDeckDownload || "");
@@ -2399,6 +2680,58 @@ function renderSlideSources(sources) {
       return `<a class="slide-source-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
     })
     .join("");
+}
+
+function renderSlideInfoBlocks(blocks) {
+  return (blocks || [])
+    .map((block) => {
+      const items = Array.isArray(block.items) ? block.items : [];
+      return `
+        <div class="slide-side-block">
+          <div class="slide-side-title">${escapeHtml(block.title || "정보")}</div>
+          <ul class="slide-info-list">
+            ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function renderSlidePromptBlocks(blocks, deckId, slideIndex) {
+  return (blocks || [])
+    .map((block, blockIndex) => {
+      const promptId = `slidePrompt-${deckId}-${slideIndex}-${blockIndex}`;
+      return `
+        <section class="slide-prompt-block">
+          <div class="slide-prompt-head">
+            <strong>${escapeHtml(block.label || "Prompt")}</strong>
+            <button type="button" class="ghost slide-prompt-copy" onclick="copyPrompt(this, '${promptId}')">복사</button>
+          </div>
+          <pre id="${promptId}" class="slide-prompt-code">${escapeHtml(block.body || "")}</pre>
+        </section>
+      `;
+    })
+    .join("");
+}
+
+function renderSlideStyleHero(preview, slide) {
+  if (!preview) return "";
+  return `
+    <section class="slide-style-hero" aria-hidden="true">
+      <div class="slide-style-hero-top">
+        <span class="slide-style-hero-chip">${escapeHtml(preview.toneLabel || "")}</span>
+        <span class="slide-style-hero-chip">${escapeHtml(preview.grammarLabel || "")}</span>
+      </div>
+      <div class="slide-style-hero-canvas">
+        <div class="slide-style-hero-rail"></div>
+        <div class="slide-style-hero-display"></div>
+        <div class="slide-style-hero-caption-line"></div>
+        <div class="slide-style-hero-panels"><span></span><span></span><span></span></div>
+      </div>
+      <div class="slide-style-hero-note">${escapeHtml(preview.useCase || slide?.title || "")}</div>
+    </section>
+  `;
 }
 
 function buildDeckPreviewEntries(deck) {
@@ -2611,9 +2944,31 @@ function renderActiveSlideDeck() {
       </article>
     `;
   } else {
+    const promptBlocksHtml = renderSlidePromptBlocks(slide.promptBlocks || [], deck.id || "deck", currentIndex);
+    const styleHeroHtml = renderSlideStyleHero(slide.stylePreview, slide);
+    const signalBlockHtml = (slide.signals || []).length
+      ? `
+            <div class="slide-side-block">
+              <div class="slide-side-title">핵심 시그널</div>
+              <div class="slide-signal-list">
+                ${(slide.signals || []).map((item) => `<span class="slide-signal-chip">${escapeHtml(item)}</span>`).join("")}
+              </div>
+            </div>
+          `
+      : "";
+    const sourceBlockHtml = (slide.sources || []).length
+      ? `
+            <div class="slide-side-block">
+              <div class="slide-side-title">출처</div>
+              <div class="slide-source-list">${renderSlideSources(slide.sources || [])}</div>
+            </div>
+          `
+      : "";
+    const infoBlocksHtml = renderSlideInfoBlocks(slide.infoBlocks || []);
+
     el.slideDeckStage.innerHTML = `
       <article
-        class="slide-sheet"
+        class="slide-sheet${slide.themeTone ? ` style-tone-${escapeHtml(slide.themeTone)}` : ""}${slide.themeGrammar ? ` style-grammar-${escapeHtml(slide.themeGrammar)}` : ""}${slide.stylePreview ? " slide-sheet-style-preview" : ""}"
         style="--slide-accent:${slide.accent || "#245fca"};--slide-accent-soft:${slide.accentSoft || "rgba(58, 126, 242, 0.22)"}"
       >
         <button
@@ -2634,23 +2989,18 @@ function renderActiveSlideDeck() {
         </div>
         <div class="slide-sheet-grid">
           <section class="slide-main-panel">
+            ${styleHeroHtml}
             <h4 class="slide-headline">${escapeHtml(slide.title || "")}</h4>
             <p class="slide-summary">${escapeHtml(slide.summary || "")}</p>
             <ul class="slide-bullet-list">
               ${(slide.bullets || []).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
             </ul>
+            ${promptBlocksHtml}
           </section>
           <aside class="slide-side-panel">
-            <div class="slide-side-block">
-              <div class="slide-side-title">핵심 시그널</div>
-              <div class="slide-signal-list">
-                ${(slide.signals || []).map((item) => `<span class="slide-signal-chip">${escapeHtml(item)}</span>`).join("")}
-              </div>
-            </div>
-            <div class="slide-side-block">
-              <div class="slide-side-title">출처</div>
-              <div class="slide-source-list">${renderSlideSources(slide.sources || [])}</div>
-            </div>
+            ${signalBlockHtml}
+            ${infoBlocksHtml}
+            ${sourceBlockHtml}
           </aside>
         </div>
         <div class="slide-sheet-foot">
@@ -3225,11 +3575,17 @@ function wireClipInteractions() {
   el.clipBody.querySelectorAll("[data-slide-deck-card]").forEach((button) => {
     if (button.dataset.slideDeckCardBound === "1") return;
     button.dataset.slideDeckCardBound = "1";
-    button.addEventListener("click", () => {
+    const openDeckFromCard = () => {
       const deckId = normalizeWs(button.dataset.slideDeckCard || "");
       const slideIndex = Number(button.dataset.slideIndex || "0");
       if (!deckId) return;
       openSlideDeck(deckId, slideIndex);
+    };
+    button.addEventListener("click", openDeckFromCard);
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      openDeckFromCard();
     });
   });
 }
@@ -4419,6 +4775,18 @@ function bindEvents() {
     if (state.activeSlideDeck) {
       if (event.key === "Escape") {
         closeSlideDeck();
+        return;
+      }
+      if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        const step = Math.max(220, el.slideDeckStage?.clientHeight ? Math.round(el.slideDeckStage.clientHeight * 0.84) : 320);
+        el.slideDeckStage?.scrollBy({ top: step, behavior: "smooth" });
+        return;
+      }
+      if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        const step = Math.max(220, el.slideDeckStage?.clientHeight ? Math.round(el.slideDeckStage.clientHeight * 0.84) : 320);
+        el.slideDeckStage?.scrollBy({ top: -step, behavior: "smooth" });
         return;
       }
       if (event.key === "ArrowLeft" && state.activeSlideIndex > 0) {
