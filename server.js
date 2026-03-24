@@ -3,6 +3,10 @@ const fsSync = require("fs");
 const fs = require("fs/promises");
 const path = require("path");
 const crypto = require("crypto");
+const { execFile } = require("child_process");
+const { promisify } = require("util");
+
+const execFileAsync = promisify(execFile);
 
 const ROOT_DIR = __dirname;
 const PUBLIC_DIR = path.join(ROOT_DIR, "public");
@@ -260,6 +264,145 @@ async function pathExists(targetPath) {
   } catch {
     return false;
   }
+}
+
+async function runGit(args) {
+  const result = await execFileAsync("git", args, {
+    cwd: ROOT_DIR,
+    windowsHide: true,
+    maxBuffer: 8 * 1024 * 1024
+  });
+  return {
+    stdout: String(result.stdout || ""),
+    stderr: String(result.stderr || "")
+  };
+}
+
+function parseGitStatusPorcelain(output) {
+  const lines = String(output || "").split(/\r?\n/).filter(Boolean);
+  const summary = {
+    branch: "",
+    upstream: "",
+    ahead: 0,
+    behind: 0,
+    tracked: [],
+    untracked: []
+  };
+
+  for (const line of lines) {
+    if (line.startsWith("## ")) {
+      const match = line.match(/^##\s+(.+?)(?:\.\.\.(\S+))?(?:\s+\[(.+)\])?$/);
+      if (match) {
+        summary.branch = normalizeWs(match[1]);
+        summary.upstream = normalizeWs(match[2] || "");
+        const divergence = normalizeWs(match[3] || "");
+        const aheadMatch = divergence.match(/ahead\s+(\d+)/i);
+        const behindMatch = divergence.match(/behind\s+(\d+)/i);
+        summary.ahead = Number(aheadMatch?.[1] || 0);
+        summary.behind = Number(behindMatch?.[1] || 0);
+      }
+      continue;
+    }
+
+    const status = line.slice(0, 2);
+    const rawPath = line.slice(3).trim();
+    const pathText = rawPath.includes(" -> ")
+      ? rawPath.split(" -> ").pop()
+      : rawPath;
+    const entry = {
+      status,
+      path: pathText.replace(/\\/g, "/")
+    };
+
+    if (status === "??") {
+      summary.untracked.push(entry);
+    } else {
+      summary.tracked.push(entry);
+    }
+  }
+
+  return summary;
+}
+
+function isPublishableGitPath(filePath) {
+  const normalized = String(filePath || "").replace(/\\/g, "/").replace(/^\/+/, "");
+  if (!normalized) return false;
+  if (
+    normalized.startsWith(".admin-history/") ||
+    normalized.startsWith("dist-pages/") ||
+    normalized.startsWith("node_modules/") ||
+    normalized.startsWith("output/")
+  ) {
+    return false;
+  }
+  if (/(^|\/)[^/]+ \(\d+\)\.[^/]+$/.test(normalized)) {
+    return false;
+  }
+
+  if (
+    normalized === "server.js" ||
+    normalized === "package.json" ||
+    normalized === "package-lock.json" ||
+    normalized === "README.md" ||
+    normalized === ".gitignore"
+  ) {
+    return true;
+  }
+
+  return (
+    normalized.startsWith("content/") ||
+    normalized.startsWith("public/") ||
+    normalized.startsWith("scripts/") ||
+    normalized.startsWith("docs/") ||
+    normalized.startsWith(".github/")
+  );
+}
+
+function buildPublishableGitChanges(status) {
+  const tracked = [];
+  const untracked = [];
+  const ignored = [];
+
+  for (const entry of status.tracked || []) {
+    if (isPublishableGitPath(entry.path)) tracked.push(entry);
+    else ignored.push(entry);
+  }
+
+  for (const entry of status.untracked || []) {
+    if (isPublishableGitPath(entry.path)) untracked.push(entry);
+    else ignored.push(entry);
+  }
+
+  return {
+    tracked,
+    untracked,
+    ignored,
+    trackedCount: tracked.length,
+    untrackedCount: untracked.length,
+    ignoredCount: ignored.length
+  };
+}
+
+async function getGitPublishStatus() {
+  const [{ stdout: statusStdout }, { stdout: headStdout }, { stdout: headMessageStdout }] =
+    await Promise.all([
+      runGit(["status", "--short", "--branch"]),
+      runGit(["rev-parse", "--short", "HEAD"]),
+      runGit(["log", "-1", "--pretty=%s"])
+    ]);
+
+  const parsed = parseGitStatusPorcelain(statusStdout);
+  return {
+    branch: parsed.branch,
+    upstream: parsed.upstream,
+    ahead: parsed.ahead,
+    behind: parsed.behind,
+    head: normalizeWs(headStdout),
+    headMessage: normalizeWs(headMessageStdout),
+    tracked: parsed.tracked,
+    untracked: parsed.untracked,
+    publishable: buildPublishableGitChanges(parsed)
+  };
 }
 
 function cleanAccountId(value) {
@@ -3211,6 +3354,85 @@ async function handleAdminClipAssets(req, res, urlObj) {
   });
 }
 
+async function handleAdminPublishStatus(req, res, urlObj) {
+  const currentUser = await resolveUserFromRequest(req, urlObj);
+  if (!currentUser) {
+    return sendJson(res, 401, { ok: false, error: "로그인이 필요합니다." });
+  }
+
+  if (!currentUser.isAdmin) {
+    return sendJson(res, 403, { ok: false, error: "관리자 권한이 필요합니다." });
+  }
+
+  const git = await getGitPublishStatus();
+  return sendJson(res, 200, {
+    ok: true,
+    git
+  });
+}
+
+async function handleAdminPublish(req, res, urlObj) {
+  const currentUser = await resolveUserFromRequest(req, urlObj);
+  if (!currentUser) {
+    return sendJson(res, 401, { ok: false, error: "로그인이 필요합니다." });
+  }
+
+  if (!currentUser.isAdmin) {
+    return sendJson(res, 403, { ok: false, error: "관리자 권한이 필요합니다." });
+  }
+
+  const payload = await readRequestJson(req);
+  const message = normalizeWs(payload.message || "") || "Publish root editor updates";
+  const before = await getGitPublishStatus();
+  const branch = before.branch || "main";
+
+  if (before.behind > 0) {
+    return sendJson(res, 409, {
+      ok: false,
+      error: "현재 로컬 브랜치가 원격보다 뒤처져 있습니다. 먼저 터미널에서 pull/rebase 후 다시 시도해 주세요.",
+      git: before
+    });
+  }
+
+  const operations = [];
+  const stageTargets = [
+    ...before.publishable.tracked.map((item) => item.path),
+    ...before.publishable.untracked.map((item) => item.path)
+  ];
+
+  if (stageTargets.length) {
+    await runGit(["add", "-A", "--", ...stageTargets]);
+    try {
+      await runGit(["commit", "-m", message]);
+      operations.push("commit");
+    } catch (error) {
+      const stderr = String(error?.stderr || error?.message || "");
+      if (!/nothing to commit/i.test(stderr)) {
+        throw error;
+      }
+    }
+  }
+
+  const afterCommit = await getGitPublishStatus();
+  if (afterCommit.ahead > 0) {
+    await runGit(["push", "origin", branch]);
+    operations.push("push");
+  } else if (!operations.length) {
+    return sendJson(res, 400, {
+      ok: false,
+      error: "push할 변경 사항이 없습니다.",
+      git: afterCommit
+    });
+  }
+
+  const afterPush = await getGitPublishStatus();
+  return sendJson(res, 200, {
+    ok: true,
+    operations,
+    git: afterPush
+  });
+}
+
 async function handleBuilderState(req, res, urlObj) {
   const currentUser = await resolveUserFromRequest(req, urlObj);
   if (!currentUser) {
@@ -3520,6 +3742,14 @@ async function route(req, res) {
     urlObj.pathname.startsWith("/api/admin/clip-assets/")
   ) {
     return handleAdminClipAssets(req, res, urlObj);
+  }
+
+  if (req.method === "GET" && urlObj.pathname === "/api/admin/publish-status") {
+    return handleAdminPublishStatus(req, res, urlObj);
+  }
+
+  if (req.method === "POST" && urlObj.pathname === "/api/admin/publish") {
+    return handleAdminPublish(req, res, urlObj);
   }
 
   if (req.method === "GET" && urlObj.pathname.startsWith("/course-files/")) {

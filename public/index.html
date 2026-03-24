@@ -190,6 +190,7 @@
               <button id="toggleNoteBtn" class="ghost">메모 펼치기</button>
               <button id="toggleEditModeBtn" class="ghost hidden" onclick="window.toggleContentEditMode?.()">본문 수정</button>
               <button id="toggleSidebarModeBtn" class="ghost hidden" onclick="window.toggleSidebarEditMode?.()">사이드바 수정</button>
+              <button id="togglePublishModeBtn" class="ghost hidden" onclick="window.togglePublishMode?.()">Pages 배포</button>
             </div>
           </div>
 
@@ -415,6 +416,59 @@
               </div>
             </div>
             <p id="sidebarEditorStatus" class="muted"></p>
+          </section>
+
+          <section id="publishPanel" class="content-editor-panel hidden">
+            <div class="content-editor-head">
+              <div>
+                <p class="eyebrow">Root Publish</p>
+                <h3>GitHub Pages 배포 상태</h3>
+              </div>
+              <div class="content-editor-actions">
+                <button id="reloadPublishStatusBtn" type="button" class="ghost" onclick="window.reloadPublishStatus?.()">상태 새로고침</button>
+                <button id="runPublishBtn" type="button" onclick="window.publishRootChanges?.()">커밋 후 Push</button>
+                <button id="closePublishPanelBtn" type="button" class="ghost" onclick="window.togglePublishMode?.()">닫기</button>
+              </div>
+            </div>
+            <p class="muted">
+              root 저장은 로컬 파일만 갱신합니다. GitHub Pages는 마지막으로 <code>commit + push</code> 된
+              상태만 배포하므로, 여기서 현재 변경 상태를 확인하고 바로 반영할 수 있습니다.
+            </p>
+            <div class="publish-status-grid">
+              <div class="publish-status-card">
+                <p class="content-editor-label">현재 브랜치</p>
+                <strong id="publishBranchSummary">-</strong>
+                <p id="publishHeadSummary" class="muted">-</p>
+              </div>
+              <div class="publish-status-card">
+                <p class="content-editor-label">원격과의 차이</p>
+                <strong id="publishDivergenceSummary">-</strong>
+                <p id="publishPendingSummary" class="muted">-</p>
+              </div>
+            </div>
+            <label class="sidebar-editor-field publish-message-field">
+              <span>커밋 메시지</span>
+              <input
+                id="publishCommitMessageInput"
+                maxlength="120"
+                placeholder="예: Publish root editor updates"
+              />
+            </label>
+            <div class="publish-file-grid">
+              <section class="publish-file-card">
+                <p class="content-editor-label">배포 대상 변경 파일</p>
+                <div id="publishTrackedFiles" class="publish-file-list">
+                  <p class="muted">변경 사항을 불러오면 여기에 표시됩니다.</p>
+                </div>
+              </section>
+              <section class="publish-file-card">
+                <p class="content-editor-label">제외된 파일</p>
+                <div id="publishIgnoredFiles" class="publish-file-list">
+                  <p class="muted">제외된 항목이 있으면 여기에 표시됩니다.</p>
+                </div>
+              </section>
+            </div>
+            <p id="publishPanelStatus" class="muted"></p>
           </section>
         </main>
 

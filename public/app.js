@@ -124,6 +124,8 @@ const state = {
   sidebarDirty: false,
   sidebarSourceClipKey: "",
   sidebarSourceState: null,
+  publishPanelOpen: false,
+  publishStatus: null,
   courses: [],
   currentCourse: null,
   mermaidReady: false
@@ -191,6 +193,7 @@ const el = {
   toggleNoteBtn: document.getElementById("toggleNoteBtn"),
   toggleEditModeBtn: document.getElementById("toggleEditModeBtn"),
   toggleSidebarModeBtn: document.getElementById("toggleSidebarModeBtn"),
+  togglePublishModeBtn: document.getElementById("togglePublishModeBtn"),
   contentEditorPanel: document.getElementById("contentEditorPanel"),
   contentEditorPath: document.getElementById("contentEditorPath"),
   contentEditorInput: document.getElementById("contentEditorInput"),
@@ -240,6 +243,18 @@ const el = {
   reloadSidebarEditorBtn: document.getElementById("reloadSidebarEditorBtn"),
   saveSidebarEditorBtn: document.getElementById("saveSidebarEditorBtn"),
   closeSidebarEditorBtn: document.getElementById("closeSidebarEditorBtn"),
+  publishPanel: document.getElementById("publishPanel"),
+  publishBranchSummary: document.getElementById("publishBranchSummary"),
+  publishHeadSummary: document.getElementById("publishHeadSummary"),
+  publishDivergenceSummary: document.getElementById("publishDivergenceSummary"),
+  publishPendingSummary: document.getElementById("publishPendingSummary"),
+  publishCommitMessageInput: document.getElementById("publishCommitMessageInput"),
+  publishTrackedFiles: document.getElementById("publishTrackedFiles"),
+  publishIgnoredFiles: document.getElementById("publishIgnoredFiles"),
+  publishPanelStatus: document.getElementById("publishPanelStatus"),
+  reloadPublishStatusBtn: document.getElementById("reloadPublishStatusBtn"),
+  runPublishBtn: document.getElementById("runPublishBtn"),
+  closePublishPanelBtn: document.getElementById("closePublishPanelBtn"),
   taskPanel: document.getElementById("taskPanel"),
   taskForm: document.getElementById("taskForm"),
   taskChapterContext: document.getElementById("taskChapterContext"),
@@ -539,6 +554,11 @@ function setEditorStatus(message, isError = false) {
 function setSidebarEditorStatus(message, isError = false) {
   el.sidebarEditorStatus.textContent = message || "";
   el.sidebarEditorStatus.style.color = isError ? "#b42318" : "";
+}
+
+function setPublishPanelStatus(message, isError = false) {
+  el.publishPanelStatus.textContent = message || "";
+  el.publishPanelStatus.style.color = isError ? "#b42318" : "";
 }
 
 function buildHighlightedHtmlSnippet(tagText) {
@@ -1449,10 +1469,91 @@ function resetSidebarEditor() {
   setSidebarEditorStatus("");
 }
 
+function resetPublishPanel() {
+  state.publishPanelOpen = false;
+  state.publishStatus = null;
+  if (el.publishCommitMessageInput) {
+    el.publishCommitMessageInput.value = "";
+  }
+  renderPublishPanel();
+  setPublishPanelStatus("");
+}
+
+function renderPublishFileEntries(items, emptyMessage) {
+  if (!Array.isArray(items) || !items.length) {
+    return `<p class="muted">${escapeHtml(emptyMessage)}</p>`;
+  }
+
+  return items
+    .map(
+      (item) => `
+        <div class="publish-file-entry">
+          <span class="publish-file-code">${escapeHtml(item.status || "--")}</span>
+          <span class="publish-file-path">${escapeHtml(item.path || "-")}</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderPublishPanel() {
+  const git = state.publishStatus?.git || null;
+
+  if (!git) {
+    el.publishBranchSummary.textContent = "-";
+    el.publishHeadSummary.textContent = "-";
+    el.publishDivergenceSummary.textContent = "-";
+    el.publishPendingSummary.textContent = "-";
+    el.publishTrackedFiles.innerHTML =
+      '<p class="muted">변경 사항을 불러오면 여기에 표시됩니다.</p>';
+    el.publishIgnoredFiles.innerHTML =
+      '<p class="muted">제외된 항목이 있으면 여기에 표시됩니다.</p>';
+    return;
+  }
+
+  const branchText = git.branch || "detached";
+  const upstreamText = git.upstream ? ` -> ${git.upstream}` : "";
+  el.publishBranchSummary.textContent = `${branchText}${upstreamText}`;
+  el.publishHeadSummary.textContent = git.head
+    ? `${git.head} ${normalizeWs(git.headMessage || "")}`.trim()
+    : "-";
+
+  const ahead = Number(git.ahead || 0);
+  const behind = Number(git.behind || 0);
+  const trackedCount = Number(git.publishable?.trackedCount || 0);
+  const untrackedCount = Number(git.publishable?.untrackedCount || 0);
+  const ignoredCount = Number(git.publishable?.ignoredCount || 0);
+  el.publishDivergenceSummary.textContent = `ahead ${ahead} / behind ${behind}`;
+  el.publishPendingSummary.textContent =
+    trackedCount || untrackedCount || ignoredCount
+      ? `배포 대상 ${trackedCount + untrackedCount}건 · 제외 ${ignoredCount}건`
+      : "배포 대상 변경 없음";
+
+  el.publishTrackedFiles.innerHTML = renderPublishFileEntries(
+    [
+      ...(git.publishable?.tracked || []),
+      ...(git.publishable?.untracked || [])
+    ],
+    "현재 배포 대상 변경 파일이 없습니다."
+  );
+  el.publishIgnoredFiles.innerHTML = renderPublishFileEntries(
+    git.publishable?.ignored || [],
+    "제외된 파일이 없습니다."
+  );
+
+  if (el.publishCommitMessageInput && !normalizeWs(el.publishCommitMessageInput.value)) {
+    el.publishCommitMessageInput.value =
+      ahead > 0 && !trackedCount && !untrackedCount
+        ? "Push pending root updates"
+        : "Publish root editor updates";
+  }
+}
+
 function updateEditorVisibility() {
   const showEditorControls = Boolean(state.isAdmin);
   el.toggleEditModeBtn.classList.toggle("hidden", !showEditorControls);
   el.toggleSidebarModeBtn.classList.toggle("hidden", !showEditorControls);
+  el.togglePublishModeBtn.classList.toggle("hidden", !showEditorControls);
   el.contentEditorPanel.classList.toggle(
     "hidden",
     !showEditorControls || !state.editModeOpen
@@ -1461,10 +1562,17 @@ function updateEditorVisibility() {
     "hidden",
     !showEditorControls || !state.sidebarEditOpen
   );
+  el.publishPanel.classList.toggle(
+    "hidden",
+    !showEditorControls || !state.publishPanelOpen
+  );
   el.toggleEditModeBtn.textContent = state.editModeOpen ? "본문 수정 닫기" : "본문 수정";
   el.toggleSidebarModeBtn.textContent = state.sidebarEditOpen
     ? "사이드바 수정 닫기"
     : "사이드바 수정";
+  el.togglePublishModeBtn.textContent = state.publishPanelOpen
+    ? "Pages 배포 닫기"
+    : "Pages 배포";
 }
 
 function openAccountModal() {
@@ -3440,6 +3548,31 @@ async function loadSidebarSourceForCurrentClip() {
   }
 }
 
+async function loadPublishStatus() {
+  if (!state.isAdmin) return;
+  setPublishPanelStatus("배포 상태를 불러오는 중...");
+  try {
+    const data = await api("/api/admin/publish-status");
+    state.publishStatus = data;
+    renderPublishPanel();
+    const git = data.git || {};
+    const trackedCount = Number(git.publishable?.trackedCount || 0);
+    const untrackedCount = Number(git.publishable?.untrackedCount || 0);
+    const ahead = Number(git.ahead || 0);
+    if (trackedCount || untrackedCount) {
+      setPublishPanelStatus(
+        `로컬 변경 ${trackedCount + untrackedCount}건이 Pages 미반영 상태입니다. commit + push가 필요합니다.`
+      );
+    } else if (ahead > 0) {
+      setPublishPanelStatus("커밋은 되어 있지만 아직 push되지 않았습니다.");
+    } else {
+      setPublishPanelStatus("로컬 변경이 없고 원격과 동기화된 상태입니다.");
+    }
+  } catch (error) {
+    setPublishPanelStatus(error.message, true);
+  }
+}
+
 async function onToggleEditMode() {
   if (!state.isAdmin) return;
 
@@ -3478,6 +3611,20 @@ async function onToggleSidebarEditMode() {
   state.sidebarEditOpen = true;
   updateEditorVisibility();
   await loadSidebarSourceForCurrentClip();
+}
+
+async function onTogglePublishMode() {
+  if (!state.isAdmin) return;
+
+  if (state.publishPanelOpen) {
+    state.publishPanelOpen = false;
+    updateEditorVisibility();
+    return;
+  }
+
+  state.publishPanelOpen = true;
+  updateEditorVisibility();
+  await loadPublishStatus();
 }
 
 async function reloadEditorSource() {
@@ -3559,8 +3706,9 @@ async function saveEditorSource() {
     state.editorDirty = false;
     await loadChaptersAndDefaultClip();
     renderEditorPreview(contentHtml);
+    await loadPublishStatus();
     setEditorStatus(
-      `저장 완료: ${new Date(result.savedAt).toLocaleString()} · content.html, content.md, content.txt, metadata.json이 동기화되었습니다.`
+      `저장 완료: ${new Date(result.savedAt).toLocaleString()} · 로컬 원본과 메타는 동기화되었습니다. Pages 반영은 배포 패널에서 commit + push 하세요.`
     );
   } catch (error) {
     setEditorStatus(error.message, true);
@@ -3592,11 +3740,38 @@ async function saveSidebarSource() {
     state.sidebarDirty = false;
     await loadChaptersAndDefaultClip();
     renderSidebarMetaPreview();
+    await loadPublishStatus();
     setSidebarEditorStatus(
-      `저장 완료: ${new Date(result.savedAt).toLocaleString()} · 사이드바 카탈로그가 갱신되었습니다.`
+      `저장 완료: ${new Date(result.savedAt).toLocaleString()} · 사이드바 카탈로그는 로컬에 반영되었습니다. Pages 반영은 배포 패널에서 commit + push 하세요.`
     );
   } catch (error) {
     setSidebarEditorStatus(error.message, true);
+  }
+}
+
+async function runPublishRootChanges() {
+  if (!state.isAdmin) return;
+
+  const commitMessage = normalizeWs(el.publishCommitMessageInput?.value || "") || "Publish root editor updates";
+  setPublishPanelStatus("commit + push 실행 중...");
+  try {
+    const result = await api("/api/admin/publish", {
+      method: "POST",
+      body: {
+        message: commitMessage
+      }
+    });
+    state.publishStatus = {
+      ok: true,
+      git: result.git || null
+    };
+    renderPublishPanel();
+    const pushed = Array.isArray(result.operations) ? result.operations.join(" -> ") : "push";
+    setPublishPanelStatus(
+      `${pushed} 완료: ${result.git?.head || "-"} ${normalizeWs(result.git?.headMessage || "")}`.trim()
+    );
+  } catch (error) {
+    setPublishPanelStatus(error.message, true);
   }
 }
 
@@ -4051,6 +4226,7 @@ async function onLogout() {
   state.notePanelOpen = false;
   resetContentEditor();
   resetSidebarEditor();
+  resetPublishPanel();
   el.adminUsersTbody.innerHTML = "";
   el.noteText.value = "";
   renderNotePreview();
@@ -4383,6 +4559,18 @@ window.reloadSidebarEditor = function reloadSidebarEditor() {
 
 window.saveSidebarEditor = function saveSidebarEditor() {
   saveSidebarSource().catch((error) => setSidebarEditorStatus(error.message, true));
+};
+
+window.togglePublishMode = function togglePublishMode() {
+  onTogglePublishMode().catch((error) => setPublishPanelStatus(error.message, true));
+};
+
+window.reloadPublishStatus = function reloadPublishStatus() {
+  loadPublishStatus().catch((error) => setPublishPanelStatus(error.message, true));
+};
+
+window.publishRootChanges = function publishRootChanges() {
+  runPublishRootChanges().catch((error) => setPublishPanelStatus(error.message, true));
 };
 
 bindEvents();
