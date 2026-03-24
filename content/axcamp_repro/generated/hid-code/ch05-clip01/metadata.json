@@ -1,0 +1,61 @@
+{
+  "route": "#ch05-clip01",
+  "url": "https://lg.cmdspace.work/axcamp#ch05-clip01",
+  "pageTitle": "AX Camp for Leaders | LG",
+  "clipTitle": "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+  "overview": "최남석(Agentic AI 팀)이 보여주는 Hi-D Code의 개념과 짧은 시연을 소개하는 개요 클립.",
+  "badges": [
+    "~10분",
+    "CH 05",
+    "개요"
+  ],
+  "links": [
+    {
+      "href": "#ch05-clip02",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch05-clip02",
+      "text": "Google AI Studio & Vibe Coding"
+    },
+    {
+      "href": "#ch07-clip01",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch07-clip01",
+      "text": "CH07 참고자료 라이브러리"
+    }
+  ],
+  "sections": [
+    {
+      "index": 1,
+      "title": "무엇을 보나",
+      "text": "문제 정의를 짧게 설명하면 AI가 작업 단위를 나누는 흐름을 보여준다.",
+      "html": "<p>문제 정의를 짧게 설명하면 AI가 작업 단위를 나누는 흐름을 보여준다.</p>",
+      "images": [],
+      "iframes": [],
+      "audios": [],
+      "videos": []
+    },
+    {
+      "index": 2,
+      "title": "짧은 시연 흐름",
+      "text": "목표 입력, 실행 확인, 결과 검토의 3단계로 빠르게 살펴본다.",
+      "html": "<p>목표 입력, 실행 확인, 결과 검토의 3단계로 빠르게 살펴본다.</p>",
+      "images": [],
+      "iframes": [],
+      "audios": [],
+      "videos": []
+    },
+    {
+      "index": 3,
+      "title": "다음 단계",
+      "text": "상세 Agentic 자료는 CH07 참고자료 라이브러리에서 이어서 본다.",
+      "html": "<p>상세 Agentic 자료는 CH07 참고자료 라이브러리에서 이어서 본다.</p>",
+      "images": [],
+      "iframes": [],
+      "audios": [],
+      "videos": []
+    }
+  ],
+  "prompts": [],
+  "images": [],
+  "iframes": [],
+  "audios": [],
+  "videos": []
+}

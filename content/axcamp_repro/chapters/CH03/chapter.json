@@ -1,8 +1,8 @@
 {
   "chapterId": "ch03",
   "chapterNum": "CH 03",
-  "title": "구조화된 프롬프팅",
-  "time": "11:00",
+  "title": "Gemini & ChatGPT",
+  "time": "09:30",
   "clips": [
     {
       "route": "#ch03-clip01",
@@ -33,6 +33,16 @@
       "imageCount": 3,
       "sectionCount": 4,
       "promptCount": 3
+    },
+    {
+      "route": "#ch03-clip04",
+      "title": "ChatGPT 소개 및 접속 방법",
+      "type": "플랫폼",
+      "folder": "chapters/CH03/ch03-clip04",
+      "linkCount": 3,
+      "imageCount": 0,
+      "sectionCount": 4,
+      "promptCount": 2
     }
   ]
 }

@@ -3,7 +3,7 @@
 - Source: `https://lg.cmdspace.work/axcamp`
 - Exported source snapshot: `2026-02-28T01:54:59.030Z`
 - Canonical source catalog: `10 chapters / 44 clips`
-- Current runtime catalog: `9 visible chapters / 40 visible clips`
+- Current runtime catalog: `8 visible chapters / 35 visible clips`
 
 ## 핵심 설명
 
@@ -11,7 +11,8 @@
 
 - `chapters/CH02`의 EXAONE 콘텐츠는 폴더상으로 남아 있다.
 - 하지만 현재 웹앱 런타임에서는 `CH02` 클립 4개를 제외한다.
-- 그 결과 원래 `CH03` 이후의 챕터가 화면에서는 한 칸씩 앞당겨져 보인다.
+- 그 뒤로는 `CH05`와 `CH06`이 합쳐져 `CH04`로 보이고, `CH07`과 `CH08`은 `CH07` 참고자료 라이브러리로 묶인다.
+- `CH09`는 `CH06` Key Takeaways & Q/A로 보인다.
 
 즉, 이 폴더의 번호와 실제 웹페이지에 보이는 챕터 번호는 일부 다를 수 있다.
 
@@ -22,13 +23,12 @@
 | `CH00` | 오늘의 여정 | `CH00` |
 | `CH01` | AI 핵심 개념 | `CH01` |
 | `CH02` | EXAONE | hidden |
-| `CH03` | 구조화된 프롬프팅 | `CH02` |
+| `CH03` | Gemini & ChatGPT | `CH02` |
 | `CH04` | NotebookLM | `CH03` |
-| `CH05` | 환경 설정 | `CH04` |
-| `CH06` | Vibe Coding | `CH05` |
-| `CH07` | Agentic AI | `CH06` |
-| `CH08` | 참고자료 라이브러리 | `CH07` |
-| `CH09` | Key Takeaways & Q/A | `CH08` |
+| `CH05` + `CH06` | Google AI Studio & Vibe Coding | `CH04` |
+| `generated/hid-code/ch05-clip01` | Hi-D Code | `CH05` |
+| `CH09` | Key Takeaways & Q/A | `CH06` |
+| `CH07` + `CH08` | 참고자료 라이브러리 / Agentic AI | `CH07` |
 
 ## Structure
 

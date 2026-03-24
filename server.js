@@ -1686,11 +1686,8 @@ async function buildCatalog(sourceRoot) {
     throw new Error(`Cannot load chapter catalog: ${reportFile}`);
   }
 
-  const chapters = [];
-  const clipsByKey = new Map();
-  const visibleChapterIdByCanonicalId = new Map();
-  const canonicalChapterIdByVisibleId = new Map();
-  const visibleClipKeyByCanonicalKey = new Map();
+  const canonicalChaptersById = new Map();
+  const canonicalClipsByKey = new Map();
 
   for (const chapter of report.chapters) {
     const canonicalChapterId = normalizeWs(chapter.chapterId).toLowerCase();
@@ -1738,52 +1735,248 @@ async function buildCatalog(sourceRoot) {
         screenshotPath: path.join(absoluteClipDir, "screenshot.png")
       };
       chapterObj.clipObjects.push(clipObj);
+      canonicalClipsByKey.set(clipKey, clipObj);
     }
 
     if (chapterObj.clipObjects.length) {
-      chapters.push(chapterObj);
+      canonicalChaptersById.set(canonicalChapterId, chapterObj);
     }
   }
 
-  chapters.forEach((chapter, chapterIndex) => {
-    const visibleChapterId = formatChapterId(chapterIndex);
+  async function buildSyntheticClip(sourceRootDir, spec, chapterId, chapterTitle, chapterNum) {
+    const folderAbsolute = path.resolve(sourceRootDir, spec.folderRelative || "");
+    const metadataPath = path.join(folderAbsolute, "metadata.json");
+    const metadata = await readJsonFileSafe(metadataPath, null);
+
+    const clipKey = normalizeWs(spec.clipKey).toLowerCase();
+    const cleanTitle = deriveClipTitle(metadata, spec.title || metadata?.clipTitle || clipKey);
+    const cleanType = normalizeWs(spec.type || metadata?.type || "");
+
+    return {
+      clipKey,
+      canonicalClipKey: clipKey,
+      route: `#${clipKey}`,
+      canonicalRoute: `#${clipKey}`,
+      title: cleanTitle,
+      type: cleanType,
+      chapterId,
+      canonicalChapterId: chapterId,
+      chapterCode: chapterCodeFromId(chapterId),
+      chapterNum,
+      chapterTitle,
+      overview: normalizeWs(metadata?.overview || ""),
+      badges: Array.isArray(metadata?.badges) ? metadata.badges : [],
+      folderRelative: spec.folderRelative || "",
+      folderAbsolute,
+      metadataPath,
+      screenshotPath: path.join(folderAbsolute, "screenshot.png")
+    };
+  }
+
+  const visibleBlueprints = [
+    {
+      visibleChapterId: "ch00",
+      title: "오늘의 여정",
+      time: "10:00",
+      sourceChapterIds: ["ch00"],
+      clipKeys: ["ch00-clip01", "ch00-clip02"]
+    },
+    {
+      visibleChapterId: "ch01",
+      title: "AI 핵심 개념",
+      time: "10:25",
+      sourceChapterIds: ["ch01"],
+      clipKeys: [
+        "ch01-clip01",
+        "ch01-clip02",
+        "ch01-clip03",
+        "ch01-clip04",
+        "ch01-clip05"
+      ]
+    },
+    {
+      visibleChapterId: "ch02",
+      title: "Gemini & ChatGPT",
+      time: "09:30",
+      sourceChapterIds: ["ch03"],
+      clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch03-clip04"],
+      clipTitles: {
+        "ch03-clip01": "Gemini 소개 및 접속 방법",
+        "ch03-clip02": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
+        "ch03-clip03": "Gems 소개: AI 비서 만들기",
+        "ch03-clip04": "ChatGPT 소개 및 접속 방법"
+      }
+    },
+    {
+      visibleChapterId: "ch03",
+      title: "NotebookLM",
+      time: "13:00",
+      sourceChapterIds: ["ch04"],
+      clipKeys: ["ch04-clip01", "ch04-clip02", "ch04-clip03"]
+    },
+    {
+      visibleChapterId: "ch04",
+      title: "Google AI Studio & Vibe Coding",
+      time: "14:10",
+      sourceChapterIds: ["ch05", "ch06"],
+      clipKeys: [
+        "ch05-clip02",
+        "ch06-clip01",
+        "ch06-clip02",
+        "ch06-clip03"
+      ],
+      clipTitles: {
+        "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
+        "ch06-clip01": "바이브 코딩이란",
+        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기",
+        "ch06-clip03": "경쟁사 리서치 대시보드"
+      }
+    },
+    {
+      visibleChapterId: "ch05",
+      title: "Hi-D Code",
+      time: "16:10",
+      sourceChapterIds: [],
+      syntheticClips: [
+        {
+          clipKey: "ch05-clip01",
+          folderRelative: "generated/hid-code/ch05-clip01",
+          title: "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+          type: "개요"
+        }
+      ]
+    },
+    {
+      visibleChapterId: "ch06",
+      title: "Key Takeaways & Q/A",
+      time: "17:10",
+      sourceChapterIds: ["ch09"],
+      clipKeys: ["ch09-clip01", "ch09-clip02"]
+    },
+    {
+      visibleChapterId: "ch07",
+      title: "참고자료 라이브러리",
+      time: "17:20",
+      sourceChapterIds: ["ch07", "ch08"],
+      clipKeys: [
+        "ch07-clip01",
+        "ch07-clip02",
+        "ch07-clip03",
+        "ch07-clip04",
+        "ch07-clip05",
+        "ch07-clip06",
+        "ch07-clip07",
+        "ch07-clip08",
+        "ch08-clip01",
+        "ch08-clip02",
+        "ch08-clip03",
+        "ch08-clip04",
+        "ch08-clip05",
+        "ch08-clip06"
+      ]
+    }
+  ];
+
+  const chapters = [];
+  const clipsByKey = new Map();
+  const visibleChapterIdByCanonicalId = new Map();
+  const canonicalChapterIdByVisibleId = new Map();
+  const visibleClipKeyByCanonicalKey = new Map();
+
+  for (const [chapterIndex, blueprint] of visibleBlueprints.entries()) {
+    const visibleChapterId = blueprint.visibleChapterId;
     const visibleChapterNum = formatChapterNum(chapterIndex);
+    const visibleChapterCode = chapterCodeFromId(visibleChapterId);
+    const chapterObj = {
+      chapterId: visibleChapterId,
+      canonicalChapterId: visibleChapterId,
+      chapterCode: visibleChapterCode,
+      chapterNum: visibleChapterNum,
+      title: normalizeWs(blueprint.title),
+      time: normalizeWs(blueprint.time || ""),
+      clips: [],
+      clipObjects: []
+    };
 
-    visibleChapterIdByCanonicalId.set(chapter.canonicalChapterId, visibleChapterId);
-    canonicalChapterIdByVisibleId.set(visibleChapterId, chapter.canonicalChapterId);
+    canonicalChapterIdByVisibleId.set(visibleChapterId, visibleChapterId);
 
-    chapter.chapterId = visibleChapterId;
-    chapter.chapterCode = chapterCodeFromId(visibleChapterId);
-    chapter.chapterNum = visibleChapterNum;
-    chapter.clips = chapter.clipObjects.map((clipObj) => {
-      const clipSuffix = clipSuffixFromKey(clipObj.canonicalClipKey);
-      const visibleClipKey = clipSuffix
-        ? `${visibleChapterId}${clipSuffix}`
-        : clipObj.canonicalClipKey;
+    for (const sourceChapterId of blueprint.sourceChapterIds || []) {
+      visibleChapterIdByCanonicalId.set(normalizeWs(sourceChapterId).toLowerCase(), visibleChapterId);
+    }
 
-      visibleClipKeyByCanonicalKey.set(clipObj.canonicalClipKey, visibleClipKey);
+    const clipSpecs = [];
+    for (const clipKey of blueprint.clipKeys || []) {
+      clipSpecs.push({ clipKey, synthetic: false });
+    }
+    for (const syntheticClip of blueprint.syntheticClips || []) {
+      clipSpecs.push({ ...syntheticClip, synthetic: true });
+    }
 
-      clipObj.clipKey = visibleClipKey;
-      clipObj.route = `#${visibleClipKey}`;
-      clipObj.chapterId = visibleChapterId;
-      clipObj.chapterCode = chapter.chapterCode;
-      clipObj.chapterNum = visibleChapterNum;
+    for (const [clipIndex, clipSpec] of clipSpecs.entries()) {
+      let clipObj = null;
 
-      clipsByKey.set(visibleClipKey, clipObj);
-      if (visibleClipKey !== clipObj.canonicalClipKey) {
-        clipsByKey.set(clipObj.canonicalClipKey, clipObj);
+      if (clipSpec.synthetic) {
+        clipObj = await buildSyntheticClip(
+          sourceRoot,
+          clipSpec,
+          visibleChapterId,
+          chapterObj.title,
+          visibleChapterNum
+        );
+      } else {
+        const sourceClip = canonicalClipsByKey.get(normalizeWs(clipSpec.clipKey).toLowerCase());
+        if (!sourceClip) continue;
+        clipObj = {
+          ...sourceClip,
+          clipKey: `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
+          route: `#${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
+          chapterId: visibleChapterId,
+          canonicalChapterId: visibleChapterId,
+          chapterCode: visibleChapterCode,
+          chapterNum: visibleChapterNum,
+          chapterTitle: chapterObj.title,
+          title: normalizeWs(blueprint.clipTitles?.[clipSpec.clipKey] || clipSpec.title || sourceClip.title),
+          canonicalClipKey: sourceClip.canonicalClipKey,
+          canonicalRoute: sourceClip.canonicalRoute
+        };
+
+        visibleClipKeyByCanonicalKey.set(sourceClip.canonicalClipKey, clipObj.clipKey);
+        clipsByKey.set(clipObj.clipKey, clipObj);
+        if (clipObj.clipKey !== sourceClip.canonicalClipKey) {
+          clipsByKey.set(sourceClip.canonicalClipKey, clipObj);
+        }
       }
 
-      return {
+      if (!clipObj) continue;
+
+      if (clipSpec.synthetic) {
+        clipObj.chapterId = visibleChapterId;
+        clipObj.canonicalChapterId = visibleChapterId;
+        clipObj.chapterCode = visibleChapterCode;
+        clipObj.chapterNum = visibleChapterNum;
+        clipObj.chapterTitle = chapterObj.title;
+        clipObj.clipKey = `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`;
+        clipObj.route = `#${clipObj.clipKey}`;
+        clipObj.canonicalClipKey = clipObj.clipKey;
+        clipObj.canonicalRoute = clipObj.route;
+        clipsByKey.set(clipObj.clipKey, clipObj);
+        visibleClipKeyByCanonicalKey.set(clipObj.canonicalClipKey, clipObj.clipKey);
+      }
+
+      chapterObj.clipObjects.push(clipObj);
+    }
+
+    if (chapterObj.clipObjects.length) {
+      chapterObj.clips = chapterObj.clipObjects.map((clipObj) => ({
         clipKey: clipObj.clipKey,
         canonicalClipKey: clipObj.canonicalClipKey,
         route: clipObj.route,
         title: clipObj.title,
         type: clipObj.type
-      };
-    });
-    delete chapter.clipObjects;
-  });
+      }));
+      chapters.push(chapterObj);
+    }
+  }
 
   return {
     chapters,
@@ -1796,9 +1989,21 @@ async function buildCatalog(sourceRoot) {
 
 async function readCatalogVersion(sourceRoot) {
   const reportFile = path.join(sourceRoot, "export-report.json");
+  const syntheticFiles = [
+    path.join(sourceRoot, "generated", "hid-code", "ch05-clip01", "content.html"),
+    path.join(sourceRoot, "generated", "hid-code", "ch05-clip01", "metadata.json")
+  ];
   try {
-    const stat = await fs.stat(reportFile);
-    return `${stat.mtimeMs}:${stat.size}`;
+    const parts = [];
+    for (const filePath of [reportFile, ...syntheticFiles]) {
+      try {
+        const stat = await fs.stat(filePath);
+        parts.push(`${filePath}:${stat.mtimeMs}:${stat.size}`);
+      } catch {
+        parts.push(`${filePath}:missing`);
+      }
+    }
+    return parts.join("|");
   } catch {
     return "missing";
   }

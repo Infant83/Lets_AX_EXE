@@ -3,7 +3,7 @@
   "url": "https://lg.cmdspace.work/axcamp#ch00-clip01",
   "pageTitle": "AX Camp for Leaders | LG",
   "clipTitle": "오늘의 시간표",
-  "overview": "오늘 하루 함께할 강사를 소개합니다.",
+  "overview": "오늘의 하루 일정을 한눈에 확인할 수 있는 시간표입니다. Gemini & ChatGPT, NotebookLM, Google AI Studio & Vibe Coding, Hi-D Code, 참고자료 라이브러리까지 흐름대로 이동합니다.",
   "badges": [
     "~10분",
     "CH 00",
@@ -28,12 +28,17 @@
     {
       "href": "#ch01-clip01",
       "absolute": "https://lg.cmdspace.work/axcamp#ch01-clip01",
-      "text": "AI 핵심 개념"
+      "text": "CH01: AI 핵심 개념"
     },
     {
       "href": "#ch03-clip01",
       "absolute": "https://lg.cmdspace.work/axcamp#ch03-clip01",
-      "text": "CH02: 구조화된 프롬프팅 (1)"
+      "text": "CH02: Gemini & ChatGPT (1)"
+    },
+    {
+      "href": "#ch03-clip04",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch03-clip04",
+      "text": "CH02: Gemini & ChatGPT (2)"
     },
     {
       "href": "#ch04-clip01",
@@ -41,14 +46,24 @@
       "text": "CH03: NotebookLM"
     },
     {
-      "href": "#ch06-clip01",
-      "absolute": "https://lg.cmdspace.work/axcamp#ch06-clip01",
-      "text": "CH05: Vibe Coding"
-    },
-    {
       "href": "#ch09-clip01",
       "absolute": "https://lg.cmdspace.work/axcamp#ch09-clip01",
-      "text": "Key Takeaways & Q/A"
+      "text": "CH06: Key Takeaways & Q/A"
+    },
+    {
+      "href": "#ch05-clip02",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch05-clip02",
+      "text": "CH04: Google AI Studio & Vibe Coding"
+    },
+    {
+      "href": "#ch05-clip01",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch05-clip01",
+      "text": "CH05: Hi-D Code"
+    },
+    {
+      "href": "#ch07-clip01",
+      "absolute": "https://lg.cmdspace.work/axcamp#ch07-clip01",
+      "text": "CH07: 참고자료 라이브러리"
     }
   ],
   "images": [],
