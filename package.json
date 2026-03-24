@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "build:pages": "node scripts/build-pages.mjs"
+    "build:pages": "node scripts/build-pages.mjs",
+    "preview:pages": "node scripts/preview-pages.mjs"
   }
 }
