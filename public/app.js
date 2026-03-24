@@ -3544,6 +3544,19 @@ async function loadSidebarSourceForCurrentClip() {
     renderSidebarMetaPreview();
     setSidebarEditorStatus("현재 클립의 사이드바 메타를 불러왔습니다.");
   } catch (error) {
+    state.sidebarSourceClipKey = state.currentClipKey || "";
+    state.sidebarSourceState = {
+      chapterTitle: normalizeWs(state.currentChapterTitle || ""),
+      chapterTime: "",
+      clipTitle: "",
+      clipType: "개념"
+    };
+    el.sidebarChapterTitleInput.value = state.sidebarSourceState.chapterTitle;
+    el.sidebarChapterTimeInput.value = state.sidebarSourceState.chapterTime;
+    el.sidebarClipTitleInput.value = state.sidebarSourceState.clipTitle;
+    el.sidebarClipTypeInput.value = state.sidebarSourceState.clipType;
+    el.sidebarEditorPath.textContent = "-";
+    renderSidebarMetaPreview();
     setSidebarEditorStatus(error.message, true);
   }
 }

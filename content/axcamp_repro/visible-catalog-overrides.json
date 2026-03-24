@@ -1,0 +1,14 @@
+{
+  "chapters": {
+    "ch02": {
+      "title": "Gemini & ChatGPT",
+      "time": "09:30"
+    }
+  },
+  "clips": {
+    "ch02-clip01": {
+      "title": "Gemini 소개 및 접속 방법",
+      "type": "플랫폼"
+    }
+  }
+}

@@ -27,6 +27,7 @@ const GENERATED_COURSES_DIR = path.resolve(ROOT_DIR, "content", "generated_cours
 const GENERATED_COURSE_CATALOG_FILE = path.join(GENERATED_COURSES_DIR, "catalog.json");
 const DEFAULT_COURSE_CODE = "AXCAMP";
 const DEFAULT_COURSE_SLUG = "axcamp_repro";
+const VISIBLE_CATALOG_OVERRIDES_FILE = "visible-catalog-overrides.json";
 const PRACTICE_ROOT_REL = "[공유용] LG AX Camp For Leaders 실습자료";
 const PRACTICE_FILE_MAP = {
   "all-zip": "practice_zips/LG_AX_Camp_For_Leaders_practice_all.zip",
@@ -1022,6 +1023,41 @@ async function writeJsonFile(filePath, payload) {
   await fs.writeFile(filePath, JSON.stringify(payload, null, 2), "utf8");
 }
 
+function normalizeVisibleCatalogOverrides(payload) {
+  const input = payload && typeof payload === "object" ? payload : {};
+  const chapterEntries =
+    input.chapters && typeof input.chapters === "object" ? Object.entries(input.chapters) : [];
+  const clipEntries =
+    input.clips && typeof input.clips === "object" ? Object.entries(input.clips) : [];
+
+  return {
+    chapters: Object.fromEntries(
+      chapterEntries.map(([chapterId, value]) => [
+        normalizeWs(chapterId).toLowerCase(),
+        {
+          title: normalizeWs(value?.title || ""),
+          time: normalizeWs(value?.time || "")
+        }
+      ])
+    ),
+    clips: Object.fromEntries(
+      clipEntries.map(([clipKey, value]) => [
+        normalizeWs(clipKey).toLowerCase(),
+        {
+          title: normalizeWs(value?.title || ""),
+          type: normalizeSidebarClipType(value?.type || "", "개념")
+        }
+      ])
+    )
+  };
+}
+
+async function readVisibleCatalogOverrides(sourceRoot) {
+  const filePath = path.join(sourceRoot, VISIBLE_CATALOG_OVERRIDES_FILE);
+  const payload = await readJsonFileSafe(filePath, { chapters: {}, clips: {} });
+  return normalizeVisibleCatalogOverrides(payload);
+}
+
 function formatByteSize(bytes) {
   const size = Number(bytes || 0);
   if (!Number.isFinite(size) || size <= 0) return "0 B";
@@ -1825,6 +1861,7 @@ async function resolveCourseContext(primary, secondary = "") {
 async function buildCatalog(sourceRoot) {
   const reportFile = path.join(sourceRoot, "export-report.json");
   const report = await readJsonFileSafe(reportFile, null);
+  const overrides = await readVisibleCatalogOverrides(sourceRoot);
   if (!report || !Array.isArray(report.chapters)) {
     throw new Error(`Cannot load chapter catalog: ${reportFile}`);
   }
@@ -2025,23 +2062,27 @@ async function buildCatalog(sourceRoot) {
   const visibleChapterIdByCanonicalId = new Map();
   const canonicalChapterIdByVisibleId = new Map();
   const visibleClipKeyByCanonicalKey = new Map();
+  const sourceChapterIdsByVisibleId = new Map();
 
   for (const [chapterIndex, blueprint] of visibleBlueprints.entries()) {
     const visibleChapterId = blueprint.visibleChapterId;
     const visibleChapterNum = formatChapterNum(chapterIndex);
     const visibleChapterCode = chapterCodeFromId(visibleChapterId);
+    const chapterOverride = overrides.chapters?.[visibleChapterId] || {};
     const chapterObj = {
       chapterId: visibleChapterId,
       canonicalChapterId: visibleChapterId,
       chapterCode: visibleChapterCode,
       chapterNum: visibleChapterNum,
-      title: normalizeWs(blueprint.title),
-      time: normalizeWs(blueprint.time || ""),
+      title: normalizeWs(chapterOverride.title || blueprint.title),
+      time: normalizeWs(chapterOverride.time || blueprint.time || ""),
+      sourceChapterIds: Array.isArray(blueprint.sourceChapterIds) ? [...blueprint.sourceChapterIds] : [],
       clips: [],
       clipObjects: []
     };
 
     canonicalChapterIdByVisibleId.set(visibleChapterId, visibleChapterId);
+    sourceChapterIdsByVisibleId.set(visibleChapterId, chapterObj.sourceChapterIds);
 
     for (const sourceChapterId of blueprint.sourceChapterIds || []) {
       visibleChapterIdByCanonicalId.set(normalizeWs(sourceChapterId).toLowerCase(), visibleChapterId);
@@ -2074,7 +2115,7 @@ async function buildCatalog(sourceRoot) {
           clipKey: `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
           route: `#${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
           chapterId: visibleChapterId,
-          canonicalChapterId: visibleChapterId,
+          canonicalChapterId: sourceClip.canonicalChapterId,
           chapterCode: visibleChapterCode,
           chapterNum: visibleChapterNum,
           chapterTitle: chapterObj.title,
@@ -2091,6 +2132,14 @@ async function buildCatalog(sourceRoot) {
       }
 
       if (!clipObj) continue;
+
+      const clipOverride = overrides.clips?.[clipObj.clipKey] || {};
+      if (clipOverride.title) {
+        clipObj.title = clipOverride.title;
+      }
+      if (clipOverride.type) {
+        clipObj.type = clipOverride.type;
+      }
 
       if (clipSpec.synthetic) {
         clipObj.chapterId = visibleChapterId;
@@ -2126,13 +2175,15 @@ async function buildCatalog(sourceRoot) {
     clipsByKey,
     visibleChapterIdByCanonicalId,
     canonicalChapterIdByVisibleId,
-    visibleClipKeyByCanonicalKey
+    visibleClipKeyByCanonicalKey,
+    sourceChapterIdsByVisibleId
   };
 }
 
 async function readCatalogVersion(sourceRoot) {
   const reportFile = path.join(sourceRoot, "export-report.json");
   const syntheticFiles = [
+    path.join(sourceRoot, VISIBLE_CATALOG_OVERRIDES_FILE),
     path.join(sourceRoot, "generated", "hid-code", "ch05-clip01", "content.html"),
     path.join(sourceRoot, "generated", "hid-code", "ch05-clip01", "metadata.json")
   ];
@@ -3091,21 +3142,35 @@ async function handleAdminSidebarSource(req, res, urlObj) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
   }
 
-  const canonicalChapterId = clip.canonicalChapterId || clip.chapterId;
+  const visibleChapter = catalog.chapters.find(
+    (item) => normalizeWs(item.chapterId).toLowerCase() === normalizeWs(clip.chapterId).toLowerCase()
+  );
+  const visibleClip = visibleChapter?.clips?.find(
+    (item) => normalizeWs(item.clipKey).toLowerCase() === normalizeWs(clip.clipKey).toLowerCase()
+  );
+  const sourceChapterIds = Array.isArray(catalog.sourceChapterIdsByVisibleId?.get(clip.chapterId))
+    ? catalog.sourceChapterIdsByVisibleId.get(clip.chapterId)
+    : [];
+  const hasSingleSourceChapter = sourceChapterIds.length === 1;
+  const sourceChapterId = sourceChapterIds.length === 1
+    ? normalizeWs(sourceChapterIds[0]).toLowerCase()
+    : normalizeWs(clip.canonicalChapterId || "").toLowerCase();
   const canonicalRoute = clip.canonicalRoute || `#${clip.canonicalClipKey || clip.clipKey}`;
+  const overridesPath = path.join(activeCourse.sourceRoot, VISIBLE_CATALOG_OVERRIDES_FILE);
   const reportFile = path.join(activeCourse.sourceRoot, "export-report.json");
   const chapterJsonPath = path.join(path.resolve(clip.folderAbsolute, ".."), "chapter.json");
   const metadataPath = path.join(clip.folderAbsolute, "metadata.json");
+  const overrides = await readVisibleCatalogOverrides(activeCourse.sourceRoot);
   const report = await readJsonFileSafe(reportFile, null);
   const chapterJson = await readJsonFileSafe(chapterJsonPath, null);
   const metadata = await readJsonFileSafe(metadataPath, {});
 
-  if (!report || !Array.isArray(report.chapters)) {
+  if (!report || !Array.isArray(report.chapters) || !visibleChapter || !visibleClip) {
     return sendJson(res, 500, { ok: false, error: "카탈로그를 읽을 수 없습니다." });
   }
 
   const reportChapter = report.chapters.find(
-    (item) => normalizeWs(item.chapterId).toLowerCase() === canonicalChapterId
+    (item) => normalizeWs(item.chapterId).toLowerCase() === sourceChapterId
   );
   const reportClip = reportChapter?.clips?.find(
     (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
@@ -3120,10 +3185,8 @@ async function handleAdminSidebarSource(req, res, urlObj) {
         (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
       )
     : null;
-
-  if (!reportChapter || !reportClip || !chapterJson || !chapterClip) {
-    return sendJson(res, 500, { ok: false, error: "사이드바 메타데이터를 찾을 수 없습니다." });
-  }
+  const chapterOverride = overrides.chapters?.[clip.chapterId] || {};
+  const clipOverride = overrides.clips?.[clip.clipKey] || {};
 
   if (req.method === "GET") {
     return sendJson(res, 200, {
@@ -3135,14 +3198,39 @@ async function handleAdminSidebarSource(req, res, urlObj) {
         chapterNum: clip.chapterNum
       },
       sidebar: {
-        chapterTitle: normalizeWs(reportChapter.title || chapterJson.title || clip.chapterTitle),
-        chapterTime: normalizeWs(reportChapter.time || chapterJson.time || ""),
-        clipTitle: normalizeWs(
-          metadata?.navTitle || reportClip.title || chapterClip.title || clip.title
+        chapterTitle: normalizeWs(
+          chapterOverride.title ||
+            visibleChapter.title ||
+            reportChapter?.title ||
+            chapterJson?.title ||
+            clip.chapterTitle
         ),
-        clipType: normalizeSidebarClipType(reportClip.type || chapterClip.type || clip.type, clip.type)
+        chapterTime: normalizeWs(
+          chapterOverride.time ||
+            visibleChapter.time ||
+            reportChapter?.time ||
+            chapterJson?.time ||
+            ""
+        ),
+        clipTitle: normalizeWs(
+          clipOverride.title ||
+            metadata?.navTitle ||
+            reportClip?.title ||
+            chapterClip?.title ||
+            visibleClip.title ||
+            clip.title
+        ),
+        clipType: normalizeSidebarClipType(
+          clipOverride.type ||
+            reportClip?.type ||
+            chapterClip?.type ||
+            visibleClip.type ||
+            clip.type,
+          clip.type
+        )
       },
       source: {
+        overridesPath: path.relative(ROOT_DIR, overridesPath).replace(/\\/g, "/"),
         reportPath: path.relative(ROOT_DIR, reportFile).replace(/\\/g, "/"),
         chapterPath: path.relative(ROOT_DIR, chapterJsonPath).replace(/\\/g, "/"),
         metadataPath: path.relative(ROOT_DIR, metadataPath).replace(/\\/g, "/")
@@ -3166,29 +3254,46 @@ async function handleAdminSidebarSource(req, res, urlObj) {
     return sendJson(res, 400, { ok: false, error: "클립 제목을 입력해 주세요." });
   }
 
-  reportChapter.title = chapterTitle;
-  reportChapter.time = chapterTime;
-  reportClip.title = clipTitle;
-  reportClip.type = clipType;
-  if (reportFlatClip) {
-    reportFlatClip.title = clipTitle;
-    reportFlatClip.type = clipType;
-  }
-
-  chapterJson.title = chapterTitle;
-  chapterJson.time = chapterTime;
-  chapterClip.title = clipTitle;
-  chapterClip.type = clipType;
-
+  const nextOverrides = normalizeVisibleCatalogOverrides(overrides);
+  nextOverrides.chapters[clip.chapterId] = {
+    title: chapterTitle,
+    time: chapterTime
+  };
+  nextOverrides.clips[clip.clipKey] = {
+    title: clipTitle,
+    type: clipType
+  };
   const nextMetadata = { ...metadata, navTitle: clipTitle };
 
-  await writeAdminHistorySnapshot(`sidebar-${clip.clipKey}`, [
-    reportFile,
-    chapterJsonPath,
-    metadataPath
-  ]);
-  await writeJsonFile(reportFile, report);
-  await writeJsonFile(chapterJsonPath, chapterJson);
+  const historyFiles = [overridesPath, metadataPath];
+  if (reportClip && chapterJson && chapterClip) {
+    if (hasSingleSourceChapter && reportChapter) {
+      reportChapter.title = chapterTitle;
+      reportChapter.time = chapterTime;
+    }
+    reportClip.title = clipTitle;
+    reportClip.type = clipType;
+    if (reportFlatClip) {
+      reportFlatClip.title = clipTitle;
+      reportFlatClip.type = clipType;
+    }
+
+    if (hasSingleSourceChapter) {
+      chapterJson.title = chapterTitle;
+      chapterJson.time = chapterTime;
+    }
+    chapterClip.title = clipTitle;
+    chapterClip.type = clipType;
+
+    historyFiles.push(reportFile, chapterJsonPath);
+  }
+
+  await writeAdminHistorySnapshot(`sidebar-${clip.clipKey}`, historyFiles);
+  if (reportClip && chapterJson && chapterClip) {
+    await writeJsonFile(reportFile, report);
+    await writeJsonFile(chapterJsonPath, chapterJson);
+  }
+  await writeJsonFile(overridesPath, nextOverrides);
   await writeJsonFile(metadataPath, nextMetadata);
   invalidateCatalogCache(activeCourse.sourceRoot);
 
