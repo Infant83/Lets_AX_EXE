@@ -128,7 +128,10 @@ const MAX_REQUEST_BODY_BYTES = 48 * 1024 * 1024;
 const catalogPromises = new Map();
 
 function normalizeWs(input) {
-  return String(input || "").replace(/\s+/g, " ").trim();
+  return String(input || "")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function normalizeCourseCode(input) {
@@ -167,7 +170,13 @@ function decodeHtmlEntities(input) {
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+    .replace(/&gt;/g, ">")
+    .replace(/&#x([0-9a-f]+);/gi, (_match, hex) =>
+      String.fromCodePoint(parseInt(hex, 16))
+    )
+    .replace(/&#(\d+);/g, (_match, decimal) =>
+      String.fromCodePoint(parseInt(decimal, 10))
+    );
 }
 
 function extractClipTitleFromHtml(html, fallback = "") {
@@ -1454,7 +1463,9 @@ function stripHtmlToText(html) {
       .replace(/\t[ \t]+/g, "\t")
       .replace(/\n{3,}/g, "\n\n")
       .replace(/[ \t]{2,}/g, " ")
-  ).trim();
+  )
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .trim();
 }
 
 function summarizeText(value, maxLength = 180) {
@@ -2687,8 +2698,15 @@ async function resolveClipPayload(clipKey, course) {
         catalog
       )
     : `<pre>${escapeHtml(mdRaw || txtRaw || "콘텐츠가 없습니다.")}</pre>`;
+  const renderedMetadata = buildMetadataFromHtml(clip, metadata, htmlContent);
   const baseBadges =
-    clip.badges?.length ? clip.badges : Array.isArray(metadata?.badges) ? metadata.badges : [];
+    Array.isArray(renderedMetadata?.badges) && renderedMetadata.badges.length
+      ? renderedMetadata.badges
+      : clip.badges?.length
+        ? clip.badges
+        : Array.isArray(metadata?.badges)
+          ? metadata.badges
+          : [];
   const badges = baseBadges.map((badge) => rewriteVisibleReferences(badge, catalog));
 
   const screenshotRelative = (await pathExists(clip.screenshotPath))
@@ -2705,14 +2723,11 @@ async function resolveClipPayload(clipKey, course) {
     chapterCode: clip.chapterCode,
     chapterNum: clip.chapterNum,
     chapterTitle: clip.chapterTitle,
-    overview: rewriteVisibleReferences(
-      clip.overview || normalizeWs(metadata?.overview || ""),
-      catalog
-    ),
+    overview: normalizeWs(renderedMetadata?.overview || clip.overview || metadata?.overview || ""),
     badges,
-    links: rewriteMetadataLinks(metadata?.links, catalog),
+    links: Array.isArray(renderedMetadata?.links) ? renderedMetadata.links : [],
     prompts: Array.isArray(metadata?.prompts) ? metadata.prompts : [],
-    sections: Array.isArray(metadata?.sections) ? metadata.sections : [],
+    sections: Array.isArray(renderedMetadata?.sections) ? renderedMetadata.sections : [],
     screenshot: screenshotRelative,
     contentHtml: htmlContent
   };
