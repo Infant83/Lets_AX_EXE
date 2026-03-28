@@ -13,11 +13,11 @@ const STATIC_PUBLIC_USER = Object.freeze({
   accountId: "public",
   displayName: "Public Viewer",
   teamName: "",
-  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP")
+  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP2")
 });
 const STATIC_PUBLIC_COURSE = Object.freeze({
-  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP"),
-  courseName: String(STATIC_CONFIG?.courseName || "AX Camp Repro"),
+  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP2"),
+  courseName: String(STATIC_CONFIG?.courseName || "AX Camp 2 Executive Lab"),
   launchUrl: STATIC_BASE_PATH || "/"
 });
 const QUICK_EDITABLE_TAGS = new Set([
@@ -131,6 +131,73 @@ const state = {
   mermaidReady: false
 };
 
+const EXECUTIVE_JOURNEY = Object.freeze({
+  ch00: {
+    phase: "Kickoff",
+    sidebar: "오늘 만들 3개 산출물",
+    mission: "오늘 하루의 목표와 완성 결과를 먼저 확인합니다.",
+    deliverable: "개인 목표 선언",
+    next: "AI 핵심 개념으로 공통 언어를 맞춥니다.",
+    difficulty: "가볍게 시작"
+  },
+  ch01: {
+    phase: "Concept",
+    sidebar: "도구에서 위임 대상으로",
+    mission: "Assistant, Agent, Context, Workflow를 임원 비유로 정리합니다.",
+    deliverable: "공통 언어 정렬",
+    next: "개인용 임원 비서를 만들 준비를 합니다.",
+    difficulty: "쉬움"
+  },
+  ch02: {
+    phase: "Personal Agent",
+    sidebar: "나만의 AI 비서 만들기",
+    mission: "프롬프트와 Gem으로 개인용 임원 비서를 만듭니다.",
+    deliverable: "개인용 임원 비서",
+    next: "문서를 근거로 답하는 브리핑으로 확장합니다.",
+    difficulty: "따라하기 중심"
+  },
+  ch03: {
+    phase: "Grounded Briefing",
+    sidebar: "출처 기반 브리핑 완성",
+    mission: "NotebookLM으로 문서 교차 분석과 경영진 브리핑 생성을 체험합니다.",
+    deliverable: "1페이지 브리핑 초안",
+    next: "이제 브리핑을 앱으로 바꿉니다.",
+    difficulty: "실무형"
+  },
+  ch04: {
+    phase: "Vibe Coding",
+    sidebar: "말로 만드는 실무 앱",
+    mission: "Google AI Studio Build로 3분 이사회 브리핑 앱을 만듭니다.",
+    deliverable: "3분 이사회 브리핑 앱",
+    next: "Hi-D Code 시연에서 에이전트 실행 감각을 넓힙니다.",
+    difficulty: "재미있게 몰입"
+  },
+  ch05: {
+    phase: "Demo",
+    sidebar: "외부 시연",
+    mission: "Hi-D Code 시연을 관람하며 에이전틱 실행 사례를 봅니다.",
+    deliverable: "관찰 포인트 정리",
+    next: "오늘 만든 것을 조직 실행안으로 정리합니다.",
+    difficulty: "관람형"
+  },
+  ch06: {
+    phase: "Wrap-up",
+    sidebar: "내일 바로 쓰는 실행안",
+    mission: "오늘 만든 결과를 조직 안착 계획으로 연결합니다.",
+    deliverable: "개인 실행계획",
+    next: "참고자료 라이브러리로 확장 학습을 이어갑니다.",
+    difficulty: "정리"
+  },
+  ch07: {
+    phase: "Library",
+    sidebar: "에이전트와 스킬 참고 킷",
+    mission: "Agentic AI, Skill, 추가 읽을거리를 묶어 다음 단계로 연결합니다.",
+    deliverable: "확장 로드맵",
+    next: "교육 종료 후 팀 전파용 자료로 재활용합니다.",
+    difficulty: "선택 심화"
+  }
+});
+
 const el = {
   loginView: document.getElementById("loginView"),
   appView: document.getElementById("appView"),
@@ -161,6 +228,7 @@ const el = {
   passwordRecoverResult: document.getElementById("passwordRecoverResult"),
   currentUser: document.getElementById("currentUser"),
   currentCourseBadge: document.getElementById("currentCourseBadge"),
+  missionStrip: document.getElementById("missionStrip"),
   accountSettingsBtn: document.getElementById("accountSettingsBtn"),
   accountModal: document.getElementById("accountModal"),
   closeAccountModalBtn: document.getElementById("closeAccountModalBtn"),
@@ -294,7 +362,7 @@ function normalizeCourseCode(input) {
 
 function staticStorageKey(prefix) {
   const courseCode = normalizeCourseCode(
-    state.currentCourse?.courseCode || STATIC_PUBLIC_COURSE.courseCode || "AXCAMP"
+    state.currentCourse?.courseCode || STATIC_PUBLIC_COURSE.courseCode || "AXCAMP2"
   );
   return `${prefix}:${courseCode}`;
 }
@@ -938,6 +1006,7 @@ function renderEditorPreview(html) {
   clearEditorPreviewClickTimer();
   renderContentEditorHighlight(source);
   el.contentEditorPreview.innerHTML = buildEditorPreviewHtml(source);
+  hydrateContentEditorPreview();
 }
 
 function setContentAssetStatus(message, isError = false) {
@@ -1630,8 +1699,51 @@ function updateSidePanelUI() {
   el.taskPanel.classList.add("collapsed");
   el.notePanel.classList.toggle("collapsed", !state.notePanelOpen);
 
-  el.toggleTaskBtn.textContent = "Miro.공유하기";
+  el.toggleTaskBtn.textContent = "오늘의 미션";
   el.toggleNoteBtn.textContent = state.notePanelOpen ? "메모 닫기" : "메모 펼치기";
+}
+
+function currentChapterJourney(chapterId = state.currentChapterId) {
+  return EXECUTIVE_JOURNEY[normalizeWs(chapterId).toLowerCase()] || null;
+}
+
+function renderMissionStrip() {
+  if (!el.missionStrip) return;
+  const journey = currentChapterJourney();
+  if (!journey) {
+    el.missionStrip.innerHTML = "";
+    return;
+  }
+
+  const chapterIndex = state.chapters.findIndex((item) => item.chapterId === state.currentChapterId);
+  const nextChapter = chapterIndex >= 0 ? state.chapters[chapterIndex + 1] : null;
+  const nextText = nextChapter ? `${nextChapter.chapterNum} ${nextChapter.title}` : "오늘의 마무리";
+
+  el.missionStrip.innerHTML = `
+    <div class="mission-strip-copy">
+      <p class="eyebrow">${journey.phase}</p>
+      <h3>${journey.mission}</h3>
+      <p>${journey.sidebar}</p>
+    </div>
+    <div class="mission-strip-cards">
+      <article class="mission-card">
+        <span class="mission-card-label">이번 세션 산출물</span>
+        <strong>${journey.deliverable}</strong>
+      </article>
+      <article class="mission-card">
+        <span class="mission-card-label">다음 스텝</span>
+        <strong>${journey.next}</strong>
+      </article>
+      <article class="mission-card">
+        <span class="mission-card-label">난이도</span>
+        <strong>${journey.difficulty}</strong>
+      </article>
+      <article class="mission-card">
+        <span class="mission-card-label">권장 흐름</span>
+        <strong>${nextText}</strong>
+      </article>
+    </div>
+  `;
 }
 
 function getAllClips() {
@@ -1825,6 +1937,15 @@ const STYLE_TONE_PRESETS = {
     defaultPalette: "black, charcoal, white, one bold accent",
     colorTip:
       "Poster 계열은 다크 배경과 강한 명암이 기본입니다. 색을 별도 요청하지 않으면 black / charcoal / white 중심에 포인트 1개만 얹는다."
+  },
+  lg: {
+    label: "LG Style",
+    accent: "#a50034",
+    accentSoft: "rgba(165, 0, 52, 0.16)",
+    identity: "화이트 기반, 회색 중심 타이포, 절제된 LG red 포인트, 엔터프라이즈 기술 브랜드 톤",
+    defaultPalette: "white, light gray, charcoal, LG red accent",
+    colorTip:
+      "색을 따로 요청하지 않으면 white / light gray / charcoal을 기본으로 두고, LG red는 CTA와 핵심 강조 1~2곳에만 제한적으로 쓰는 편이 안정적입니다."
   }
 };
 
@@ -1979,6 +2100,14 @@ const STYLE_PROMPT_MATRIX_LIBRARY = [
     useCase: "런칭형 마이크로사이트와 강한 시연 화면",
     cues: ["대형 타이포", "강한 블록", "몰입형 장면"],
     avoid: ["잔잔한 비즈니스 카드", "얇은 보고서형 배치"]
+  },
+  {
+    title: "LG Style",
+    tone: "lg",
+    grammar: "system",
+    useCase: "임원용 AI 브리핑 대시보드와 사내 포털",
+    cues: ["LG red accent", "gray-led typography", "restrained enterprise cards"],
+    avoid: ["네온 글로우", "과한 브루탈 보더"]
   }
 ];
 
@@ -1987,43 +2116,123 @@ function buildWebStylePromptSlide(entry, index) {
   const grammar = STYLE_GRAMMAR_PRESETS[entry.grammar];
   const cuesText = entry.cues.join(", ");
   const avoidText = entry.avoid.join(", ");
-  const quickPrompt = `${entry.title} 스타일로 ${entry.useCase} 웹 화면을 만들어줘. ${cuesText}를 먼저 보이게 하고, ${avoidText}는 피해서 정리해줘. 색은 따로 지정하지 않으면 ${tone.defaultPalette} 톤으로 잡아줘.`;
-  const fullPrompt = [
-    `Create a polished responsive web interface for ${entry.useCase}.`,
-    "",
-    `Style direction`,
-    `- Overall style: ${entry.title}`,
-    `- Tone family: ${tone.label} (${tone.identity})`,
-    `- Layout grammar: ${grammar.label} (${grammar.structure})`,
-    `- Visual cues to emphasize: ${cuesText}`,
-    `- Avoid: ${avoidText}`,
-    "",
-    `Layout requirements`,
-    `- Keep the page usable as a realistic web app, not a poster-only mockup.`,
-    `- Use a clear header, one main working area, and support panels that match ${grammar.outcome}.`,
-    `- Make the hierarchy obvious within 3 seconds when the screen first loads.`,
-    `- Keep copy concise and executive-friendly.`,
-    "",
-    `Color guidance`,
-    `- If I do not specify brand colors, use the default ${tone.label} palette: ${tone.defaultPalette}.`,
-    `- If brand colors are required, keep them constrained so the ${tone.label} mood still survives.`,
-    "",
-    `Output guidance`,
-    `- Return a production-minded web UI concept that could be implemented in HTML/CSS/JS or React.`,
-    `- Make the interface feel intentional and visually distinctive instead of generic SaaS.`,
-    `- The first impression should clearly read as ${entry.title}.`
-  ].join("\n");
+  const isLgTone = entry.tone === "lg";
+  const quickPrompt = isLgTone
+    ? "LG Style로, 임원용 AI 브리핑 대시보드를 만들어줘. 흰 배경과 밝은 회색 베이스를 유지하고, 타이포는 회색 중심으로 정돈하며, LG red는 CTA와 핵심 강조에만 제한적으로 써줘. 카드 간 간격은 넉넉하게 두고, 과한 네온 효과·브루탈 보더·스타트업식 장식은 피해서 엔터프라이즈 기술 브랜드처럼 정리해줘."
+    : `${entry.title} 스타일로 ${entry.useCase} 웹 화면을 만들어줘. ${cuesText}를 먼저 보이게 하고, ${avoidText}는 피해서 정리해줘. 색은 따로 지정하지 않으면 ${tone.defaultPalette} 톤으로 잡아줘.`;
+  const fullPrompt = isLgTone
+    ? [
+        "Create a polished responsive enterprise web interface for an internal AI briefing dashboard.",
+        "",
+        "Brand interpretation",
+        "- Overall style: LG Style",
+        `- Tone family: ${tone.label} (${tone.identity})`,
+        `- Layout grammar: ${grammar.label} (${grammar.structure})`,
+        "- Treat the LG logo only as a reference for brand character, not as a giant hero graphic.",
+        "- The interface should feel like a credible internal product used by executives and strategy teams.",
+        "",
+        "Visual direction",
+        "- Use a white or very light gray base with charcoal and gray-led typography.",
+        "- Use LG red (#a50034) only for CTA, progress, status, or one focal accent at a time.",
+        "- Prefer clean cards, generous whitespace, thin borders, and subtle shadows over flashy visual tricks.",
+        `- Visual cues to emphasize: ${cuesText}`,
+        `- Avoid: ${avoidText}`,
+        "",
+        "Layout requirements",
+        `- Make the structure clearly read as ${grammar.outcome}.`,
+        "- Use a clean header, one focused working area, and restrained support panels.",
+        "- Keep copy concise, executive-friendly, and easy to scan in three seconds.",
+        "- Make the page feel like a production-minded React or HTML/CSS/JS app, not a poster-only mockup.",
+        "",
+        "Color guidance",
+        `- If I do not specify colors, default to ${tone.defaultPalette}.`,
+        "- Keep the palette mostly neutral and let LG red appear only as a controlled accent.",
+        "- Do not flood the background with saturated red.",
+        "",
+        "Output guidance",
+        "- Return a distinctive but restrained enterprise UI concept.",
+        "- The first impression should read as LG-style technology brand, not generic SaaS or startup demo."
+      ].join("\n")
+    : [
+        `Create a polished responsive web interface for ${entry.useCase}.`,
+        "",
+        `Style direction`,
+        `- Overall style: ${entry.title}`,
+        `- Tone family: ${tone.label} (${tone.identity})`,
+        `- Layout grammar: ${grammar.label} (${grammar.structure})`,
+        `- Visual cues to emphasize: ${cuesText}`,
+        `- Avoid: ${avoidText}`,
+        "",
+        `Layout requirements`,
+        `- Keep the page usable as a realistic web app, not a poster-only mockup.`,
+        `- Use a clear header, one main working area, and support panels that match ${grammar.outcome}.`,
+        `- Make the hierarchy obvious within 3 seconds when the screen first loads.`,
+        `- Keep copy concise and executive-friendly.`,
+        "",
+        `Color guidance`,
+        `- If I do not specify brand colors, use the default ${tone.label} palette: ${tone.defaultPalette}.`,
+        `- If brand colors are required, keep them constrained so the ${tone.label} mood still survives.`,
+        "",
+        `Output guidance`,
+        `- Return a production-minded web UI concept that could be implemented in HTML/CSS/JS or React.`,
+        `- Make the interface feel intentional and visually distinctive instead of generic SaaS.`,
+        `- The first impression should clearly read as ${entry.title}.`
+      ].join("\n");
+  const infoBlocks = isLgTone
+    ? [
+        {
+          title: "색상 팁",
+          items: [
+            tone.colorTip,
+            "로고의 빨간색을 화면 전체 배경으로 확장하지 말고, CTA와 핵심 상태 강조에만 쓰는 편이 더 LG답습니다."
+          ]
+        },
+        {
+          title: "브랜드 해석",
+          items: [
+            "사내 브리핑과 엔터프라이즈 제품 같은 신뢰감을 먼저 보여주세요.",
+            "회색 중심 타이포, 얇은 선, 넓은 여백, 절제된 카드 구조가 기본입니다."
+          ]
+        },
+        {
+          title: "언제 쓰나",
+          items: [
+            "임원용 AI 대시보드, 전략 브리핑, 내부 포털처럼 브랜드 신뢰감이 중요한 화면일 때",
+            "4×4 매트릭스로 구조를 고른 뒤 마지막 브랜드 모드로 마감하고 싶을 때"
+          ]
+        }
+      ]
+    : [
+        {
+          title: "색상 팁",
+          items: [
+            tone.colorTip,
+            "브랜드 컬러를 강하게 써야 할 때만 추가로 색을 지정하고, 그렇지 않으면 톤 패밀리 기본 팔레트를 믿는 편이 안정적입니다."
+          ]
+        },
+        {
+          title: "언제 쓰나",
+          items: [
+            `${entry.useCase}처럼 화면 목적이 분명할 때`,
+            `${grammar.label} 문법을 먼저 고르고 톤은 ${tone.label}로 확정하고 싶을 때`
+          ]
+        }
+      ];
 
   return {
     eyebrow: `${String(index + 1).padStart(2, "0")} / ${entry.title}`,
     title: entry.title,
-    summary: `${entry.useCase}에 바로 적용할 수 있는 ${tone.label} × ${grammar.label} prompt. 카드에서 보이는 프리뷰 구성을 실제 화면 프롬프트로 풀어쓴 버전입니다.`,
+    summary: isLgTone
+      ? "LG 로고와 브랜드 톤을 참고해, 임원용 브리핑 화면과 사내 포털에 바로 쓸 수 있는 브랜드 프롬프트로 정리한 버전입니다."
+      : `${entry.useCase}에 바로 적용할 수 있는 ${tone.label} × ${grammar.label} prompt. 카드에서 보이는 프리뷰 구성을 실제 화면 프롬프트로 풀어쓴 버전입니다.`,
     themeTone: entry.tone,
     themeGrammar: entry.grammar,
     stylePreview: {
       toneLabel: tone.label,
       grammarLabel: grammar.label,
-      useCase: entry.useCase
+      useCase: entry.useCase,
+      logoSrc: isLgTone ? withBase("/assets/reference/lg-logo.png") : "",
+      logoAlt: isLgTone ? "LG logo reference" : ""
     },
     bullets: [
       `Tone family: ${tone.label} — ${tone.identity}`,
@@ -2031,23 +2240,8 @@ function buildWebStylePromptSlide(entry, index) {
       `Visual cues: ${cuesText}`,
       `Avoid: ${avoidText}`
     ],
-    signals: [tone.label, grammar.label, ...entry.cues],
-    infoBlocks: [
-      {
-        title: "색상 팁",
-        items: [
-          tone.colorTip,
-          "브랜드 컬러를 강하게 써야 할 때만 추가로 색을 지정하고, 그렇지 않으면 톤 패밀리 기본 팔레트를 믿는 편이 안정적입니다."
-        ]
-      },
-      {
-        title: "언제 쓰나",
-        items: [
-          `${entry.useCase}처럼 화면 목적이 분명할 때`,
-          `${grammar.label} 문법을 먼저 고르고 톤은 ${tone.label}로 확정하고 싶을 때`
-        ]
-      }
-    ],
+    signals: isLgTone ? [tone.label, grammar.label, "LG red", "Enterprise", "White base"] : [tone.label, grammar.label, ...entry.cues],
+    infoBlocks,
     promptBlocks: [
       { label: "바로 써보는 예제 프롬프트", body: quickPrompt },
       { label: "Gemini / ChatGPT Full Prompt", body: fullPrompt }
@@ -3020,8 +3214,9 @@ function buildWebStylePromptLibraryDeck() {
   };
 }
 
-function populateSlideDeckDownloadLinks() {
-  el.clipBody.querySelectorAll("[data-slide-deck-download]").forEach((anchor) => {
+function populateSlideDeckDownloadLinks(root = el.clipBody) {
+  if (!root) return;
+  root.querySelectorAll("[data-slide-deck-download]").forEach((anchor) => {
     const deckId = normalizeWs(anchor.dataset.slideDeckDownload || "");
     const deck = getSlideDeck(deckId);
     if (!deck || !deck.downloadUrl) {
@@ -3097,9 +3292,13 @@ function renderSlidePromptBlocks(blocks, deckId, slideIndex) {
 
 function renderSlideStyleHero(preview, slide) {
   if (!preview) return "";
+  const logoHtml = preview.logoSrc
+    ? `<img class="slide-style-hero-logo" src="${escapeAttribute(preview.logoSrc)}" alt="${escapeAttribute(preview.logoAlt || "Brand logo reference")}">`
+    : "";
   return `
     <section class="slide-style-hero" aria-hidden="true">
       <div class="slide-style-hero-top">
+        ${logoHtml}
         <span class="slide-style-hero-chip">${escapeHtml(preview.toneLabel || "")}</span>
         <span class="slide-style-hero-chip">${escapeHtml(preview.grammarLabel || "")}</span>
       </div>
@@ -3158,8 +3357,10 @@ function buildDeckPreviewEntries(deck) {
   }));
 }
 
-function renderSlideDeckPreviews() {
-  el.clipBody.querySelectorAll("[data-slide-deck-preview]").forEach((container) => {
+function renderSlideDeckPreviews(root = el.clipBody, options = {}) {
+  if (!root) return;
+  const editorPreview = Boolean(options.editorPreview);
+  root.querySelectorAll("[data-slide-deck-preview]").forEach((container) => {
     const deckId = normalizeWs(container.dataset.slideDeckPreview || "");
     const deck = getSlideDeck(deckId);
     if (!deck) {
@@ -3174,6 +3375,12 @@ function renderSlideDeckPreviews() {
     const previewEntries = buildDeckPreviewEntries(deck);
     const isSingleSlide = previewEntries.length === 1;
     const isImmersivePreview = isSingleSlide && deck.previewStyle === "immersive";
+    const sourceAttrs =
+      editorPreview && container.dataset.editorSourceIndex
+        ? ` data-editor-source-index="${escapeHtml(container.dataset.editorSourceIndex || "")}" data-editor-source-line="${escapeHtml(container.dataset.editorSourceLine || "")}" data-editor-interactive="1"`
+        : editorPreview
+          ? ' data-editor-interactive="1"'
+          : "";
 
     container.classList.toggle("single-slide", isSingleSlide);
     container.classList.toggle("immersive-preview", isImmersivePreview);
@@ -3195,6 +3402,7 @@ function renderSlideDeckPreviews() {
               class="slide-preview-card slide-preview-card-wide slide-preview-card-immersive${previewClass ? ` ${escapeHtml(previewClass)}` : ""}"
               data-slide-deck-card="${escapeHtml(deckId)}"
               data-slide-index="${entry.slideIndex}"
+              ${sourceAttrs}
               aria-label="${escapeHtml(entry.title || slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
             >
               <span class="slide-preview-page">${escapeHtml(entry.pageLabel)}</span>
@@ -3217,6 +3425,7 @@ function renderSlideDeckPreviews() {
             class="slide-preview-card${isSingleSlide ? " slide-preview-card-wide" : ""}${previewClass ? ` ${escapeHtml(previewClass)}` : ""}"
             data-slide-deck-card="${escapeHtml(deckId)}"
             data-slide-index="${entry.slideIndex}"
+            ${sourceAttrs}
             aria-label="${escapeHtml(entry.title || slide.title || `슬라이드 ${index + 1}`)} 크게 보기"
           >
             <span class="slide-preview-page">${escapeHtml(entry.pageLabel)}</span>
@@ -3237,6 +3446,49 @@ function renderSlideDeckPreviews() {
         `;
       })
       .join("");
+  });
+}
+
+function wireSlideDeckTriggers(root = el.clipBody, options = {}) {
+  if (!root) return;
+  const stopPropagation = Boolean(options.stopPropagation);
+
+  root.querySelectorAll("[data-slide-deck]").forEach((button) => {
+    if (button.dataset.slideDeckBound === "1") return;
+    button.dataset.slideDeckBound = "1";
+    button.addEventListener("click", (event) => {
+      if (stopPropagation) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const deckId = normalizeWs(button.dataset.slideDeck || "");
+      if (!deckId) return;
+      openSlideDeck(deckId);
+    });
+  });
+
+  root.querySelectorAll("[data-slide-deck-card]").forEach((button) => {
+    if (button.dataset.slideDeckCardBound === "1") return;
+    button.dataset.slideDeckCardBound = "1";
+    const openDeckFromCard = (event) => {
+      if (stopPropagation && event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const deckId = normalizeWs(button.dataset.slideDeckCard || "");
+      const slideIndex = Number(button.dataset.slideIndex || "0");
+      if (!deckId) return;
+      openSlideDeck(deckId, slideIndex);
+    };
+    button.addEventListener("click", openDeckFromCard);
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      if (stopPropagation) {
+        event.stopPropagation();
+      }
+      openDeckFromCard();
+    });
   });
 }
 
@@ -3714,14 +3966,16 @@ function setupPromptMarkdownPreview(block) {
   render();
 }
 
-function enhancePromptMarkdownBlocks() {
-  el.clipBody
+function enhancePromptMarkdownBlocks(root = el.clipBody) {
+  if (!root) return;
+  root
     .querySelectorAll(".prompt-inline-block, .prompt-block")
     .forEach((block) => setupPromptMarkdownPreview(block));
 }
 
-function wireMarkdownLiveEditors() {
-  el.clipBody.querySelectorAll(".md-live-editor").forEach((editor) => {
+function wireMarkdownLiveEditors(root = el.clipBody) {
+  if (!root) return;
+  root.querySelectorAll(".md-live-editor").forEach((editor) => {
     const input = editor.querySelector(".md-editor-input");
     const preview = editor.querySelector(".md-editor-preview");
     if (!input || !preview) return;
@@ -3735,11 +3989,23 @@ function wireMarkdownLiveEditors() {
   });
 }
 
+function hydrateContentEditorPreview() {
+  if (!el.contentEditorPreview) return;
+  populateSlideDeckDownloadLinks(el.contentEditorPreview);
+  renderSlideDeckPreviews(el.contentEditorPreview, { editorPreview: true });
+  wireSlideDeckTriggers(el.contentEditorPreview, { stopPropagation: true });
+  wireMarkdownLiveEditors(el.contentEditorPreview);
+  enhancePromptMarkdownBlocks(el.contentEditorPreview);
+  enhanceChartBlocks(el.contentEditorPreview);
+  enhanceMermaidBlocks(el.contentEditorPreview);
+}
+
 function renderSidebar() {
   el.chapterList.innerHTML = "";
   const fragment = document.createDocumentFragment();
 
   for (const chapter of state.chapters) {
+    const journey = currentChapterJourney(chapter.chapterId);
     const chapterCard = document.createElement("section");
     chapterCard.className = "chapter-card";
     const expanded = state.expandedChapters.has(chapter.chapterId);
@@ -3751,7 +4017,10 @@ function renderSidebar() {
     header.innerHTML = `
       <span class="chapter-header-left">
         <span class="chapter-code">${chapter.chapterNum.replace(/\s+/g, "")}</span>
-        <span class="chapter-label">${chapter.title}</span>
+        <span class="chapter-label-wrap">
+          <span class="chapter-label">${chapter.title}</span>
+          <span class="chapter-mission">${journey?.sidebar || ""}</span>
+        </span>
       </span>
       <span class="chapter-header-right">
         <span class="chapter-time">${chapter.time || ""}</span>
@@ -3843,11 +4112,14 @@ function renderClipHeader(clip) {
     span.textContent = badge;
     el.clipBadges.appendChild(span);
   }
+
+  renderMissionStrip();
 }
 
-function enhanceChartBlocks() {
+function enhanceChartBlocks(root = el.clipBody) {
+  if (!root) return;
   if (!window.Chart) return;
-  el.clipBody.querySelectorAll(".chart-shell").forEach((shell) => {
+  root.querySelectorAll(".chart-shell").forEach((shell) => {
     if (shell.dataset.bound === "1") return;
     shell.dataset.bound = "1";
     const source = shell.querySelector(".chart-json");
@@ -3876,13 +4148,14 @@ function enhanceChartBlocks() {
   });
 }
 
-function enhanceMermaidBlocks() {
+function enhanceMermaidBlocks(root = el.clipBody) {
+  if (!root) return;
   if (!window.mermaid) return;
   if (!state.mermaidReady) {
     window.mermaid.initialize({ startOnLoad: false, securityLevel: "loose", theme: "default" });
     state.mermaidReady = true;
   }
-  const nodes = Array.from(el.clipBody.querySelectorAll(".mermaid"));
+  const nodes = Array.from(root.querySelectorAll(".mermaid"));
   if (!nodes.length) return;
   window.mermaid.run({ nodes }).catch(() => {});
 }
@@ -3944,32 +4217,7 @@ function wireClipInteractions() {
     });
   });
 
-  el.clipBody.querySelectorAll("[data-slide-deck]").forEach((button) => {
-    if (button.dataset.slideDeckBound === "1") return;
-    button.dataset.slideDeckBound = "1";
-    button.addEventListener("click", () => {
-      const deckId = normalizeWs(button.dataset.slideDeck || "");
-      if (!deckId) return;
-      openSlideDeck(deckId);
-    });
-  });
-
-  el.clipBody.querySelectorAll("[data-slide-deck-card]").forEach((button) => {
-    if (button.dataset.slideDeckCardBound === "1") return;
-    button.dataset.slideDeckCardBound = "1";
-    const openDeckFromCard = () => {
-      const deckId = normalizeWs(button.dataset.slideDeckCard || "");
-      const slideIndex = Number(button.dataset.slideIndex || "0");
-      if (!deckId) return;
-      openSlideDeck(deckId, slideIndex);
-    };
-    button.addEventListener("click", openDeckFromCard);
-    button.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      event.preventDefault();
-      openDeckFromCard();
-    });
-  });
+  wireSlideDeckTriggers(el.clipBody);
 }
 
 async function openClip(clipKey, updateHash = false) {
@@ -4137,7 +4385,7 @@ async function loadCourseDirectory() {
     const preferred =
       queryCourse ||
       normalizeCourseCode(localStorage.getItem(STORAGE_COURSE_CODE_KEY)) ||
-      normalizeCourseCode(state.courses[0]?.courseCode || "AXCAMP");
+      normalizeCourseCode(state.courses[0]?.courseCode || "AXCAMP2");
     if (el.loginCourseCode && !normalizeCourseCode(el.loginCourseCode.value)) {
       el.loginCourseCode.value = preferred;
     }

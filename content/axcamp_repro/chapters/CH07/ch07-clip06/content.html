@@ -1,76 +1,72 @@
+<div class="clip-header">
+  <div class="clip-badges">
+    <span class="clip-badge chapter">CH 07</span>
+    <span class="clip-badge type-reference">참고</span>
+  </div>
+  <h1 class="clip-title">스킬을 SOP처럼 쓰는 법</h1>
+</div>
 
-    <div class="clip-header">
-      <div class="clip-badges">
-        
-        <span class="clip-badge chapter">CH 07</span>
-        <span class="clip-badge type-reference">참고</span>
-      </div>
-      <h1 class="clip-title">스킬(Skill)이란 <span class="badge-advanced">심화</span></h1>
+<div class="clip-overview">스킬을 프롬프트 저장본으로 보면 개인 도구에 머물고, <strong>재실행 가능한 SOP 카드</strong>로 보면 팀 자산이 됩니다. 이 장에서는 바로 실무에 옮길 수 있는 스킬 구조를 정리합니다.</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">좋은 스킬은 5칸만 있으면 됩니다</div>
+  <div class="clip-section-content">
+    <table class="comparison-table">
+      <thead><tr><th>칸</th><th>무엇을 적나</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td><strong>언제 실행</strong></td><td>어떤 순간에 이 Skill을 쓰는지</td><td>매주 월요일 오전, 주간 보고 초안 작성 전</td></tr>
+        <tr><td><strong>입력 자료</strong></td><td>꼭 넣어야 할 파일과 데이터</td><td>회의록, KPI 표, 경쟁사 기사 3건</td></tr>
+        <tr><td><strong>출력 형식</strong></td><td>최종 산출물의 형식과 길이</td><td>1페이지 브리핑, 5문장 CEO 메모, 팀 액션 리스트</td></tr>
+        <tr><td><strong>금지 사항</strong></td><td>자동으로 하면 안 되는 것</td><td>확인되지 않은 숫자 확정 금지, 인사평가 문구 금지</td></tr>
+        <tr><td><strong>최종 검토자</strong></td><td>누가 마지막에 승인하는지</td><td>팀장 검토 후 본부장 공유</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">오늘 바로 만들기 좋은 스킬 3개</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0">
+    <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-weight:700;font-size:0.9rem;color:var(--text-heading);margin-bottom:8px">주간 보고 Skill</div>
+      <div style="font-size:0.8rem;color:var(--text-secondary)">회의록과 KPI를 넣으면 본인 메모와 상사 보고 초안을 동시에 만듭니다.</div>
     </div>
-    
-    <div class="info-block" style="margin-bottom:20px;background:var(--bg-offwhite);border-left:3px solid var(--text-muted)">
-  <div style="font-size:0.85rem;color:var(--text-muted)">이 섹션은 <strong>심화/선택</strong> 자료입니다. 시간 여유가 있을 때 참고하세요.</div>
-</div>
-
-<div class="clip-overview">반복 업무를 자동화하는 <strong>스킬(Skill)</strong>의 개념과 원리를 이해하고, 조직 확산 시나리오를 살펴봅니다.</div>
-
-<div class="clip-section">
- <div class="clip-section-title">스킬(Skill)이란?</div>
- <div class="clip-section-content">
- <p style="margin-bottom:12px"><span class="glossary-term">Antigravity<span class="glossary-tooltip"><strong>Antigravity</strong><br>AI 에이전트 플랫폼이에요. 에디터·터미널·브라우저를 AI가 동시에 조작하여 코드 작성, 파일 생성, 웹 작업을 한꺼번에 자율적으로 처리합니다.</span></span>의 <strong>스킬</strong>은 자주 사용하는 프롬프트 + 워크플로우를 저장해두고 클릭 한 번으로 재실행하는 기능입니다.</p>
- <table class="comparison-table">
- <thead><tr><th></th><th>수동 반복</th><th>스킬 사용</th></tr></thead>
- <tbody>
- <tr><td><strong>프롬프트</strong></td><td>매번 복사·붙여넣기</td><td>클릭 한 번</td></tr>
- <tr><td><strong>품질</strong></td><td>매번 미세한 차이</td><td>동일한 구조·품질 보장</td></tr>
- <tr><td><strong>공유</strong></td><td>텍스트 파일 전달</td><td>팀 내 스킬 공유</td></tr>
- <tr><td><strong>개선</strong></td><td>개인 기억에 의존</td><td>버전 관리 가능</td></tr>
- </tbody>
- </table>
- <p style="font-size:0.82rem;color:var(--text-secondary);margin-top:12px">스킬은 <strong>조직의 업무 표준(SOP)을 디지털화</strong>한 것입니다. 한 명이 만들면 팀 전체가 같은 품질로 산출물을 만들 수 있습니다.</p>
- </div>
+    <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:10px;padding:16px">
+      <div style="font-weight:700;font-size:0.9rem;color:var(--text-heading);margin-bottom:8px">경쟁사 브리핑 Skill</div>
+      <div style="font-size:0.8rem;color:var(--text-secondary)">기사와 PDF를 넣으면 NotebookLM 스타일의 근거 중심 요약을 만듭니다.</div>
+    </div>
+    <div style="background:var(--brand-light);border:1px solid var(--brand);border-radius:10px;padding:16px">
+      <div style="font-weight:700;font-size:0.9rem;color:var(--brand);margin-bottom:8px">이사회 앱 Skill</div>
+      <div style="font-size:0.8rem;color:var(--text-secondary)">Build 모드에서 3분 브리핑 앱의 기본 레이아웃과 톤을 다시 불러옵니다.</div>
+    </div>
+  </div>
 </div>
 
 <div class="clip-section">
- <div class="clip-section-title">스킬의 조직 확산 시나리오</div>
- <div class="clip-section-content">
- <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0">
- <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
-
- <div style="font-weight:600;font-size:0.85rem;margin-bottom:4px">1명이 만들면</div>
- <div style="font-size:0.75rem;color:var(--text-secondary)">전무가 최적의 프롬프트를<br>스킬로 저장</div>
- </div>
- <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
-
- <div style="font-weight:600;font-size:0.85rem;margin-bottom:4px">팀 전체가 쓰고</div>
- <div style="font-size:0.75rem;color:var(--text-secondary)">팀원 6명이 동일한<br>품질의 산출물 생성</div>
- </div>
- <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
-
- <div style="font-weight:600;font-size:0.85rem;margin-bottom:4px">조직 표준이 된다</div>
- <div style="font-size:0.75rem;color:var(--text-secondary)">사업부 전체의<br>보고 프로세스 통일</div>
- </div>
- </div>
- <p style="font-size:0.82rem;color:var(--text-secondary);margin-top:8px">이것이 <strong>"AI 시대의 SOP"</strong>입니다. 개인의 노하우가 조직의 자산으로 전환됩니다.</p>
- </div>
+  <div class="clip-section-title">스킬 문장 자체는 이렇게 써야 합니다</div>
+  <div class="clip-section-content">
+    <ul>
+      <li><strong>목적 문장</strong>을 제일 앞에 둡니다. 예: “이 Skill은 임원 보고 초안을 10분 안에 만드는 데 쓴다.”</li>
+      <li><strong>입력과 출력</strong>을 숫자로 제한합니다. 예: “입력은 최대 PDF 3개, 출력은 7문장 이내.”</li>
+      <li><strong>검토 기준</strong>을 미리 씁니다. 예: “근거 없는 단정 금지, 5초 안에 핵심이 보일 것.”</li>
+      <li><strong>금지 문구</strong>를 분명히 씁니다. 예: “미확인 수치 확정 표현 금지.”</li>
+    </ul>
+  </div>
 </div>
 
 <div class="tip-block">
- <div class="tip-block-title">스킬 활용의 핵심 — "한 번 만들면 계속 쓴다"</div>
- <div class="tip-block-content">
- 이번 실습에서 만든 스킬은 실제 업무에서 바로 활용 가능합니다:<br><br>
- • <strong>매주 월요일</strong>: 주간 보고서 → 스킬 실행 → 3종 보고서 자동 생성<br>
- • <strong>매월 초</strong>: 월간 실적 → 스킬 실행 → 대시보드 + PPT 자동 생성<br>
- • <strong>분기말</strong>: 분기 전략보고서 → 스킬 실행 → 이사회 자료 초안 5분 완성<br><br>
- 반복 업무에 들이는 시간을 <strong>90% 이상</strong> 절약할 수 있습니다.
- </div>
+  <div class="tip-block-title">핵심 포인트</div>
+  <div class="tip-block-content">
+    <strong>스킬은 ‘잘 쓴 프롬프트’가 아니라 ‘다시 돌릴 수 있는 업무 방식’입니다.</strong><br><br>
+    그래서 프롬프트 문장보다도 입력 범위, 출력 형식, 검토 기준을 먼저 고정해야 팀에서 살아남습니다.
+  </div>
 </div>
-    <div class="clip-nav-footer">
-      <a class="clip-nav-btn " href="#ch07-clip05">
-        ← HTML + PPT 동시 출력 <span class="badge-advanced">심화</span>
-      </a>
-      <a class="clip-nav-btn " href="#ch07-clip07">
-        스킬 저장 &amp; 재사용 <span class="badge-advanced">심화</span> →
-      </a>
-    </div>
-  
+
+<div class="clip-nav-footer">
+  <a class="clip-nav-btn" href="#ch07-clip02">
+    ← 시연: 여러 보고서를 한 화면으로 묶기
+  </a>
+  <a class="clip-nav-btn" href="#ch07-clip04">
+    스킬 저장과 재사용 심화 →
+  </a>
+</div>

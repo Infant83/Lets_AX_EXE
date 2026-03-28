@@ -3,15 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AX Literacy</title>
+    <title>AXCAMP2 Executive Lab</title>
     <link rel="stylesheet" href="/styles.css?v=20260323-editor3" />
   </head>
   <body>
     <section id="loginView" class="login-view">
-      <div class="login-card">
-        <p class="eyebrow">AX Literacy</p>
-        <h1>AX Literacy 학습 포털</h1>
-        <p class="muted">회원가입 후 로그인하면 개인 진도, 과제, 노트가 계정별로 저장됩니다.</p>
+      <div class="login-shell">
+        <aside class="login-brief">
+          <p class="eyebrow">AX CAMP 2</p>
+          <h1>Executive Lab</h1>
+          <p class="login-lead">
+            코딩을 잘 몰라도, 임원 관점의 AI 비서와 출처 기반 브리핑, 실무형 웹앱을 하루 안에 직접
+            만들어보는 실습형 랩입니다.
+          </p>
+          <div class="login-brief-grid">
+            <article class="brief-card">
+              <span class="brief-kicker">오늘의 산출물 1</span>
+              <strong>개인용 임원 비서</strong>
+              <p>반복되는 회의 브리핑과 질문 응답을 맡길 나만의 AI 비서를 만듭니다.</p>
+            </article>
+            <article class="brief-card">
+              <span class="brief-kicker">오늘의 산출물 2</span>
+              <strong>출처 기반 브리핑</strong>
+              <p>NotebookLM으로 문서를 교차 분석하고 1페이지 경영진 브리핑을 뽑아냅니다.</p>
+            </article>
+            <article class="brief-card">
+              <span class="brief-kicker">오늘의 산출물 3</span>
+              <strong>3분 이사회 브리핑 앱</strong>
+              <p>Google AI Studio Build로 말로만 지시해 실무형 앱을 만드는 바이브 코딩을 체험합니다.</p>
+            </article>
+          </div>
+          <div class="login-agenda">
+            <span>09:00 Kickoff</span>
+            <span>10:00 Personal Agent</span>
+            <span>13:00 Grounded Briefing</span>
+            <span>14:20 Vibe Coding</span>
+            <span>17:10 Wrap-up</span>
+          </div>
+          <p class="login-meta">난이도: 쉬움 · 방식: 따라하며 바로 결과 만들기 · 톤: 임원 보고 수준</p>
+        </aside>
+        <div class="login-card">
+          <p class="eyebrow">AX CAMP 2</p>
+          <h1>Executive Lab 로그인</h1>
+          <p class="muted">로그인하면 진도, 메모, 실습 히스토리가 계정별로 저장됩니다.</p>
 
         <div class="auth-tabs">
           <button id="showLoginModeBtn" type="button" class="ghost active">로그인</button>
@@ -25,7 +59,7 @@
               id="loginCourseCode"
               name="loginCourseCode"
               list="courseCodeList"
-              placeholder="예: AXCAMP"
+              placeholder="예: AXCAMP2"
               maxlength="24"
             />
           </label>
@@ -66,7 +100,7 @@
               id="signupCourseCode"
               name="signupCourseCode"
               list="courseCodeList"
-              placeholder="예: AXCAMP"
+              placeholder="예: AXCAMP2"
               maxlength="24"
             />
           </label>
@@ -150,15 +184,16 @@
           <button id="closePasswordHelpBtn" type="button" class="ghost">닫기</button>
         </section>
 
-        <datalist id="courseCodeList"></datalist>
+          <datalist id="courseCodeList"></datalist>
+        </div>
       </div>
     </section>
 
     <section id="appView" class="app-view hidden">
       <header class="topbar">
         <div>
-          <p class="eyebrow">AX Literacy</p>
-          <h2>AX Literacy</h2>
+          <p class="eyebrow">AX CAMP 2</p>
+          <h2>Executive Lab</h2>
         </div>
         <div class="topbar-right">
           <div id="currentCourseBadge" class="course-badge">코스 -</div>
@@ -171,6 +206,7 @@
         </div>
       </header>
 
+      <section id="missionStrip" class="mission-strip"></section>
       <div id="appLayout" class="layout">
         <aside class="sidebar">
           <div class="sidebar-title">강의 목차</div>
@@ -186,7 +222,7 @@
             </div>
             <div class="content-actions">
               <button id="markCompleteBtn">학습 완료</button>
-              <button id="toggleTaskBtn" class="ghost">Miro.공유하기</button>
+              <button id="toggleTaskBtn" class="ghost">오늘의 미션</button>
               <button id="toggleNoteBtn" class="ghost">메모 펼치기</button>
               <button id="toggleEditModeBtn" class="ghost hidden" onclick="window.toggleContentEditMode?.()">본문 수정</button>
               <button id="toggleSidebarModeBtn" class="ghost hidden" onclick="window.toggleSidebarEditMode?.()">사이드바 수정</button>

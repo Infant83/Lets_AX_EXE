@@ -25,8 +25,8 @@ const CHAPTERS_DIR = path.join(SOURCE_ROOT, "chapters");
 const EXPORT_REPORT_FILE = path.join(SOURCE_ROOT, "export-report.json");
 const GENERATED_COURSES_DIR = path.resolve(ROOT_DIR, "content", "generated_courses");
 const GENERATED_COURSE_CATALOG_FILE = path.join(GENERATED_COURSES_DIR, "catalog.json");
-const DEFAULT_COURSE_CODE = "AXCAMP";
-const DEFAULT_COURSE_SLUG = "axcamp_repro";
+const DEFAULT_COURSE_CODE = "AXCAMP2";
+const DEFAULT_COURSE_SLUG = "axcamp2_exec_lab";
 const VISIBLE_CATALOG_OVERRIDES_FILE = "visible-catalog-overrides.json";
 const PRACTICE_ROOT_REL = "[공유용] LG AX Camp For Leaders 실습자료";
 const PRACTICE_FILE_MAP = {
@@ -54,7 +54,7 @@ const PRACTICE_FILE_MAP = {
 };
 
 const HOST = "0.0.0.0";
-const PORT = Number(process.env.PORT || 4071);
+const PORT = Number(process.env.PORT || 4072);
 const EXCLUDED_CLIP_KEYS = new Set([
   "ch02-clip01",
   "ch02-clip02",
@@ -147,7 +147,7 @@ function defaultCourseContext() {
   return {
     courseCode: DEFAULT_COURSE_CODE,
     slug: DEFAULT_COURSE_SLUG,
-    courseName: "AX Camp Repro",
+    courseName: "AX Camp 2 Executive Lab",
     sourceRoot: SOURCE_ROOT,
     launchUrl: `/?course=${encodeURIComponent(DEFAULT_COURSE_CODE)}`
   };
@@ -695,7 +695,7 @@ function createProjectFromTemplate(template, customName = "") {
           ? "워크숍형 교육 과정"
           : normalizedTemplate === "blank"
           ? "빈 템플릿 과정"
-          : "AX Literacy 신규 과정"),
+          : "AXCAMP2 신규 과정"),
       subtitle: "",
       audience: "",
       template: normalizedTemplate,
@@ -1301,9 +1301,17 @@ function rewriteVisibleReferences(input, catalog) {
   let output = String(input || "");
   if (!output || !catalog) return output;
 
+  output = output.replace(/#v-(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
+    return `__VISIBLE_ROUTE__${normalizeWs(rawKey).toLowerCase()}`;
+  });
+
   output = output.replace(/#(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
     const mapped = toVisibleClipKey(catalog, rawKey);
     return mapped ? `#${mapped}` : `#${rawKey}`;
+  });
+
+  output = output.replace(/__VISIBLE_ROUTE__(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
+    return `#${normalizeWs(rawKey).toLowerCase()}`;
   });
 
   for (const [canonicalChapterId, visibleChapterId] of catalog.visibleChapterIdByCanonicalId || []) {
@@ -1325,6 +1333,62 @@ function rewriteVisibleReferences(input, catalog) {
     output = output.replace(
       new RegExp(`\\bCH${canonicalPadded}\\b`, "g"),
       `CH${visiblePadded}`
+    );
+  }
+
+  return output;
+}
+
+function rewriteCanonicalReferences(input, catalog) {
+  let output = String(input || "");
+  if (!output || !catalog) return output;
+
+  output = output.replace(/#v-(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
+    return `__VISIBLE_ROUTE__${normalizeWs(rawKey).toLowerCase()}`;
+  });
+
+  output = output.replace(/#(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
+    const mapped = toCanonicalClipKey(catalog, rawKey);
+    return mapped ? `#${mapped}` : `#${rawKey}`;
+  });
+
+  output = output.replace(/__VISIBLE_ROUTE__(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
+    const mapped = toCanonicalClipKey(catalog, rawKey);
+    return mapped ? `#${mapped}` : `#${normalizeWs(rawKey).toLowerCase()}`;
+  });
+
+  const chapterMappings = Array.from(catalog.canonicalChapterIdByVisibleId || [])
+    .map(([visibleChapterId, canonicalChapterId]) => {
+      const visibleIndex = chapterIndexFromId(visibleChapterId);
+      const canonicalIndex = chapterIndexFromId(canonicalChapterId);
+      return {
+        visibleChapterId,
+        canonicalChapterId,
+        visibleIndex,
+        canonicalIndex
+      };
+    })
+    .filter(
+      (item) =>
+        item.canonicalChapterId &&
+        item.visibleChapterId &&
+        item.canonicalChapterId !== item.visibleChapterId &&
+        item.canonicalIndex != null &&
+        item.visibleIndex != null
+    )
+    .sort((a, b) => b.visibleIndex - a.visibleIndex);
+
+  for (const mapping of chapterMappings) {
+    const visiblePadded = String(mapping.visibleIndex).padStart(2, "0");
+    const canonicalPadded = String(mapping.canonicalIndex).padStart(2, "0");
+
+    output = output.replace(
+      new RegExp(`\\bCH\\s+${visiblePadded}\\b`, "g"),
+      `CH ${canonicalPadded}`
+    );
+    output = output.replace(
+      new RegExp(`\\bCH${visiblePadded}\\b`, "g"),
+      `CH${canonicalPadded}`
     );
   }
 
@@ -1968,34 +2032,36 @@ async function buildCatalog(sourceRoot) {
     {
       visibleChapterId: "ch00",
       title: "오늘의 여정",
-      time: "10:00",
+      time: "09:00",
       sourceChapterIds: ["ch00"],
-      clipKeys: ["ch00-clip01", "ch00-clip02"]
+      clipKeys: ["ch00-clip01", "ch00-clip02"],
+      clipTitles: {
+        "ch00-clip01": "오늘의 시간표",
+        "ch00-clip02": "왜 지금 임원이 AI를 직접 만져봐야 하나"
+      }
     },
     {
       visibleChapterId: "ch01",
       title: "AI 핵심 개념",
-      time: "10:25",
+      time: "09:20",
       sourceChapterIds: ["ch01"],
-      clipKeys: [
-        "ch01-clip01",
-        "ch01-clip02",
-        "ch01-clip03",
-        "ch01-clip04",
-        "ch01-clip05"
-      ]
+      clipKeys: ["ch01-clip01", "ch01-clip02", "ch01-clip03"],
+      clipTitles: {
+        "ch01-clip01": "Assistant에서 Agent Team까지",
+        "ch01-clip02": "위임형 프롬프트 4원칙",
+        "ch01-clip03": "오늘의 4단계 실습 로드맵"
+      }
     },
     {
       visibleChapterId: "ch02",
       title: "Gemini & ChatGPT",
-      time: "09:30",
+      time: "10:00",
       sourceChapterIds: ["ch03"],
-      clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch03-clip04"],
+      clipKeys: ["ch03-clip01", "ch03-clip03", "ch03-clip04"],
       clipTitles: {
-        "ch03-clip01": "Gemini 소개 및 접속 방법",
-        "ch03-clip02": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
-        "ch03-clip03": "Gems 소개: AI 비서 만들기",
-        "ch03-clip04": "ChatGPT 소개 및 접속 방법"
+        "ch03-clip01": "Gemini로 임원 비서 시작하기",
+        "ch03-clip03": "Gems로 나만의 임원 비서 만들기",
+        "ch03-clip04": "ChatGPT로 세컨드 오피니언 받기"
       }
     },
     {
@@ -2003,25 +2069,41 @@ async function buildCatalog(sourceRoot) {
       title: "NotebookLM",
       time: "13:00",
       sourceChapterIds: ["ch04"],
-      clipKeys: ["ch04-clip01", "ch04-clip02", "ch04-clip03"]
+      clipKeys: ["ch04-clip01", "ch04-clip02"],
+      clipTitles: {
+        "ch04-clip01": "NotebookLM: 출처 기반 리서치 워크벤치",
+        "ch04-clip02": "문서 교차분석으로 1페이지 브리핑 만들기"
+      }
     },
     {
       visibleChapterId: "ch04",
       title: "Google AI Studio & Vibe Coding",
-      time: "14:10",
+      time: "14:20",
       sourceChapterIds: ["ch05", "ch06"],
-      clipKeys: [
-        "ch05-clip02",
-        "ch06-clip01",
-        "ch06-clip02",
-        "ch06-clip03"
-      ],
-      clipTitles: {
-        "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
-        "ch06-clip01": "바이브 코딩이란",
-        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기",
-        "ch06-clip03": "경쟁사 리서치 대시보드"
-      }
+      clipKeys: [],
+      syntheticClips: [
+        {
+          clipKey: "ch04-build-setup",
+          canonicalClipKey: "ch05-clip02",
+          folderRelative: "chapters/CH05/ch05-clip02",
+          title: "Google AI Studio 빠르게 시작하기",
+          type: "설정"
+        },
+        {
+          clipKey: "ch04-boardroom-app",
+          canonicalClipKey: "ch06-clip05",
+          folderRelative: "chapters/CH06/ch06-clip05",
+          title: "3분 이사회 브리핑 앱 만들기",
+          type: "실습"
+        },
+        {
+          clipKey: "ch04-skill-draft",
+          canonicalClipKey: "ch06-clip04",
+          folderRelative: "chapters/CH06/ch06-clip04",
+          title: "나만의 스킬 초안 만들기",
+          type: "실습"
+        }
+      ]
     },
     {
       visibleChapterId: "ch05",
@@ -2042,29 +2124,25 @@ async function buildCatalog(sourceRoot) {
       title: "Key Takeaways & Q/A",
       time: "17:10",
       sourceChapterIds: ["ch09"],
-      clipKeys: ["ch09-clip01", "ch09-clip02"]
+      clipKeys: ["ch09-clip01", "ch09-clip02"],
+      clipTitles: {
+        "ch09-clip01": "오늘의 핵심 정리",
+        "ch09-clip02": "내일부터 바로 쓰는 30-60-90일 실행안"
+      }
     },
     {
       visibleChapterId: "ch07",
       title: "참고자료 라이브러리",
-      time: "17:20",
+      time: "17:30",
       sourceChapterIds: ["ch07", "ch08"],
-      clipKeys: [
-        "ch07-clip01",
-        "ch07-clip02",
-        "ch07-clip03",
-        "ch07-clip04",
-        "ch07-clip05",
-        "ch07-clip06",
-        "ch07-clip07",
-        "ch07-clip08",
-        "ch08-clip01",
-        "ch08-clip02",
-        "ch08-clip03",
-        "ch08-clip04",
-        "ch08-clip05",
-        "ch08-clip06"
-      ]
+      clipKeys: ["ch07-clip01", "ch07-clip03", "ch07-clip06", "ch07-clip07", "ch08-clip03"],
+      clipTitles: {
+        "ch07-clip01": "에이전트는 왜 조직 운영 비유로 설명해야 하나",
+        "ch07-clip03": "시연: 여러 보고서를 한 화면으로 묶기",
+        "ch07-clip06": "Skill을 SOP처럼 쓰는 법",
+        "ch07-clip07": "스킬 저장과 재사용 심화",
+        "ch08-clip03": "추가 읽을거리"
+      }
     }
   ];
 
@@ -2077,12 +2155,13 @@ async function buildCatalog(sourceRoot) {
 
   for (const [chapterIndex, blueprint] of visibleBlueprints.entries()) {
     const visibleChapterId = blueprint.visibleChapterId;
+    const primarySourceChapterId = normalizeWs(blueprint.sourceChapterIds?.[0] || visibleChapterId).toLowerCase();
     const visibleChapterNum = formatChapterNum(chapterIndex);
     const visibleChapterCode = chapterCodeFromId(visibleChapterId);
     const chapterOverride = overrides.chapters?.[visibleChapterId] || {};
     const chapterObj = {
       chapterId: visibleChapterId,
-      canonicalChapterId: visibleChapterId,
+      canonicalChapterId: primarySourceChapterId,
       chapterCode: visibleChapterCode,
       chapterNum: visibleChapterNum,
       title: normalizeWs(chapterOverride.title || blueprint.title),
@@ -2092,7 +2171,7 @@ async function buildCatalog(sourceRoot) {
       clipObjects: []
     };
 
-    canonicalChapterIdByVisibleId.set(visibleChapterId, visibleChapterId);
+    canonicalChapterIdByVisibleId.set(visibleChapterId, primarySourceChapterId);
     sourceChapterIdsByVisibleId.set(visibleChapterId, chapterObj.sourceChapterIds);
 
     for (const sourceChapterId of blueprint.sourceChapterIds || []) {
@@ -2162,6 +2241,17 @@ async function buildCatalog(sourceRoot) {
         clipObj.route = `#${clipObj.clipKey}`;
         clipObj.canonicalClipKey = clipObj.clipKey;
         clipObj.canonicalRoute = clipObj.route;
+        const syntheticOverride = overrides.clips?.[clipObj.clipKey] || {};
+        if (syntheticOverride.title) {
+          clipObj.title = syntheticOverride.title;
+        }
+        if (syntheticOverride.type) {
+          clipObj.type = syntheticOverride.type;
+        }
+        const preservedTimeBadge = Array.isArray(clipObj.badges)
+          ? clipObj.badges.find((badge) => /\d/.test(String(badge || "")) && !/^CH\s*\d+/i.test(String(badge || "")))
+          : "";
+        clipObj.badges = [preservedTimeBadge, visibleChapterCode, clipObj.type].filter(Boolean);
         clipsByKey.set(clipObj.clipKey, clipObj);
         visibleClipKeyByCanonicalKey.set(clipObj.canonicalClipKey, clipObj.clipKey);
       }
@@ -2707,7 +2797,12 @@ async function resolveClipPayload(clipKey, course) {
         : Array.isArray(metadata?.badges)
           ? metadata.badges
           : [];
-  const badges = baseBadges.map((badge) => rewriteVisibleReferences(badge, catalog));
+  const preservedTimeBadge = baseBadges.find(
+    (badge) => /\d/.test(String(badge || "")) && !/^CH\s*\d+/i.test(String(badge || ""))
+  );
+  const badges = [preservedTimeBadge, clip.chapterCode, clip.type]
+    .filter(Boolean)
+    .map((badge) => String(badge));
 
   const screenshotRelative = (await pathExists(clip.screenshotPath))
     ? `/course-files/${encodeURIComponent(activeCourse.courseCode)}/${encodeURIComponent(clip.clipKey)}/screenshot.png`
@@ -3068,7 +3163,8 @@ async function handleAdminClipSource(req, res, urlObj) {
   const metadataPath = path.join(clip.folderAbsolute, "metadata.json");
 
   if (req.method === "GET") {
-    const contentHtml = await readFileSafe(htmlPath, "");
+    const storedContentHtml = await readFileSafe(htmlPath, "");
+    const contentHtml = rewriteVisibleReferences(storedContentHtml, catalog);
     const metadata = await readJsonFileSafe(metadataPath, {});
     return sendJson(res, 200, {
       ok: true,
@@ -3082,6 +3178,7 @@ async function handleAdminClipSource(req, res, urlObj) {
       },
       source: {
         contentHtml,
+        canonicalContentHtml: storedContentHtml,
         contentPath: path.relative(ROOT_DIR, htmlPath).replace(/\\/g, "/"),
         markdownPath: path.relative(ROOT_DIR, mdPath).replace(/\\/g, "/"),
         metadataPath: path.relative(ROOT_DIR, metadataPath).replace(/\\/g, "/"),
@@ -3096,16 +3193,17 @@ async function handleAdminClipSource(req, res, urlObj) {
   }
 
   const payload = await readRequestJson(req);
-  const contentHtml = String(payload.contentHtml || "");
-  if (!contentHtml.trim()) {
+  const editorContentHtml = String(payload.contentHtml || "");
+  if (!editorContentHtml.trim()) {
     return sendJson(res, 400, { ok: false, error: "contentHtml이 비어 있습니다." });
   }
+  const storedContentHtml = rewriteCanonicalReferences(editorContentHtml, catalog);
 
   const existingMetadata = await readJsonFileSafe(metadataPath, {});
   const existingMarkdown = await readFileSafe(mdPath, "");
-  const nextMetadata = buildMetadataFromHtml(clip, existingMetadata, contentHtml);
-  const nextMarkdown = buildMarkdownDocument(clip, existingMarkdown, contentHtml);
-  const nextText = stripHtmlToText(contentHtml);
+  const nextMetadata = buildMetadataFromHtml(clip, existingMetadata, editorContentHtml);
+  const nextMarkdown = buildMarkdownDocument(clip, existingMarkdown, editorContentHtml);
+  const nextText = stripHtmlToText(editorContentHtml);
 
   await writeAdminHistorySnapshot(`clip-source-${clip.clipKey}`, [
     htmlPath,
@@ -3113,7 +3211,7 @@ async function handleAdminClipSource(req, res, urlObj) {
     txtPath,
     metadataPath
   ]);
-  await fs.writeFile(htmlPath, contentHtml, "utf8");
+  await fs.writeFile(htmlPath, storedContentHtml, "utf8");
   await fs.writeFile(mdPath, nextMarkdown, "utf8");
   await fs.writeFile(txtPath, `${nextText}\n`, "utf8");
   await writeJsonFile(metadataPath, nextMetadata);
