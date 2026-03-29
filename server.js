@@ -25,8 +25,8 @@ const CHAPTERS_DIR = path.join(SOURCE_ROOT, "chapters");
 const EXPORT_REPORT_FILE = path.join(SOURCE_ROOT, "export-report.json");
 const GENERATED_COURSES_DIR = path.resolve(ROOT_DIR, "content", "generated_courses");
 const GENERATED_COURSE_CATALOG_FILE = path.join(GENERATED_COURSES_DIR, "catalog.json");
-const DEFAULT_COURSE_CODE = "AXCAMP2";
-const DEFAULT_COURSE_SLUG = "axcamp2_exec_lab";
+const DEFAULT_COURSE_CODE = "AXCAMP";
+const DEFAULT_COURSE_SLUG = "axcamp_repro";
 const VISIBLE_CATALOG_OVERRIDES_FILE = "visible-catalog-overrides.json";
 const PRACTICE_ROOT_REL = "[공유용] LG AX Camp For Leaders 실습자료";
 const PRACTICE_FILE_MAP = {
@@ -147,7 +147,7 @@ function defaultCourseContext() {
   return {
     courseCode: DEFAULT_COURSE_CODE,
     slug: DEFAULT_COURSE_SLUG,
-    courseName: "AX Camp 2 Executive Lab",
+    courseName: "AX Camp Repro",
     sourceRoot: SOURCE_ROOT,
     launchUrl: `/?course=${encodeURIComponent(DEFAULT_COURSE_CODE)}`
   };
@@ -695,7 +695,7 @@ function createProjectFromTemplate(template, customName = "") {
           ? "워크숍형 교육 과정"
           : normalizedTemplate === "blank"
           ? "빈 템플릿 과정"
-          : "AXCAMP2 신규 과정"),
+          : "AXCAMP 신규 과정"),
       subtitle: "",
       audience: "",
       template: normalizedTemplate,

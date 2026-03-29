@@ -13,11 +13,11 @@ const STATIC_PUBLIC_USER = Object.freeze({
   accountId: "public",
   displayName: "Public Viewer",
   teamName: "",
-  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP2")
+  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP")
 });
 const STATIC_PUBLIC_COURSE = Object.freeze({
-  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP2"),
-  courseName: String(STATIC_CONFIG?.courseName || "AX Camp 2 Executive Lab"),
+  courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP"),
+  courseName: String(STATIC_CONFIG?.courseName || "AX Camp Repro"),
   launchUrl: STATIC_BASE_PATH || "/"
 });
 const QUICK_EDITABLE_TAGS = new Set([
@@ -362,7 +362,7 @@ function normalizeCourseCode(input) {
 
 function staticStorageKey(prefix) {
   const courseCode = normalizeCourseCode(
-    state.currentCourse?.courseCode || STATIC_PUBLIC_COURSE.courseCode || "AXCAMP2"
+    state.currentCourse?.courseCode || STATIC_PUBLIC_COURSE.courseCode || "AXCAMP"
   );
   return `${prefix}:${courseCode}`;
 }
@@ -1704,6 +1704,9 @@ function updateSidePanelUI() {
 }
 
 function currentChapterJourney(chapterId = state.currentChapterId) {
+  if (STATIC_MODE) {
+    return null;
+  }
   return EXECUTIVE_JOURNEY[normalizeWs(chapterId).toLowerCase()] || null;
 }
 
@@ -4385,7 +4388,7 @@ async function loadCourseDirectory() {
     const preferred =
       queryCourse ||
       normalizeCourseCode(localStorage.getItem(STORAGE_COURSE_CODE_KEY)) ||
-      normalizeCourseCode(state.courses[0]?.courseCode || "AXCAMP2");
+      normalizeCourseCode(state.courses[0]?.courseCode || "AXCAMP");
     if (el.loginCourseCode && !normalizeCourseCode(el.loginCourseCode.value)) {
       el.loginCourseCode.value = preferred;
     }
