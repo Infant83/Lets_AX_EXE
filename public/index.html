@@ -4,48 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AX Camp for Leaders</title>
-    <link rel="stylesheet" href="/styles.css?v=20260323-editor3" />
+    <link rel="stylesheet" href="/styles.css?v=20260329-directedit1" />
   </head>
   <body>
     <section id="loginView" class="login-view">
-      <div class="login-shell">
-        <aside class="login-brief">
-          <p class="eyebrow">AXCAMP</p>
-          <h1>AX Camp for Leaders</h1>
-          <p class="login-lead">
-            코딩을 잘 몰라도, 임원 관점의 AI 비서와 출처 기반 브리핑, 실무형 웹앱을 하루 안에 직접
-            만들어보는 실습형 랩입니다.
-          </p>
-          <div class="login-brief-grid">
-            <article class="brief-card">
-              <span class="brief-kicker">오늘의 산출물 1</span>
-              <strong>개인용 임원 비서</strong>
-              <p>반복되는 회의 브리핑과 질문 응답을 맡길 나만의 AI 비서를 만듭니다.</p>
-            </article>
-            <article class="brief-card">
-              <span class="brief-kicker">오늘의 산출물 2</span>
-              <strong>출처 기반 브리핑</strong>
-              <p>NotebookLM으로 문서를 교차 분석하고 1페이지 경영진 브리핑을 뽑아냅니다.</p>
-            </article>
-            <article class="brief-card">
-              <span class="brief-kicker">오늘의 산출물 3</span>
-              <strong>3분 이사회 브리핑 앱</strong>
-              <p>Google AI Studio Build로 말로만 지시해 실무형 앱을 만드는 바이브 코딩을 체험합니다.</p>
-            </article>
-          </div>
-          <div class="login-agenda">
-            <span>09:00 Kickoff</span>
-            <span>10:00 Personal Agent</span>
-            <span>13:00 Grounded Briefing</span>
-            <span>14:20 Vibe Coding</span>
-            <span>17:10 Wrap-up</span>
-          </div>
-          <p class="login-meta">난이도: 쉬움 · 방식: 따라하며 바로 결과 만들기 · 톤: 임원 보고 수준</p>
-        </aside>
-        <div class="login-card">
-          <p class="eyebrow">AXCAMP</p>
-          <h1>AX Camp for Leaders 로그인</h1>
-          <p class="muted">로그인하면 진도, 메모, 실습 히스토리가 계정별로 저장됩니다.</p>
+      <div class="login-card">
+        <p class="eyebrow">AXCAMP</p>
+        <h1>AX Camp for Leaders</h1>
+        <p class="muted">회원가입 후 로그인하면 개인 진도, 과제, 노트가 계정별로 저장됩니다.</p>
 
         <div class="auth-tabs">
           <button id="showLoginModeBtn" type="button" class="ghost active">로그인</button>
@@ -184,52 +150,69 @@
           <button id="closePasswordHelpBtn" type="button" class="ghost">닫기</button>
         </section>
 
-          <datalist id="courseCodeList"></datalist>
-        </div>
+        <datalist id="courseCodeList"></datalist>
       </div>
     </section>
 
     <section id="appView" class="app-view hidden">
       <header class="topbar">
-        <div>
-          <p class="eyebrow">AXCAMP</p>
-          <h2>AX Camp for Leaders</h2>
+        <div class="topbar-brand">
+          <button
+            id="sidebarToggleBtn"
+            class="sidebar-toggle"
+            type="button"
+            aria-controls="chapterSidebar"
+            aria-expanded="true"
+            aria-label="목차 접기"
+            title="목차 접기"
+          >
+            <span class="sidebar-toggle-bars" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+          <div>
+            <p class="eyebrow">AXCAMP</p>
+            <h2>AX Camp for Leaders</h2>
+          </div>
         </div>
         <div class="topbar-right">
-          <div id="currentCourseBadge" class="course-badge">코스 -</div>
-          <div id="progressBadge" class="progress-badge">진도 0%</div>
-          <div class="user-box">
-            <strong id="currentUser">-</strong>
-            <button id="accountSettingsBtn" class="ghost">계정정보</button>
-            <button id="logoutBtn" class="ghost">로그아웃</button>
+          <div class="topbar-status-row">
+            <div id="progressBadge" class="progress-badge">진도 0%</div>
+            <div class="user-box">
+              <strong id="currentUser">-</strong>
+              <button id="accountSettingsBtn" class="ghost">계정정보</button>
+              <button id="logoutBtn" class="ghost">로그아웃</button>
+            </div>
+          </div>
+          <div class="content-actions topbar-actions">
+            <button id="markCompleteBtn">학습 완료</button>
+            <button id="toggleTaskBtn" class="ghost miro-launch-btn" aria-label="Miro 보드 열기" title="Miro 보드 열기">
+              <span class="miro-logo-badge" aria-hidden="true">
+                <svg viewBox="0 0 38 38" focusable="false" aria-hidden="true">
+                  <path d="M7 8h5l3.8 7-4.3 15H7.4l3.2-15L7 8Z" fill="currentColor"></path>
+                  <path d="M17 8h5.2l3.6 7-4 15H17.6l3.1-15L17 8Z" fill="currentColor"></path>
+                  <path d="M27 8h5.4l2.6 7-4.8 15h-5l3.7-15L27 8Z" fill="currentColor"></path>
+                </svg>
+              </span>
+              <span class="miro-btn-label">Miro</span>
+            </button>
+            <button id="toggleNoteBtn" class="ghost">메모 펼치기</button>
+            <button id="toggleEditModeBtn" class="ghost hidden" onclick="window.toggleContentEditMode?.()">본문 수정</button>
+            <button id="toggleSidebarModeBtn" class="ghost hidden" onclick="window.toggleSidebarEditMode?.()">사이드바 수정</button>
+            <button id="togglePublishModeBtn" class="ghost hidden" onclick="window.togglePublishMode?.()">Pages 배포</button>
           </div>
         </div>
       </header>
 
-      <section id="missionStrip" class="mission-strip"></section>
       <div id="appLayout" class="layout">
-        <aside class="sidebar">
+        <aside id="chapterSidebar" class="sidebar">
           <div class="sidebar-title">강의 목차</div>
           <div id="chapterList" class="chapter-list"></div>
         </aside>
 
         <main class="content-area">
-          <div class="content-head">
-            <div>
-              <div id="clipBadges" class="clip-badges"></div>
-              <h1 id="clipTitle">클립을 선택하세요</h1>
-              <p id="clipOverview" class="overview"></p>
-            </div>
-            <div class="content-actions">
-              <button id="markCompleteBtn">학습 완료</button>
-              <button id="toggleTaskBtn" class="ghost">오늘의 미션</button>
-              <button id="toggleNoteBtn" class="ghost">메모 펼치기</button>
-              <button id="toggleEditModeBtn" class="ghost hidden" onclick="window.toggleContentEditMode?.()">본문 수정</button>
-              <button id="toggleSidebarModeBtn" class="ghost hidden" onclick="window.toggleSidebarEditMode?.()">사이드바 수정</button>
-              <button id="togglePublishModeBtn" class="ghost hidden" onclick="window.togglePublishMode?.()">Pages 배포</button>
-            </div>
-          </div>
-
           <article id="clipBody" class="clip-body"></article>
 
           <section id="contentEditorPanel" class="content-editor-panel hidden">
@@ -371,7 +354,7 @@
               <section class="content-editor-pane">
                 <div class="content-editor-label-row">
                   <p class="content-editor-label">HTML 소스</p>
-                  <span class="content-editor-hint">클릭: 소스 이동 · 더블클릭: 평문 텍스트 빠른 수정</span>
+                  <span class="content-editor-hint">클릭: 소스 이동 · 더블클릭: 평문 텍스트 빠른 수정 · 본문에서도 동일</span>
                 </div>
                 <div class="content-code-editor-shell">
                   <pre
@@ -648,6 +631,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-    <script src="/app.js?v=20260323-editor3"></script>
+    <script src="/app.js?v=20260329-directedit1"></script>
   </body>
 </html>

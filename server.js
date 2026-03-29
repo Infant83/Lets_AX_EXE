@@ -54,7 +54,7 @@ const PRACTICE_FILE_MAP = {
 };
 
 const HOST = "0.0.0.0";
-const PORT = Number(process.env.PORT || 4072);
+const PORT = Number(process.env.PORT || 4071);
 const EXCLUDED_CLIP_KEYS = new Set([
   "ch02-clip01",
   "ch02-clip02",
@@ -695,7 +695,7 @@ function createProjectFromTemplate(template, customName = "") {
           ? "워크숍형 교육 과정"
           : normalizedTemplate === "blank"
           ? "빈 템플릿 과정"
-          : "AXCAMP 신규 과정"),
+          : "AX Literacy 신규 과정"),
       subtitle: "",
       audience: "",
       template: normalizedTemplate,
@@ -1301,17 +1301,9 @@ function rewriteVisibleReferences(input, catalog) {
   let output = String(input || "");
   if (!output || !catalog) return output;
 
-  output = output.replace(/#v-(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
-    return `__VISIBLE_ROUTE__${normalizeWs(rawKey).toLowerCase()}`;
-  });
-
   output = output.replace(/#(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
     const mapped = toVisibleClipKey(catalog, rawKey);
     return mapped ? `#${mapped}` : `#${rawKey}`;
-  });
-
-  output = output.replace(/__VISIBLE_ROUTE__(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
-    return `#${normalizeWs(rawKey).toLowerCase()}`;
   });
 
   for (const [canonicalChapterId, visibleChapterId] of catalog.visibleChapterIdByCanonicalId || []) {
@@ -1343,18 +1335,9 @@ function rewriteCanonicalReferences(input, catalog) {
   let output = String(input || "");
   if (!output || !catalog) return output;
 
-  output = output.replace(/#v-(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
-    return `__VISIBLE_ROUTE__${normalizeWs(rawKey).toLowerCase()}`;
-  });
-
   output = output.replace(/#(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
     const mapped = toCanonicalClipKey(catalog, rawKey);
     return mapped ? `#${mapped}` : `#${rawKey}`;
-  });
-
-  output = output.replace(/__VISIBLE_ROUTE__(ch\d{2}-clip\d{2})/gi, (_match, rawKey) => {
-    const mapped = toCanonicalClipKey(catalog, rawKey);
-    return mapped ? `#${mapped}` : `#${normalizeWs(rawKey).toLowerCase()}`;
   });
 
   const chapterMappings = Array.from(catalog.canonicalChapterIdByVisibleId || [])
@@ -1998,40 +1981,68 @@ async function buildCatalog(sourceRoot) {
     }
   }
 
+  async function buildSyntheticClip(sourceRootDir, spec, chapterId, chapterTitle, chapterNum) {
+    const folderAbsolute = path.resolve(sourceRootDir, spec.folderRelative || "");
+    const metadataPath = path.join(folderAbsolute, "metadata.json");
+    const metadata = await readJsonFileSafe(metadataPath, null);
+
+    const clipKey = normalizeWs(spec.clipKey).toLowerCase();
+    const cleanTitle = deriveClipTitle(metadata, spec.title || metadata?.clipTitle || clipKey);
+    const cleanType = normalizeWs(spec.type || metadata?.type || "");
+
+    return {
+      clipKey,
+      canonicalClipKey: clipKey,
+      route: `#${clipKey}`,
+      canonicalRoute: `#${clipKey}`,
+      title: cleanTitle,
+      type: cleanType,
+      chapterId,
+      canonicalChapterId: chapterId,
+      chapterCode: chapterCodeFromId(chapterId),
+      chapterNum,
+      chapterTitle,
+      overview: normalizeWs(metadata?.overview || ""),
+      badges: Array.isArray(metadata?.badges) ? metadata.badges : [],
+      folderRelative: spec.folderRelative || "",
+      folderAbsolute,
+      metadataPath,
+      screenshotPath: path.join(folderAbsolute, "screenshot.png")
+    };
+  }
+
   const visibleBlueprints = [
     {
       visibleChapterId: "ch00",
       title: "오늘의 여정",
-      time: "09:00",
+      time: "10:00",
       sourceChapterIds: ["ch00"],
-      clipKeys: ["ch00-clip01", "ch00-clip02"],
-      clipTitles: {
-        "ch00-clip01": "오늘의 시간표",
-        "ch00-clip02": "왜 지금 임원이 AI를 직접 만져봐야 하나"
-      }
+      clipKeys: ["ch00-clip01", "ch00-clip02"]
     },
     {
       visibleChapterId: "ch01",
       title: "AI 핵심 개념",
-      time: "09:20",
+      time: "10:25",
       sourceChapterIds: ["ch01"],
-      clipKeys: ["ch01-clip01", "ch01-clip02", "ch01-clip03"],
-      clipTitles: {
-        "ch01-clip01": "Assistant에서 Agent Team까지",
-        "ch01-clip02": "위임형 프롬프트 4원칙",
-        "ch01-clip03": "오늘의 4단계 실습 로드맵"
-      }
+      clipKeys: [
+        "ch01-clip01",
+        "ch01-clip02",
+        "ch01-clip03",
+        "ch01-clip04",
+        "ch01-clip05"
+      ]
     },
     {
       visibleChapterId: "ch02",
       title: "Gemini & ChatGPT",
-      time: "10:00",
+      time: "09:30",
       sourceChapterIds: ["ch03"],
-      clipKeys: ["ch03-clip01", "ch03-clip03", "ch03-clip04"],
+      clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch03-clip04"],
       clipTitles: {
-        "ch03-clip01": "Gemini로 임원 비서 시작하기",
-        "ch03-clip03": "Gems로 나만의 임원 비서 만들기",
-        "ch03-clip04": "ChatGPT로 세컨드 오피니언 받기"
+        "ch03-clip01": "Gemini 소개 및 접속 방법",
+        "ch03-clip02": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
+        "ch03-clip03": "Gems 소개: AI 비서 만들기",
+        "ch03-clip04": "ChatGPT 소개 및 접속 방법"
       }
     },
     {
@@ -2039,22 +2050,24 @@ async function buildCatalog(sourceRoot) {
       title: "NotebookLM",
       time: "13:00",
       sourceChapterIds: ["ch04"],
-      clipKeys: ["ch04-clip01", "ch04-clip02"],
-      clipTitles: {
-        "ch04-clip01": "NotebookLM: 출처 기반 리서치 워크벤치",
-        "ch04-clip02": "문서 교차분석으로 1페이지 브리핑 만들기"
-      }
+      clipKeys: ["ch04-clip01", "ch04-clip02", "ch04-clip03"]
     },
     {
       visibleChapterId: "ch04",
       title: "Google AI Studio & Vibe Coding",
-      time: "14:20",
+      time: "14:10",
       sourceChapterIds: ["ch05", "ch06"],
-      clipKeys: ["ch05-clip02", "ch06-clip05", "ch06-clip04"],
+      clipKeys: [
+        "ch05-clip02",
+        "ch06-clip01",
+        "ch06-clip02",
+        "ch06-clip03"
+      ],
       clipTitles: {
-        "ch05-clip02": "Google AI Studio 빠르게 시작하기",
-        "ch06-clip05": "3분 이사회 브리핑 앱 만들기",
-        "ch06-clip04": "나만의 스킬 초안 만들기"
+        "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
+        "ch06-clip01": "바이브 코딩이란",
+        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기",
+        "ch06-clip03": "경쟁사 리서치 대시보드"
       }
     },
     {
@@ -2062,35 +2075,43 @@ async function buildCatalog(sourceRoot) {
       title: "Hi-D Code",
       time: "16:10",
       sourceChapterIds: [],
-      clipKeys: ["ch05-clip01"],
-      clipTitles: {
-        "ch05-clip01": "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)"
-      }
+      syntheticClips: [
+        {
+          clipKey: "ch05-clip01",
+          folderRelative: "generated/hid-code/ch05-clip01",
+          title: "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+          type: "개요"
+        }
+      ]
     },
     {
       visibleChapterId: "ch06",
       title: "Key Takeaways & Q/A",
       time: "17:10",
       sourceChapterIds: ["ch09"],
-      clipKeys: ["ch09-clip01", "ch09-clip02"],
-      clipTitles: {
-        "ch09-clip01": "오늘의 핵심 정리",
-        "ch09-clip02": "내일부터 바로 쓰는 30-60-90일 실행안"
-      }
+      clipKeys: ["ch09-clip01", "ch09-clip02"]
     },
     {
       visibleChapterId: "ch07",
       title: "참고자료 라이브러리",
-      time: "17:30",
+      time: "17:20",
       sourceChapterIds: ["ch07", "ch08"],
-      clipKeys: ["ch07-clip01", "ch07-clip03", "ch07-clip06", "ch07-clip07", "ch08-clip03"],
-      clipTitles: {
-        "ch07-clip01": "에이전트는 왜 조직 운영 비유로 설명해야 하나",
-        "ch07-clip03": "시연: 여러 보고서를 한 화면으로 묶기",
-        "ch07-clip06": "Skill을 SOP처럼 쓰는 법",
-        "ch07-clip07": "스킬 저장과 재사용 심화",
-        "ch08-clip03": "추가 읽을거리"
-      }
+      clipKeys: [
+        "ch07-clip01",
+        "ch07-clip02",
+        "ch07-clip03",
+        "ch07-clip04",
+        "ch07-clip05",
+        "ch07-clip06",
+        "ch07-clip07",
+        "ch07-clip08",
+        "ch08-clip01",
+        "ch08-clip02",
+        "ch08-clip03",
+        "ch08-clip04",
+        "ch08-clip05",
+        "ch08-clip06"
+      ]
     }
   ];
 
@@ -2126,28 +2147,50 @@ async function buildCatalog(sourceRoot) {
       visibleChapterIdByCanonicalId.set(normalizeWs(sourceChapterId).toLowerCase(), visibleChapterId);
     }
 
-    for (const [clipIndex, clipKey] of (blueprint.clipKeys || []).entries()) {
-      const sourceClip = canonicalClipsByKey.get(normalizeWs(clipKey).toLowerCase());
-      if (!sourceClip) continue;
-      const clipObj = {
-        ...sourceClip,
-        clipKey: `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
-        route: `#${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
-        chapterId: visibleChapterId,
-        canonicalChapterId: sourceClip.canonicalChapterId,
-        chapterCode: visibleChapterCode,
-        chapterNum: visibleChapterNum,
-        chapterTitle: chapterObj.title,
-        title: normalizeWs(blueprint.clipTitles?.[clipKey] || sourceClip.title),
-        canonicalClipKey: sourceClip.canonicalClipKey,
-        canonicalRoute: sourceClip.canonicalRoute
-      };
+    const clipSpecs = [];
+    for (const clipKey of blueprint.clipKeys || []) {
+      clipSpecs.push({ clipKey, synthetic: false });
+    }
+    for (const syntheticClip of blueprint.syntheticClips || []) {
+      clipSpecs.push({ ...syntheticClip, synthetic: true });
+    }
 
-      visibleClipKeyByCanonicalKey.set(sourceClip.canonicalClipKey, clipObj.clipKey);
-      clipsByKey.set(clipObj.clipKey, clipObj);
-      if (clipObj.clipKey !== sourceClip.canonicalClipKey) {
-        clipsByKey.set(sourceClip.canonicalClipKey, clipObj);
+    for (const [clipIndex, clipSpec] of clipSpecs.entries()) {
+      let clipObj = null;
+
+      if (clipSpec.synthetic) {
+        clipObj = await buildSyntheticClip(
+          sourceRoot,
+          clipSpec,
+          visibleChapterId,
+          chapterObj.title,
+          visibleChapterNum
+        );
+      } else {
+        const sourceClip = canonicalClipsByKey.get(normalizeWs(clipSpec.clipKey).toLowerCase());
+        if (!sourceClip) continue;
+        clipObj = {
+          ...sourceClip,
+          clipKey: `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
+          route: `#${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
+          chapterId: visibleChapterId,
+          canonicalChapterId: sourceClip.canonicalChapterId,
+          chapterCode: visibleChapterCode,
+          chapterNum: visibleChapterNum,
+          chapterTitle: chapterObj.title,
+          title: normalizeWs(blueprint.clipTitles?.[clipSpec.clipKey] || clipSpec.title || sourceClip.title),
+          canonicalClipKey: sourceClip.canonicalClipKey,
+          canonicalRoute: sourceClip.canonicalRoute
+        };
+
+        visibleClipKeyByCanonicalKey.set(sourceClip.canonicalClipKey, clipObj.clipKey);
+        clipsByKey.set(clipObj.clipKey, clipObj);
+        if (clipObj.clipKey !== sourceClip.canonicalClipKey) {
+          clipsByKey.set(sourceClip.canonicalClipKey, clipObj);
+        }
       }
+
+      if (!clipObj) continue;
 
       const clipOverride = overrides.clips?.[clipObj.clipKey] || {};
       if (clipOverride.title) {
@@ -2155,6 +2198,20 @@ async function buildCatalog(sourceRoot) {
       }
       if (clipOverride.type) {
         clipObj.type = clipOverride.type;
+      }
+
+      if (clipSpec.synthetic) {
+        clipObj.chapterId = visibleChapterId;
+        clipObj.canonicalChapterId = visibleChapterId;
+        clipObj.chapterCode = visibleChapterCode;
+        clipObj.chapterNum = visibleChapterNum;
+        clipObj.chapterTitle = chapterObj.title;
+        clipObj.clipKey = `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`;
+        clipObj.route = `#${clipObj.clipKey}`;
+        clipObj.canonicalClipKey = clipObj.clipKey;
+        clipObj.canonicalRoute = clipObj.route;
+        clipsByKey.set(clipObj.clipKey, clipObj);
+        visibleClipKeyByCanonicalKey.set(clipObj.canonicalClipKey, clipObj.clipKey);
       }
 
       chapterObj.clipObjects.push(clipObj);
@@ -2184,10 +2241,14 @@ async function buildCatalog(sourceRoot) {
 
 async function readCatalogVersion(sourceRoot) {
   const reportFile = path.join(sourceRoot, "export-report.json");
-  const trackedFiles = [path.join(sourceRoot, VISIBLE_CATALOG_OVERRIDES_FILE)];
+  const syntheticFiles = [
+    path.join(sourceRoot, VISIBLE_CATALOG_OVERRIDES_FILE),
+    path.join(sourceRoot, "generated", "hid-code", "ch05-clip01", "content.html"),
+    path.join(sourceRoot, "generated", "hid-code", "ch05-clip01", "metadata.json")
+  ];
   try {
     const parts = [];
-    for (const filePath of [reportFile, ...trackedFiles]) {
+    for (const filePath of [reportFile, ...syntheticFiles]) {
       try {
         const stat = await fs.stat(filePath);
         parts.push(`${filePath}:${stat.mtimeMs}:${stat.size}`);
@@ -2694,12 +2755,7 @@ async function resolveClipPayload(clipKey, course) {
         : Array.isArray(metadata?.badges)
           ? metadata.badges
           : [];
-  const preservedTimeBadge = baseBadges.find(
-    (badge) => /\d/.test(String(badge || "")) && !/^CH\s*\d+/i.test(String(badge || ""))
-  );
-  const badges = [preservedTimeBadge, clip.chapterCode, clip.type]
-    .filter(Boolean)
-    .map((badge) => String(badge));
+  const badges = baseBadges.map((badge) => rewriteVisibleReferences(badge, catalog));
 
   const screenshotRelative = (await pathExists(clip.screenshotPath))
     ? `/course-files/${encodeURIComponent(activeCourse.courseCode)}/${encodeURIComponent(clip.clipKey)}/screenshot.png`

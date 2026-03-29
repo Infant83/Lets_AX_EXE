@@ -1,78 +1,48 @@
 ---
 route: "#ch03-clip02"
 chapter: "ch03"
-title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑"
+title: "프롬프팅 기초"
 source_url: "https://lg.cmdspace.work/axcamp#ch03-clip02"
-exported_at: "2026-02-28T01:54:00.678Z"
+exported_at: "2026-02-28T01:53:52.740Z"
 ---
+~10분 CH 03 개념
 
-~30분
-CH 04
-실습
+# 프롬프팅 기초
 
-# 문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑
+AI에게 효과적으로 지시하는 핵심 프레임워크와 프롬프트 작성 기법을 배웁니다.
 
-실습용 파일이 필요하신가요?
-[참고자료 라이브러리 › 실습용 컨텍스트 파일](#ch08-clip04)
+AI에게 효과적으로 지시하는 7가지 요소 (Delegation Canvas)
 
-이 섹션은 Gemini Deep Research 결과와 외부 보고서를 NotebookLM에 올려 교차 분석하고, 출처가 붙은 응답을 확인한 다음, LG 스타일 슬라이드로 브리핑을 만드는 흐름을 그대로 따라간다. 핵심 메시지는 CIQO, 즉 좋은 컨텍스트가 좋은 결과를 만든다는 점이다.
+좋은 프롬프트의 본질은 **"AI에게 업무를 위임하는 지시서"**를 잘 작성하는 것입니다.
 
-## 실습 준비 파일
+<table class="comparison-table"><thead><tr><th>#</th><th>요소</th><th>프롬프트 예시</th><th>CEO 예시</th></tr></thead><tbody><tr><td>1</td><td><strong>Role (역할)</strong></td><td>"당신은 어떤 역할인가?"</td><td>전략 참모 / 재무 분석가 / 보고서 작성자</td></tr><tr><td>2</td><td><strong>Goal (목표)</strong></td><td>"무엇을 해달라는 것인가?"</td><td>분석 / 비교 / 요약 / 작성 / 번역</td></tr><tr><td>3</td><td><strong>Context (맥락)</strong></td><td>"배경 상황은 무엇인가?"</td><td>LG그룹 계열사 사업 맥락 / 이사회 안건 / 경쟁사 대응</td></tr><tr><td>4</td><td><strong>Constraints (제약)</strong></td><td>"반드시 지켜야 할 조건은?"</td><td>기밀 제외 / 2페이지 이내 / 격식체</td></tr><tr><td>5</td><td><strong>Output (형식)</strong></td><td>"어떤 형태로 제시할 것인가?"</td><td>표 + 매트릭스 / 1페이지 요약 / 옵션 3개</td></tr><tr><td>6</td><td><strong>Evaluation (평가)</strong></td><td>"좋은 결과의 기준은 무엇인가?"</td><td>ROI 포함 / 리스크 분석 / 경쟁사 비교</td></tr><tr><td>7</td><td><strong>Questions (선제 질문)</strong></td><td>"더 나은 결과를 위해 먼저 물어볼 것"</td><td>예산 범위? 우선순위? 타겟 시장?</td></tr></tbody></table>
 
-[NotebookLM 리서치 플레이북 실습 순서와 프롬프트 흐름 정리](/assets/practice/ch03/notebooklm-research-playbook.md)
-[WEF Future of Jobs 2025 미래 일자리 보고서](/assets/practice/ch03/wef-future-of-jobs-2025.pdf)
-[Deloitte Luxury 2023 이전 산업 구조 비교용](/assets/practice/ch03/deloitte-luxury-2023.pdf)
-[Deloitte Luxury 2026 최신 산업 동향 비교용](/assets/practice/ch03/deloitte-luxury-2026.pdf)
-[LG 로고 브랜드 스타일 힌트용 이미지](/assets/practice/ch03/lg-logo-red.png)
+CEO 실전 팁
 
-## CIQO로 이해하는 문서 기반 AI 리서치
+7가지를 모두 포함할 필요는 없습니다. 처음엔 **Role + Goal + Output** 3개만 넣어도 답변 품질이 눈에 띄게 향상됩니다. 익숙해지면 Context와 Constraints를 추가하세요.
 
-| 패러다임 | 무엇이 들어가나 | 어떤 결과가 나오나 |
-| --- | --- | --- |
-|
-**GIGO** |
-짧고 모호한 질문만 던짐 |
-일반적이고 검증하기 어려운 출력 |
+프롬프트 엔지니어링 4원칙
 
-|
-**CIQO** |
-Deep Research 보고서, 산업 보고서, 브랜드 자산, 후속 질문을 함께 제공 |
-출처가 있고 맥락이 풍부한 브리핑 초안 |
+Delegation Canvas를 실전에 적용할 때, 특히 중요한 4가지 원칙입니다.
 
-### 이 섹션에서 강조할 한 문장
+<table class="comparison-table"><thead><tr><th>원칙</th><th>설명</th><th>CEO 활용 예시</th></tr></thead><tbody><tr><td><strong>Format (형식)</strong></td><td>출력 형태를 구체적으로 지정하면 AI가 즉시 활용 가능한 결과를 생성합니다</td><td>"표 형태로", "A4 1장 분량으로", "불릿 포인트로"</td></tr><tr><td><strong>Role (역할)</strong></td><td>AI에게 전문가 역할을 부여하면 관점과 깊이가 달라집니다</td><td>"전략 참모로서", "재무 분석가로서", "비서관으로서"</td></tr><tr><td><strong>Context (맥락)</strong></td><td>파일 첨부로 풍부한 배경 정보를 제공하면 정확도가 크게 향상됩니다</td><td>회의록 첨부, 보고서 첨부, 전략 문서 첨부</td></tr><tr><td><strong>Step (단계)</strong></td><td>하나의 긴 프롬프트보다, 대화를 이어가며 단계적으로 깊이를 더합니다</td><td>요약 → 이슈 추출 → 전략 제안 → 시나리오 분석</td></tr></tbody></table>
 
-NotebookLM의 품질은 프롬프트 한 줄보다도, 어떤 문서를 먼저 넣고 어떤 맥락으로 다시 묻느냐에 더 크게 좌우된다.
+4원칙 적용 순서
 
-## 실제 NotebookLM 교차 분석 화면
+**Format → Role → Context → Step** 순서로 프롬프트를 구성하면 자연스럽게 좋은 결과를 얻을 수 있습니다. 처음엔 Format과 Role만 적용해도 답변 품질이 크게 달라집니다.
 
-![NotebookLM 교차 분석 실제 화면](/assets/notebooklm/ch03-notebooklm/screens/ciqo-cross-analysis.png)
+컨텍스트 엔지니어링 연결
 
-NotebookLM이 여러 소스를 교차 분석해 경영진 관점의 통찰을 정리하는 실제 화면이다. 파란 출처 번호를 눌러 원문 근거를 확인하고, 같은 문맥으로 후속 질문을 이어갈 수 있다.
+프롬프트 엔지니어링 4원칙은 **컨텍스트 엔지니어링의 실천 도구**입니다. 역할·맥락·형식·단계적 사고를 통해 AI에게 더 풍부한 컨텍스트를 제공하는 것이 곧 더 좋은 결과로 이어집니다.
 
-- Gemini Deep Research 결과가 있으면 첫 소스로 넣고, 여기에 WEF와 Deloitte 보고서를 추가한다.
+Before & After: 프롬프트의 힘
 
-- NotebookLM에서 교차 분석 질문을 던지고 출처 번호를 눌러 답변 근거를 검증한다.
+Before (비효율적)
 
-- 좋은 답이 나오면 그 흐름을 유지한 채 Studio 패널에서 슬라이드로 전환한다.
+AI 트렌드 알려줘
 
-## 바로 써볼 프롬프트
+After (효과적)
 
-교차 분석 질문복사
+당신은 글로벌 전략 컨설팅 펌의 시니어 파트너입니다. 산업: 가전, 화학, 배터리, 통신, IT서비스 등 분석 관점: CEO 의사결정 지원용 2025~2026년 AI 산업의 주요 트렌드 Top 5를 다음 형식으로 정리해 주세요: - 각 트렌드별: 트렌드명 / 현황 / 우리 사업에 미치는 영향 / 대응 시급도(상/중/하) - 표 형태로 정리 - CEO가 이사회에서 언급할 수 있는 수준의 인사이트 포함
 
-Gemini Deep Research 결과와 함께 업로드된 WEF 2025, Deloitte 2023, Deloitte 2026을 교차 분석해 주세요. 세 소스가 공통적으로 시사하는 변화 신호 3가지를 먼저 정리하고, 각 신호가 LG 경영진 의사결정에 주는 의미를 표로 요약해 주세요. 모든 핵심 주장에는 출처를 붙여 주세요.
-
-LG 스타일 슬라이드 커스터마이징복사
-
-LG 경영진 대상 6~8장 브리핑 슬라이드로 만들어줘. 업로드된 LG 로고를 참고해 흰 배경, 절제된 빨간 포인트, 간결한 데이터 중심 레이아웃을 사용하고, 교차 분석 결과를 바탕으로 CIQO 메시지와 경영진 액션 아이템을 분명하게 보여줘. 마지막 장에는 So What 한 줄과 다음 액션을 넣어줘.
-
-### 생성 후 꼭 확인할 것
-
-Studio가 만든 슬라이드는 초안이다. 숫자 표현이 과장되거나, 메시지가 너무 넓으면 채팅으로 돌아가 근거 문장을 더 좁혀 달라고 다시 요청하는 식으로 품질을 높인다.
-
-NotebookLM Slide Deck
-
-## CIQO 기반 교차 분석 결과를 LG 스타일 7장 브리핑으로 정리한 실제 deck
-
-WEF, Deloitte 2023/2026, NotebookLM 프롬프트, LG 로고를 같은 노트북에 올린 뒤 Studio 패널에서 생성한 실제 슬라이드.
-
-다운로드
+[← Gemini 플랫폼 가이드](#ch03-clip01) [비즈니스 프롬프트 연습 →](#ch03-clip03)

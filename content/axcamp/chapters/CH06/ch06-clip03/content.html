@@ -1,0 +1,258 @@
+<div class="clip-header">
+  <div class="clip-badges">
+    <span class="clip-badge time">~50분</span>
+    <span class="clip-badge chapter">CH 06</span>
+    <span class="clip-badge type-practice">실습</span>
+  </div>
+  <h1 class="clip-title">실습 워크숍: 경쟁사 리서치 대시보드</h1>
+</div>
+
+<div class="practice-shortcut-bar">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="library" aria-hidden="true" style="width:15px;height:15px;flex-shrink:0;" class="lucide lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg>
+  <span class="practice-shortcut-text">실습용 파일이 필요하신가요?</span>
+  <a href="#ch08-clip04" target="_blank" class="practice-shortcut-link">
+    참고자료 라이브러리 › 실습용 컨텍스트 파일
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-right" aria-hidden="true" style="width:13px;height:13px;" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"></path></svg>
+  </a>
+</div>
+
+<div class="clip-overview">Gems로 앱 프롬프트 초안을 만들고, AI Studio Build에서 경쟁사 리서치 기능이 있는 React 대시보드를 생성한 뒤, refinement와 LG 스타일 적용, 외부 API 확장까지 이어가는 실습입니다.</div>
+
+<div class="clip-section slide-preview-shell">
+  <div class="slide-preview-head">
+    <p class="slide-briefing-eyebrow">NotebookLM Slide Deck</p>
+    <div class="slide-preview-top">
+      <div>
+        <h2 class="slide-briefing-title">임원용 경쟁사 리서치 대시보드를 React 앱으로 완성하는 실습</h2>
+        <p class="slide-briefing-desc">이번 워크숍은 Gems에서 Build용 초안 프롬프트를 만들고, AI Studio Build에서 리서치 기능을 붙인 대시보드를 생성한 뒤, refinement, LG 스타일과 웹 스타일 요청, 외부 API 확장, 공유까지 이어가는 흐름을 다룹니다.</p>
+      </div>
+      <div class="slide-preview-actions">
+        <button type="button" class="slides-launch-btn" data-slide-deck="executive-app-build-sprint">슬라이드 보기</button>
+        <a class="slide-briefing-link" data-slide-deck-download="executive-app-build-sprint">다운로드</a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-preview-gallery" data-slide-deck-preview="executive-app-build-sprint"></div>
+</div>
+
+<div style="background:var(--brand-light);border-left:3px solid var(--brand);border-radius:12px;padding:20px 24px;margin-bottom:24px">
+  <div style="font-weight:700;font-size:1rem;margin-bottom:12px">이 실습의 핵심</div>
+  <div style="font-size:0.85rem;line-height:1.8;color:var(--text)">
+    • 시작점은 앱 구현이 아니라 <strong>Gems에서 실습용 프롬프트 초안을 만드는 것</strong>입니다.<br>
+    • Build에서는 완성보다 <strong>같은 대화에서 계속 refinement</strong>하는 감각을 익힌다.<br>
+    • 기능 요청, 스타일 요청, API 확장을 분리하고 마지막에는 XML 구조 프롬프트로 요구사항을 정리합니다.<br>
+    • 결과 앱을 동료에게 공유하거나 이후 API 연동 확장으로 이어갈 수 있는 기반을 만듭니다.
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">실습 파일 바로 보기</div>
+  <div class="clip-section-content">
+    <div class="practice-file-grid">
+      <div class="practice-file-card">
+        <strong>Step 0. Gems 시작 프롬프트</strong>
+        <p>실습용 Build 프롬프트 초안을 먼저 뽑아내는 시작 문서다.</p>
+        <div class="practice-file-actions">
+          <button type="button" class="practice-file-btn" onclick="showAssetPreview('Gems 시작 프롬프트', '/assets/practice/ch05/phase-0-gems-build-brief.md')">보기</button>
+          <a class="practice-file-btn ghost" href="/assets/practice/ch05/phase-0-gems-build-brief.md" download>다운로드</a>
+        </div>
+      </div>
+      <div class="practice-file-card">
+        <strong>Step 1. Build 초안 프롬프트</strong>
+        <p>경쟁사 리서치 대시보드의 첫 React 초안을 만드는 기본 프롬프트다.</p>
+        <div class="practice-file-actions">
+          <button type="button" class="practice-file-btn" onclick="showAssetPreview('Phase 1 프롬프트', '/assets/practice/ch05/phase-1-competitive-dashboard-prompt.md')">보기</button>
+          <a class="practice-file-btn ghost" href="/assets/practice/ch05/phase-1-competitive-dashboard-prompt.md" download>다운로드</a>
+        </div>
+      </div>
+      <div class="practice-file-card">
+        <strong>Step 2. Refinement 프롬프트</strong>
+        <p>리서치 카드, 정렬, KPI, 분석 흐름을 고도화할 때 쓰는 후속 요청 모음입니다.</p>
+        <div class="practice-file-actions">
+          <button type="button" class="practice-file-btn" onclick="showAssetPreview('Phase 2 고도화 프롬프트', '/assets/practice/ch05/phase-2-refinement-prompts.md')">보기</button>
+          <a class="practice-file-btn ghost" href="/assets/practice/ch05/phase-2-refinement-prompts.md" download>다운로드</a>
+        </div>
+      </div>
+      <div class="practice-file-card">
+        <strong>Step 3. LG 스타일 프롬프트</strong>
+        <p>LG 스타일과 함께 웹 스타일 요청을 얹어 화면 위계를 정리할 때 쓴다.</p>
+        <div class="practice-file-actions">
+          <button type="button" class="practice-file-btn" onclick="showAssetPreview('LG 스타일 프롬프트', '/assets/practice/ch05/phase-3-lg-style-prompt.md')">보기</button>
+          <a class="practice-file-btn ghost" href="/assets/practice/ch05/phase-3-lg-style-prompt.md" download>다운로드</a>
+        </div>
+      </div>
+      <div class="practice-file-card">
+        <strong>Step 4. API 확장 프롬프트</strong>
+        <p>외부 데이터 수집 API를 붙여 앱을 실무형으로 확장하는 문서다.</p>
+        <div class="practice-file-actions">
+          <button type="button" class="practice-file-btn" onclick="showAssetPreview('API 확장 프롬프트', '/assets/practice/ch05/phase-4-firecrawl-extension-prompt.md')">보기</button>
+          <a class="practice-file-btn ghost" href="/assets/practice/ch05/phase-4-firecrawl-extension-prompt.md" download>다운로드</a>
+        </div>
+      </div>
+      <div class="practice-file-card">
+        <strong>XML 구조 프롬프트</strong>
+        <p>목표, 데이터 흐름, 스타일 제약을 한 번에 묶어 정확도를 높이는 구조화 버전입니다.</p>
+        <div class="practice-file-actions">
+          <button type="button" class="practice-file-btn" onclick="showAssetPreview('XML 프롬프트', '/assets/practice/ch05/competitive-dashboard-request.xml')">보기</button>
+          <a class="practice-file-btn ghost" href="/assets/practice/ch05/competitive-dashboard-request.xml" download>다운로드</a>
+        </div>
+      </div>
+    </div>
+    <div class="asset-preview-panel hidden" id="practiceAssetPreviewPanel">
+      <div class="asset-preview-head">
+        <div>
+          <div class="asset-preview-kicker">실습 파일 미리보기</div>
+          <strong class="asset-preview-title" id="practiceAssetPreviewTitle">파일 제목</strong>
+        </div>
+        <div class="asset-preview-actions">
+          <button type="button" class="practice-file-btn" onclick="copyAssetPreview(this)">복사</button>
+          <a class="practice-file-btn ghost" id="practiceAssetPreviewDownload" download>다운로드</a>
+          <button type="button" class="practice-file-btn ghost" onclick="hideAssetPreview()">닫기</button>
+        </div>
+      </div>
+      <pre class="asset-preview-body" id="practiceAssetPreviewBody"></pre>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">Gems + Build 5단계 실습 흐름</div>
+  <div class="clip-section-content">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:800;color:var(--brand);margin-bottom:8px">Step 0</div>
+        <strong style="display:block;margin-bottom:8px">Gems로 초안 프롬프트 설계</strong>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">비즈니스 목표와 사용자, 기능을 정리해 Build에 넣을 실습용 초안 프롬프트를 먼저 만듭니다. 시작점은 코드가 아니라 좋은 brief다. 필요하면 Gems를 짧은 <strong>프롬프트 정리 보조 앱</strong>처럼 써서 brief를 XML이나 Build용 요청문으로 다시 써도 된다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:800;color:var(--brand);margin-bottom:8px">Step 1</div>
+        <strong style="display:block;margin-bottom:8px">리서치 대시보드 초안 생성</strong>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">경쟁사 뉴스와 기술 동향을 검색·요약하는 첫 React 대시보드를 만듭니다. 중요한 것은 “동작하는 초안”을 빠르게 얻는 것입니다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:800;color:var(--brand);margin-bottom:8px">Step 2</div>
+        <strong style="display:block;margin-bottom:8px">리서치 기능 refinement</strong>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">KPI 카드, 중요도 태그, 정렬, 북마크 같은 기능을 같은 대화 안에서 차례로 추가합니다. 여기서 Vibe Coding의 진짜 힘이 보입니다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:800;color:var(--brand);margin-bottom:8px">Step 3</div>
+        <strong style="display:block;margin-bottom:8px">LG 스타일과 웹 스타일 적용</strong>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">LG 매젠타 포인트, 절제된 카드 UI를 적용하고, 필요하면 스타일 가이드에서 고른 웹 스타일 요청을 얹어 화면 성격을 정리합니다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:800;color:var(--brand);margin-bottom:8px">Step 4</div>
+        <strong style="display:block;margin-bottom:8px">선택 확장: 외부 API와 공유</strong>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">Firecrawl 같은 API를 연결해 더 넓은 소스를 끌어오도록 확장하고, 마지막에는 Share 또는 Publish로 결과를 공유합니다.</div>
+      </div>
+    </div>
+    <div class="tip-block" style="margin-top:16px">
+      <div class="tip-block-title">스타일 요청도 실습에 포함합니다</div>
+      <div class="tip-block-content">같은 기능이라도 “Pure Minimal Grid로”, “Scandinavian System으로” 같은 요청을 더하면 화면 결과가 크게 달라집니다. 스타일 선택지는 <a href="#ch08-clip06">웹 스타일 프롬프트 가이드</a>에서 바로 참고할 수 있습니다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">실습 진행 순서</div>
+  <div class="clip-section-content">
+    <table class="comparison-table">
+      <thead><tr><th>순서</th><th>무엇을 하나</th><th>사용 파일</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>0</strong></td>
+          <td>Gems로 Build 초안 프롬프트 생성</td>
+          <td>
+            <div class="practice-file-table-actions">
+              <button type="button" class="practice-mini-btn" onclick="showAssetPreview('Gems 시작 프롬프트', '/assets/practice/ch05/phase-0-gems-build-brief.md')">보기</button>
+              <a class="practice-mini-btn ghost" href="/assets/practice/ch05/phase-0-gems-build-brief.md" download>다운로드</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>기본 리서치 대시보드 생성</td>
+          <td>
+            <div class="practice-file-table-actions">
+              <button type="button" class="practice-mini-btn" onclick="showAssetPreview('Phase 1 프롬프트', '/assets/practice/ch05/phase-1-competitive-dashboard-prompt.md')">보기</button>
+              <a class="practice-mini-btn ghost" href="/assets/practice/ch05/phase-1-competitive-dashboard-prompt.md" download>다운로드</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>감성 분석, KPI, 정렬 등 기능 refinement</td>
+          <td>
+            <div class="practice-file-table-actions">
+              <button type="button" class="practice-mini-btn" onclick="showAssetPreview('Phase 2 고도화 프롬프트', '/assets/practice/ch05/phase-2-refinement-prompts.md')">보기</button>
+              <a class="practice-mini-btn ghost" href="/assets/practice/ch05/phase-2-refinement-prompts.md" download>다운로드</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td>LG 스타일과 웹 스타일 요청 반영</td>
+          <td>
+            <div class="practice-file-table-actions">
+              <button type="button" class="practice-mini-btn" onclick="showAssetPreview('LG 스타일 프롬프트', '/assets/practice/ch05/phase-3-lg-style-prompt.md')">보기</button>
+              <a class="practice-mini-btn ghost" href="/assets/practice/ch05/phase-3-lg-style-prompt.md" download>다운로드</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>외부 데이터 수집 API 확장</td>
+          <td>
+            <div class="practice-file-table-actions">
+              <button type="button" class="practice-mini-btn" onclick="showAssetPreview('API 확장 프롬프트', '/assets/practice/ch05/phase-4-firecrawl-extension-prompt.md')">보기</button>
+              <a class="practice-mini-btn ghost" href="/assets/practice/ch05/phase-4-firecrawl-extension-prompt.md" download>다운로드</a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">구조화된 프롬프트를 한 번 더 써보자</div>
+  <div class="clip-section-content">
+    <p style="font-size:0.85rem;line-height:1.7;margin-bottom:12px">처음부터 XML을 손으로 길게 쓰기보다, <strong>Gems에서 비즈니스 brief를 먼저 정리하고 그 결과를 XML로 다시 묶는 흐름</strong>이 실습에서는 가장 안정적입니다. 아래 예시는 전체 파일의 핵심만 추린 것입니다.</p>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">XML 프롬프트 예시</span><button class="copy-btn" onclick="copyPrompt(this,'vibe-ch05-xml')">복사</button></div>
+      <div class="prompt-content" id="vibe-ch05-xml">&lt;app_request&gt;
+  &lt;goal&gt;Create an executive competitive-intelligence dashboard&lt;/goal&gt;
+  &lt;framework&gt;React&lt;/framework&gt;
+  &lt;data_flow&gt;Search recent news, summarize findings, assign urgency, and prepare export-friendly cards.&lt;/data_flow&gt;
+  &lt;brand_style&gt;LG magenta accent, restrained executive tone, white background.&lt;/brand_style&gt;
+&lt;/app_request&gt;</div>
+    </div>
+    <div class="tip-block" style="margin-top:16px">
+      <div class="tip-block-title">언제 XML을 넣는 것이 가장 좋은가</div>
+      <div class="tip-block-content">초안 프롬프트를 만든 직후보다, <strong>한두 번 refinement를 거쳐 요구사항이 굳은 다음</strong> XML로 정리하는 편이 효율적입니다. 필요하면 Gems에 “이 프롬프트를 app_request XML 형식으로 다시 써줘”라고 맡겨 <strong>가벼운 XML 변환 보조 앱처럼</strong> 쓰는 정도면 충분하다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">마지막 체크포인트</div>
+  <div class="clip-section-content">
+    <div class="info-block">
+      <div class="info-block-title">완료 기준</div>
+      <div style="font-size:0.85rem;line-height:1.8;color:var(--text-body)">
+        1. 검색 입력과 결과 카드가 동작합니다.<br>
+        2. KPI 또는 요약 카드가 추가되어 있다.<br>
+        3. LG 스타일 지시문이 반영되어 화면 위계가 정리되어 있다.<br>
+        4. 필요하면 Share 또는 Publish로 다른 사람에게 보여줄 준비가 되어 있다.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-nav-footer">
+  <a class="clip-nav-btn" href="#ch06-clip02">
+    ← Google AI Studio Build 시작하기
+  </a>
+  <a class="clip-nav-btn" href="#ch07-clip01">
+    에이전틱 AI란 →
+  </a>
+</div>

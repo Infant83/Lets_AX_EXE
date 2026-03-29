@@ -1,44 +1,73 @@
 ---
-route: "#ch06-clip04"
-chapter: "ch06"
-title: "외부 APIAPI프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동"
-source_url: "https://lg.cmdspace.work/axcamp#ch06-clip04"
-exported_at: "2026-02-28T01:54:12.557Z"
+route: "#ch03-clip03"
+chapter: "ch03"
+title: "기업 분석 코스: Gems에서 NotebookLM까지"
+source_url: "https://lg.cmdspace.work/axcamp#ch03-clip03"
+exported_at: "2026-02-28T01:54:01.804Z"
 ---
-CH 06 참고
 
-# 외부 API**API**  
-프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동
+~30분
+CH 04
+실습
 
-Build로 만든 앱에 외부 데이터 소스를 연결하여 실시간 정보를 다루는 두 가지 경로를 안내합니다.
+# 기업 분석 코스: Gems에서 NotebookLM까지
 
-이 실습에서는
+실습용 파일이 필요하신가요?
+[참고자료 라이브러리 › 실습용 컨텍스트 파일](#ch08-clip04)
 
-• 초급(Google Search 그라운딩)과 상급(Firecrawl API**API**  
-프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.) 두 경로의 차이를 이해합니다  
-• 각 경로의 장단점과 적합한 활용 상황을 파악합니다  
-• 본인 수준에 맞는 실습 경로를 선택합니다
+이 섹션은 특정 기업에 대한 분석 보고서를 만드는 과정을 하나의 코스로 보여준다. 먼저 Gems로 소스 수집 기준과 질문 템플릿을 만들고, NotebookLM에서 다중 소스를 분석한 뒤, 슬라이드나 인포그래픽까지 만드는 흐름이다. 삼양식품은 예시일 뿐이고, 실제 실습에서는 원하는 기업명으로 바꿔도 된다.
 
-초급 vs 상급 경로 비교
+NotebookLM Infographic
 
-<table class="comparison-table"><thead><tr><th></th><th>초급: Google Search 그라운딩</th><th>상급: Firecrawl <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 연동</th></tr></thead><tbody><tr><td><strong>사전 준비</strong></td><td>없음 (AI Studio 내장)</td><td>Firecrawl <span class="glossary-term">API<span class="glossary-tooltip"><strong>API</strong><br>프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.</span></span> 키 필요</td></tr><tr><td><strong>검색 범위</strong></td><td>Google 검색 결과 기반</td><td>특정 웹페이지 직접 크롤링</td></tr><tr><td><strong>데이터 깊이</strong></td><td>뉴스 헤드라인·요약 수준</td><td>페이지 전체 콘텐츠 추출</td></tr><tr><td><strong>활용 예시</strong></td><td>경쟁사 뉴스 모니터링</td><td>IR 페이지, 기술 블로그 정밀 분석</td></tr><tr><td><strong>소요 시간</strong></td><td>~15분</td><td>~25분</td></tr></tbody></table>
+## 기업 분석 코스를 한 장으로 정리한 workflow infographic
 
-주요 연동 가능 API**API**  
-프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.
+Gem으로 자료 수집 기준을 만들고, NotebookLM으로 grounded analysis를 수행한 뒤, 슬라이드와 인포그래픽까지 이어지는 전체 흐름을 NotebookLM에서 인포그래픽으로 정리했다.
 
--   **Google Search API**API**  
-    프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.:** Gemini**Gemini**  
-    Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요.의 구글 검색 기능을 앱에 직접 연결 (초급 경로)
--   **Firecrawl:** 웹페이지를 AI가 읽을 수 있는 마크다운으로 변환 (상급 경로)
--   **SerpAPI:** 검색 엔진 결과를 구조화된 데이터로 제공
--   **News API**API**  
-    프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다.:** 실시간 뉴스 데이터를 수집하여 분석
+다운로드
 
-초급 / 상급 분기
+## 코스 시나리오
 
-• **초급반**: 위 메인 프롬프트만 사용 → Google Search 그라운딩으로 기본 리서치 앱 완성 (~15분)  
-• **상급반**: 메인 프롬프트 + Firecrawl API**API**  
-프로그램끼리 대화하는 통로예요. 마치 레스토랑의 웨이터처럼, 주문(요청)을 주방(서비스)에 전달하고 요리(결과)를 가져다줍니다. 연동 → 직접 크롤링 기능 추가 (~25분)  
-• 두 버전 모두 **코딩 없이 프롬프트만으로** 완성됩니다
+| 단계 | 도구 | 무엇을 만드나 |
+| --- | --- | --- |
+| **1** | Gems | 기업명을 넣으면 소스 후보와 첫 질문을 정리해 주는 리서치 비서 |
+| **2** | NotebookLM | 공식 자료, 외부 산업 자료, 최근 뉴스, 내부 메모를 묶은 grounded notebook |
+| **3** | Gems | XML 형식으로 요구 섹션과 출력 형식을 명확히 한 분석 요청 |
+| **4** | NotebookLM | 경영진 브리핑용 슬라이드와 인포그래픽 |
+### 강의 포인트
 
-[← 파라미터 직접 체험](#ch06-clip03) [실습 시트: 앱 만들기 →](#ch06-clip05)
+강한 프롬프트 하나로 끝나는 게 아니라, 좋은 소스 선정과 재사용 가능한 Gem, NotebookLM의 검증 구조가 함께 가야 결과가 좋아진다.
+
+## 바로 내려받아 쓰는 실습 파일
+
+[기업 분석 Gem 시스템 인스트럭션 기업명만 넣어도 소스 팩을 설계하게 하는 Gem 지시문](/assets/practice/ch03/company-analysis-gem-instruction.md)
+[NotebookLM용 XML 프롬프트 필요 섹션과 출력 형식을 구조화한 분석 템플릿](/assets/practice/ch03/company-analysis-notebooklm-prompt.xml)
+[삼양식품 예시 노트 실습 목표와 후속 작업 아이디어](/assets/practice/ch03/samyang-case-notes.md)
+[사례 PPT 강의 예시 흐름을 설명하는 발표 자료](/assets/practice/ch03/samyang-company-analysis-case.pptx)
+
+## 구조화 프롬프트는 XML로 명확하게
+
+기업 분석 XML 프롬프트복사
+
+<role>기업 분석 연구원</role>
+<goal>경영진 보고용 기업 분석 초안 작성</goal>
+<company_name>[여기에 기업명을 입력]</company_name>
+
+<source_policy>
+공식 IR 자료, 사업보고서, 신뢰할 수 있는 외부 산업 자료, 최근 동향 자료를 우선 사용한다.
+</source_policy>
+
+<required_sections>
+<section>핵심 사업</section>
+<section>최근 3년 매출 흐름</section>
+<section>해외 성장 동력</section>
+<section>리스크와 기회</section>
+<section>경영진 시사점</section>
+</required_sections>
+
+Gem에 넣을 첫 요청복사
+
+삼양식품에 대한 NotebookLM 분석용 소스 팩을 만들어줘. 공식 자료, 산업 및 경쟁사 자료, 최근 뉴스로 나눠서 추천해 주고, NotebookLM 첫 질문과 경영진 보고용 후속 질문도 같이 정리해줘.
+
+### 왜 XML이 유리한가
+
+역할, 목표, 소스 정책, 필수 섹션을 태그로 분리하면 NotebookLM과 다른 LLM이 구조를 더 안정적으로 해석한다. 나중에 기업명만 바꿔 재사용하기도 쉽다.

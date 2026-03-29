@@ -1,26 +1,49 @@
 ---
-route: "#ch07-clip07"
+route: "#ch07-clip04"
 chapter: "ch07"
-title: "스킬 저장 & 재사용 심화"
-source_url: "https://lg.cmdspace.work/axcamp#ch07-clip07"
-exported_at: "2026-02-28T01:54:21.618Z"
+title: "듀얼 출력의 원리 심화"
+source_url: "https://lg.cmdspace.work/axcamp#ch07-clip04"
+exported_at: "2026-02-28T01:54:18.217Z"
 ---
 CH 07 참고
 
-# 스킬 저장 & 재사용 심화
+# 듀얼 출력의 원리 심화
 
 이 섹션은 **심화/선택** 자료입니다. 시간 여유가 있을 때 참고하세요.
 
-워크플로우를 **스킬로 저장**하면 같은 작업을 반복하지 않고 클릭 한 번으로 재사용할 수 있습니다.
+같은 분석 결과를 **HTML 대시보드와 PowerPoint** 두 가지 포맷으로 동시에 출력하는 개념과 원리를 이해합니다.
 
-스킬 저장 & 재사용이란
+왜 두 가지 포맷인가?
 
-에이전틱 AI 도구에서 성공한 워크플로우를 **스킬(Skill)**로 저장해두면, 새로운 데이터를 입력하는 것만으로 동일한 결과물을 다시 생성할 수 있습니다.
+같은 데이터, 같은 분석이지만 **보고 대상과 상황**에 따라 최적의 형태가 다릅니다.
 
-<table class="comparison-table" style="margin-top:12px"><thead><tr><th>구분</th><th>매번 수동 입력</th><th>스킬 저장 후</th></tr></thead><tbody><tr><td><strong>소요 시간</strong></td><td>프롬프트 작성 + 설정 반복</td><td>파일 첨부 → 클릭 한 번</td></tr><tr><td><strong>품질 일관성</strong></td><td>입력마다 결과 편차</td><td>동일한 품질 보장</td></tr><tr><td><strong>팀 공유</strong></td><td>프롬프트 텍스트 공유 필요</td><td>스킬 자체를 공유 가능</td></tr></tbody></table>
+<table class="comparison-table"><thead><tr><th></th><th>HTML 대시보드</th><th>PowerPoint</th></tr></thead><tbody><tr><td><strong>용도</strong></td><td>실무자 간 공유, 실시간 분석</td><td>이사회·경영회의 보고</td></tr><tr><td><strong>특징</strong></td><td>인터랙티브 (필터, 정렬, 클릭)</td><td>정적이지만 간결한 스토리</td></tr><tr><td><strong>전달 방식</strong></td><td>브라우저에서 바로 확인</td><td>프로젝터 or 인쇄물</td></tr><tr><td><strong>강점</strong></td><td>데이터 탐색, 다크모드, 반응형</td><td>슬라이드별 핵심 메시지 집중</td></tr></tbody></table>
 
-핵심 포인트
+예전에는 각각 따로 만들었습니다. 이제는 **한 번의 프롬프트로 동시에** 생성합니다.
 
-스킬 = **SOP의 디지털 버전**. 한 번 만들면 누구나 같은 품질의 결과를 얻을 수 있습니다. 시연에서 본 "3종 보고서 + 대시보드" 워크플로우가 바로 스킬의 대표적 활용 사례입니다.
+"같은 데이터, 두 가지 산출물 — 보고 대상에 맞는 형태"
 
-[← 스킬(Skill)이란 심화](#ch07-clip06) [정리 & 핵심 인사이트 →](#ch07-clip08)
+• **실무자끼리 공유할 때** → 인터랙티브 HTML (데이터 탐색, 필터링)  
+• **이사회에 올릴 때** → PPT (간결한 스토리, 슬라이드당 1 메시지)  
+  
+HTML은 Antigravity**Antigravity**  
+AI 에이전트 플랫폼이에요. 에디터·터미널·브라우저를 AI가 동시에 조작하여 코드 작성, 파일 생성, 웹 작업을 한꺼번에 자율적으로 처리합니다.의 프리뷰 기능으로 즉시 확인 가능합니다.  
+PPT는 다운로드하여 실제 이사회 보고 자료로 활용할 수 있습니다.
+
+LG 브랜드 컬러 가이드
+
+**Heritage Red**  
+#A50034
+
+**Dark Gray**  
+#333333
+
+**보조색**  
+#6B7280
+
+**Light**  
+#E5E7EB
+
+프롬프트에 브랜드 컬러를 명시하면, AI가 일관된 디자인 시스템을 적용합니다.
+
+[← 시연: 3종 보고서 → 대시보드](#ch07-clip03) [HTML + PPT 동시 출력 심화 →](#ch07-clip05)

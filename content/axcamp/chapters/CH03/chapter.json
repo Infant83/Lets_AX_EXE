@@ -1,18 +1,48 @@
 {
-  "title": "NotebookLM",
-  "time": "13:00",
+  "chapterId": "ch03",
+  "chapterNum": "CH 03",
+  "title": "Gemini & ChatGPT",
+  "time": "09:30",
   "clips": [
     {
-      "route": "#ch04-clip01",
-      "title": "NotebookLM: 출처 기반 리서치 워크벤치",
+      "route": "#ch03-clip01",
+      "title": "Gemini 소개 및 접속 방법",
       "type": "플랫폼",
-      "folder": "chapters/CH03/ch03-clip01"
+      "folder": "chapters/CH03/ch03-clip01",
+      "linkCount": 3,
+      "imageCount": 3,
+      "sectionCount": 4,
+      "promptCount": 0
     },
     {
-      "route": "#ch04-clip02",
-      "title": "문서 교차분석으로 1페이지 브리핑 만들기",
+      "route": "#ch03-clip02",
+      "title": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
       "type": "실습",
-      "folder": "chapters/CH03/ch03-clip02"
+      "folder": "chapters/CH03/ch03-clip02",
+      "linkCount": 6,
+      "imageCount": 1,
+      "sectionCount": 4,
+      "promptCount": 4
+    },
+    {
+      "route": "#ch03-clip03",
+      "title": "Gems 소개: AI 비서 만들기",
+      "type": "실습",
+      "folder": "chapters/CH03/ch03-clip03",
+      "linkCount": 4,
+      "imageCount": 3,
+      "sectionCount": 4,
+      "promptCount": 3
+    },
+    {
+      "route": "#ch03-clip04",
+      "title": "ChatGPT 소개 및 접속 방법",
+      "type": "플랫폼",
+      "folder": "chapters/CH03/ch03-clip04",
+      "linkCount": 3,
+      "imageCount": 0,
+      "sectionCount": 4,
+      "promptCount": 2
     }
   ]
 }

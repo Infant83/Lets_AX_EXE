@@ -1,82 +1,87 @@
-<div class="clip-header">
-  <div class="clip-badges">
-    <span class="clip-badge time"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="timer" aria-hidden="true" style="width:13px;height:13px;vertical-align:-2px;" class="lucide lucide-timer"><line x1="10" x2="14" y1="2" y2="2"></line><line x1="12" x2="15" y1="14" y2="11"></line><circle cx="12" cy="14" r="8"></circle></svg> ~10분</span>
-    <span class="clip-badge chapter">CH 07</span>
-    <span class="clip-badge type-reference">참고</span>
-  </div>
-  <h1 class="clip-title">추가 읽을거리</h1>
+
+    <div class="clip-header">
+      <div class="clip-badges">
+        
+        <span class="clip-badge chapter">CH 07</span>
+        <span class="clip-badge type-reference">참고</span>
+      </div>
+      <h1 class="clip-title">HTML + PPT 동시 출력 <span class="badge-advanced">심화</span></h1>
+    </div>
+    
+    <div class="info-block" style="margin-bottom:20px;background:var(--bg-offwhite);border-left:3px solid var(--text-muted)">
+  <div style="font-size:0.85rem;color:var(--text-muted)">이 섹션은 <strong>심화/선택</strong> 자료입니다. 시간 여유가 있을 때 참고하세요.</div>
 </div>
 
-<div class="clip-overview">2026년 3월 기준, 오늘 수업을 혼자 다시 돌릴 때 실제로 도움이 되는 자료만 남겼습니다. 숫자가 빨리 낡는 기사보다 <strong>공식 문서와 바로 다시 써볼 수 있는 실습 자료</strong>를 우선 배치했습니다.</div>
-
-<div class="tip-block" style="margin-bottom:24px">
-  <div class="tip-block-title">읽는 순서 추천</div>
-  <div class="tip-block-content">
-    오늘은 <strong>내부 실습 자료 2개</strong>만 다시 보십시오. 이번 주 안에 <strong>공식 문서 2개</strong>, 다음 달에는 <strong>리더 관점 자료 1개</strong>를 읽으면 충분합니다.
-  </div>
-</div>
-
-<div class="clip-section">
-  <div class="clip-section-title">오늘 밤 바로 다시 볼 5개</div>
-  <div class="clip-section-content">
-    <table class="comparison-table">
-      <thead><tr><th>우선순위</th><th>자료</th><th>왜 다시 보나</th></tr></thead>
-      <tbody>
-        <tr><td><strong>1</strong></td><td><a href="#ch02-clip02" style="color:var(--brand);text-decoration:none;font-weight:600">Gems로 나만의 임원 비서 만들기</a></td><td>가장 빨리 재현 가능한 개인용 비서를 다시 만듭니다.</td></tr>
-        <tr><td><strong>2</strong></td><td><a href="#ch03-clip02" style="color:var(--brand);text-decoration:none;font-weight:600">문서 교차분석으로 1페이지 브리핑 만들기</a></td><td>출처 기반 브리핑 루틴을 다시 손에 익힙니다.</td></tr>
-        <tr><td><strong>3</strong></td><td><a href="#v-ch04-clip02" style="color:var(--brand);text-decoration:none;font-weight:600">3분 이사회 브리핑 앱 만들기</a></td><td>오늘 수업의 메인 결과물을 다시 돌려봅니다.</td></tr>
-        <tr><td><strong>4</strong></td><td><a href="/assets/practice/ch05/executive-briefing-app-prompt.md" style="color:var(--brand);text-decoration:none;font-weight:600" download>메인 프롬프트 다운로드</a></td><td>실습 때 쓴 구조를 그대로 복사해 재시도할 수 있습니다.</td></tr>
-        <tr><td><strong>5</strong></td><td><a href="/assets/practice/ch05/boardroom-signal-radar-prompt.md" style="color:var(--brand);text-decoration:none;font-weight:600" download>대체 시나리오 다운로드</a></td><td>같은 수업 흐름으로 다른 앱 콘셉트를 시험할 수 있습니다.</td></tr>
-      </tbody>
-    </table>
-  </div>
+<div class="clip-overview">앞서 학습한 듀얼 포맷 개념을 바탕으로, 분석 결과를 <strong>인터랙티브 HTML 대시보드 + 이사회 보고용 PPT</strong>로 직접 실습합니다.</div>
+<div style="background:var(--brand-light);border-left:3px solid var(--brand);border-radius:12px;padding:20px 24px;margin-bottom:24px">
+ <div style="font-weight:700;font-size:1rem;margin-bottom:12px">이 실습에서는</div>
+ <div style="font-size:0.85rem;line-height:1.8;color:var(--text)">
+ • 같은 분석 결과를 HTML 대시보드 + PPT 두 가지 포맷으로 동시에 출력합니다<br>
+ • 실무 공유용(HTML)과 이사회 보고용(PPT)의 용도 차이를 체험합니다<br>
+ • LG 브랜드 컬러가 적용된 실전 수준의 산출물을 만듭니다
+ </div>
 </div>
 
 <div class="clip-section">
-  <div class="clip-section-title">공식 문서 6선</div>
-  <div class="clip-section-content">
-    <table class="comparison-table">
-      <thead><tr><th>링크</th><th>용도</th></tr></thead>
-      <tbody>
-        <tr><td><a class="ref-link-title" href="https://help.openai.com/en/articles/8554397-creating-a-gpt" target="_blank" rel="noreferrer">OpenAI: Creating and editing GPTs</a></td><td>ChatGPT에서 개인 비서를 다시 만들 때 가장 짧은 공식 가이드입니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://cdn.openai.com/business-guides-and-resources/a-business-leaders-guide-to-working-with-agents.pdf" target="_blank" rel="noreferrer">OpenAI: A Business Leader's Guide to Working with Agents</a></td><td>임원 관점에서 에이전트를 어디에 붙일지 판단할 때 읽기 좋습니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://ai.google.dev/aistudio" target="_blank" rel="noreferrer">Google AI Studio</a></td><td>가장 빠르게 Gemini 기반 앱 실험을 시작하는 공식 진입점입니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://ai.google.dev/gemini-api/docs/ai-studio-quickstart" target="_blank" rel="noreferrer">Google AI Studio Quickstart</a></td><td>계정, 키, 기본 흐름을 다시 확인할 때 씁니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://ai.google.dev/gemini-api/docs/aistudio-build-mode" target="_blank" rel="noreferrer">Build apps in Google AI Studio</a></td><td>Build 모드의 full-stack 생성 흐름을 공식 설명으로 확인합니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://support.google.com/notebooklm/answer/14278184?hl=en" target="_blank" rel="noreferrer">NotebookLM Help</a></td><td>NotebookLM 기능과 작업 흐름을 다시 찾을 때 가장 안전한 공식 문서입니다.</td></tr>
-      </tbody>
-    </table>
-  </div>
+ <div class="clip-section-title">Step 3: HTML + PPT 동시 출력 프롬프트</div>
+ <div class="clip-section-content">
+ <p style="margin-bottom:12px">이어서 <strong>같은 대화</strong>에서 입력합니다 (새 대화를 열지 마세요):</p>
+ </div>
+ <div class="prompt-block">
+ <div class="prompt-header"><span class="prompt-label">HTML + PPT 동시 생성</span><button class="copy-btn" onclick="copyPrompt(this,'agent-html-ppt')">복사</button></div>
+ <div class="prompt-content" id="agent-html-ppt">앞서 분석한 내용을 기반으로 두 가지 형태의 산출물을 동시에 생성해주세요.
+
+[산출물 1: HTML 대시보드]
+- 인터랙티브 KPI 카드 (매출, 점유율, 고객만족도, AI 탑재율)
+- 차트 3종: 매출 추이(Line), 부문별 비중(Donut), 경쟁사 비교(Bar)
+- 필터링/정렬 가능한 데이터 테이블
+- 반응형 디자인, 다크/라이트 모드 지원
+- LG 브랜드 컬러: Heritage Red #A50034
+
+[산출물 2: PowerPoint]
+- 16:9 와이드, 5~7 슬라이드
+- LG 브랜드 컬러: Heritage Red #A50034
+- 구성: 표지 → Executive Summary → 매출 실적 → 전략 과제 → Next Steps
+- 이사회 보고 수준의 간결한 레이아웃
+- 슬라이드당 핵심 메시지 1개 원칙</div>
+ </div>
 </div>
 
 <div class="clip-section">
-  <div class="clip-section-title">리더 관점으로 읽을 4선</div>
-  <div class="clip-section-content">
-    <table class="comparison-table">
-      <thead><tr><th>링크</th><th>왜 볼 만한가</th></tr></thead>
-      <tbody>
-        <tr><td><a class="ref-link-title" href="https://cloud.google.com/discover/what-is-vibe-coding" target="_blank" rel="noreferrer">Google Cloud: What Is Vibe Coding?</a></td><td>비개발자도 왜 프로토타입 속도를 체감하는지 설명하기 좋습니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://www.anthropic.com/solutions/agents" target="_blank" rel="noreferrer">Anthropic: Claude Agents</a></td><td>에이전트라는 말을 제품 수준에서 어떻게 정리하는지 비교할 수 있습니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="https://mitsloan.mit.edu/ideas-made-to-matter/agentic-ai-explained" target="_blank" rel="noreferrer">MIT Sloan: Agentic AI, explained</a></td><td>기술보다 경영자 언어로 설명하고 싶을 때 읽기 좋습니다.</td></tr>
-        <tr><td><a class="ref-link-title" href="#v-ch07-clip03" style="color:var(--brand);text-decoration:none;font-weight:600">스킬을 SOP처럼 쓰는 법</a></td><td>외부 글보다도 실제 조직 적용에는 이 수업의 정리본이 더 직접적입니다.</td></tr>
-      </tbody>
-    </table>
-  </div>
+ <div class="clip-section-title">산출물 확인 포인트</div>
+ <div class="clip-section-content">
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0">
+ <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+ <div style="font-weight:600;margin-bottom:8px">HTML 대시보드 체크</div>
+ <ul style="font-size:0.8rem;margin:0;padding-left:16px">
+ <li>KPI 카드 4개 표시</li>
+ <li>Heritage Red(#A50034) 적용</li>
+ <li>차트 3개 정상 렌더링</li>
+ <li>필터링/정렬 동작</li>
+ <li>다크/라이트 모드 전환</li>
+ <li>모바일 반응형</li>
+ </ul>
+ </div>
+ <div style="background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:16px">
+ <div style="font-weight:600;margin-bottom:8px">PPT 체크</div>
+ <ul style="font-size:0.8rem;margin:0;padding-left:16px">
+ <li>5~7 슬라이드 구성</li>
+ <li>Heritage Red 브랜드 컬러</li>
+ <li>Executive Summary 포함</li>
+ <li>차트/그래프 포함</li>
+ <li>여백 충분 (임원 보고 적합)</li>
+ <li>16:9 와이드스크린</li>
+ </ul>
+ </div>
+ </div>
+ </div>
 </div>
-
-<div class="tip-block" style="margin-top:16px">
-  <div class="tip-block-title">마지막 권고</div>
-  <div class="tip-block-content">
-    <strong>읽을거리를 늘리지 말고, 오늘 만든 흐름을 한 번 더 돌려보는 것이 우선입니다.</strong><br><br>
-    내일부터 바로 바뀌는 것은 지식량이 아니라 반복 루틴입니다. 그래서 이 라이브러리도 “많이 읽기”보다 “바로 다시 써보기” 중심으로 정리했습니다.
-  </div>
-</div>
-
-<div class="clip-nav-footer">
-  <a class="clip-nav-btn" href="#ch07-clip04">
-    ← 스킬 저장과 재사용 심화
-  </a>
-  <a class="clip-nav-btn" href="#ch00-clip01">
-    오늘의 시간표로 돌아가기 →
-  </a>
-</div>
+    <div class="clip-nav-footer">
+      <a class="clip-nav-btn " href="#ch07-clip04">
+        ← 듀얼 출력의 원리 <span class="badge-advanced">심화</span>
+      </a>
+      <a class="clip-nav-btn " href="#ch07-clip06">
+        스킬(Skill)이란 <span class="badge-advanced">심화</span> →
+      </a>
+    </div>
+  

@@ -1,6 +1,7 @@
 const STORAGE_SESSION_KEY = "ax_literacy_session_token";
 const STORAGE_LAST_ID_KEY = "ax_literacy_last_lets_id";
 const STORAGE_COURSE_CODE_KEY = "ax_literacy_course_code";
+const STORAGE_SIDEBAR_COLLAPSED_KEY = "ax_literacy_sidebar_collapsed";
 const AX_TASK_BOARD_URL =
   "https://miro.com/welcomeonboard/L0kvb0JlVFVoUzBMbEoxQ2Qwb1pPMm5lczhOc0tpcGFOcGlBLy9sa3ZFYlczR2k3ekg4VDdLVGVKUVdTUTdmQUUvYUQwRzdlZFAraTRYYkxPRCsvU1RCditNWlFPbGdYZzQvYjh5RkN2UVYvMEhLY05PV2FQL0lGV3hnRHlUa3hhWWluRVAxeXRuUUgwWDl3Mk1qRGVRPT0hdjE=?share_link_id=111023574955";
 const STATIC_CONFIG = window.__AX_STATIC_CONFIG__ || null;
@@ -107,6 +108,7 @@ const state = {
   currentChapterNum: "",
   currentChapterTitle: "",
   expandedChapters: new Set(),
+  sidebarCollapsed: false,
   activeSlideDeck: null,
   activeSlideIndex: 0,
   taskPanelOpen: false,
@@ -130,73 +132,6 @@ const state = {
   currentCourse: null,
   mermaidReady: false
 };
-
-const EXECUTIVE_JOURNEY = Object.freeze({
-  ch00: {
-    phase: "Kickoff",
-    sidebar: "오늘 만들 3개 산출물",
-    mission: "오늘 하루의 목표와 완성 결과를 먼저 확인합니다.",
-    deliverable: "개인 목표 선언",
-    next: "AI 핵심 개념으로 공통 언어를 맞춥니다.",
-    difficulty: "가볍게 시작"
-  },
-  ch01: {
-    phase: "Concept",
-    sidebar: "도구에서 위임 대상으로",
-    mission: "Assistant, Agent, Context, Workflow를 임원 비유로 정리합니다.",
-    deliverable: "공통 언어 정렬",
-    next: "개인용 임원 비서를 만들 준비를 합니다.",
-    difficulty: "쉬움"
-  },
-  ch02: {
-    phase: "Personal Agent",
-    sidebar: "나만의 AI 비서 만들기",
-    mission: "프롬프트와 Gem으로 개인용 임원 비서를 만듭니다.",
-    deliverable: "개인용 임원 비서",
-    next: "문서를 근거로 답하는 브리핑으로 확장합니다.",
-    difficulty: "따라하기 중심"
-  },
-  ch03: {
-    phase: "Grounded Briefing",
-    sidebar: "출처 기반 브리핑 완성",
-    mission: "NotebookLM으로 문서 교차 분석과 경영진 브리핑 생성을 체험합니다.",
-    deliverable: "1페이지 브리핑 초안",
-    next: "이제 브리핑을 앱으로 바꿉니다.",
-    difficulty: "실무형"
-  },
-  ch04: {
-    phase: "Vibe Coding",
-    sidebar: "말로 만드는 실무 앱",
-    mission: "Google AI Studio Build로 3분 이사회 브리핑 앱을 만듭니다.",
-    deliverable: "3분 이사회 브리핑 앱",
-    next: "Hi-D Code 시연에서 에이전트 실행 감각을 넓힙니다.",
-    difficulty: "재미있게 몰입"
-  },
-  ch05: {
-    phase: "Demo",
-    sidebar: "외부 시연",
-    mission: "Hi-D Code 시연을 관람하며 에이전틱 실행 사례를 봅니다.",
-    deliverable: "관찰 포인트 정리",
-    next: "오늘 만든 것을 조직 실행안으로 정리합니다.",
-    difficulty: "관람형"
-  },
-  ch06: {
-    phase: "Wrap-up",
-    sidebar: "내일 바로 쓰는 실행안",
-    mission: "오늘 만든 결과를 조직 안착 계획으로 연결합니다.",
-    deliverable: "개인 실행계획",
-    next: "참고자료 라이브러리로 확장 학습을 이어갑니다.",
-    difficulty: "정리"
-  },
-  ch07: {
-    phase: "Library",
-    sidebar: "에이전트와 스킬 참고 킷",
-    mission: "Agentic AI, Skill, 추가 읽을거리를 묶어 다음 단계로 연결합니다.",
-    deliverable: "확장 로드맵",
-    next: "교육 종료 후 팀 전파용 자료로 재활용합니다.",
-    difficulty: "선택 심화"
-  }
-});
 
 const el = {
   loginView: document.getElementById("loginView"),
@@ -228,7 +163,6 @@ const el = {
   passwordRecoverResult: document.getElementById("passwordRecoverResult"),
   currentUser: document.getElementById("currentUser"),
   currentCourseBadge: document.getElementById("currentCourseBadge"),
-  missionStrip: document.getElementById("missionStrip"),
   accountSettingsBtn: document.getElementById("accountSettingsBtn"),
   accountModal: document.getElementById("accountModal"),
   closeAccountModalBtn: document.getElementById("closeAccountModalBtn"),
@@ -250,6 +184,7 @@ const el = {
   slidePrevBtn: document.getElementById("slidePrevBtn"),
   slideNextBtn: document.getElementById("slideNextBtn"),
   logoutBtn: document.getElementById("logoutBtn"),
+  sidebarToggleBtn: document.getElementById("sidebarToggleBtn"),
   chapterList: document.getElementById("chapterList"),
   clipTitle: document.getElementById("clipTitle"),
   clipOverview: document.getElementById("clipOverview"),
@@ -379,6 +314,22 @@ function readStaticJson(key, fallback) {
 
 function writeStaticJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+function readSidebarCollapsedPreference() {
+  try {
+    return localStorage.getItem(STORAGE_SIDEBAR_COLLAPSED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writeSidebarCollapsedPreference(value) {
+  try {
+    localStorage.setItem(STORAGE_SIDEBAR_COLLAPSED_KEY, value ? "1" : "0");
+  } catch {
+    // ignore
+  }
 }
 
 function getStaticCompletedClipKeys() {
@@ -782,17 +733,15 @@ function clearEditorPreviewClickTimer() {
 }
 
 function closeInlineQuickEditor() {
-  el.contentEditorPreview?.querySelector(".content-inline-editor")?.remove();
+  document.querySelectorAll(".content-inline-editor").forEach((node) => node.remove());
 }
 
-function positionInlineQuickEditor(target, shell) {
-  if (!el.contentEditorPreview || !target || !shell) return;
-  const previewRect = el.contentEditorPreview.getBoundingClientRect();
+function positionInlineQuickEditor(container, target, shell) {
+  if (!container || !target || !shell) return;
+  const previewRect = container.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
-  const top =
-    targetRect.bottom - previewRect.top + el.contentEditorPreview.scrollTop + 8;
-  const left =
-    targetRect.left - previewRect.left + el.contentEditorPreview.scrollLeft;
+  const top = targetRect.bottom - previewRect.top + container.scrollTop + 8;
+  const left = targetRect.left - previewRect.left + container.scrollLeft;
   shell.style.top = `${Math.max(8, top)}px`;
   shell.style.left = `${Math.max(8, left)}px`;
 }
@@ -890,8 +839,67 @@ function focusContentEditorSource(offset, lineHint = 0) {
   setEditorStatus(`렌더 미리보기에서 선택한 요소의 소스 줄 ${lineNumber}로 이동했습니다.`);
 }
 
-function openInlineQuickEditor(target, offset, lineNumber) {
-  if (!el.contentEditorPreview || !target) return;
+function isLiveContentDirectEditEnabled() {
+  return Boolean(
+    state.isAdmin &&
+      state.editModeOpen &&
+      state.currentClipKey &&
+      state.editorSourceClipKey &&
+      state.editorSourceClipKey === state.currentClipKey
+  );
+}
+
+function annotateLiveEditorNodes(root, source) {
+  if (!(root instanceof Element)) return;
+  const sourceText = String(source || "");
+  const sourceLower = sourceText.toLowerCase();
+  const lineStarts = computeLineStarts(sourceText);
+  let searchFrom = 0;
+
+  root.querySelectorAll("*").forEach((node) => {
+    const tagName = String(node.tagName || "").toLowerCase();
+    if (!tagName) return;
+
+    const needle = `<${tagName}`;
+    let offset = sourceLower.indexOf(needle, searchFrom);
+    if (offset < 0) {
+      offset = sourceLower.indexOf(needle);
+    }
+    if (offset < 0) return;
+
+    if (isQuickEditablePreviewNode(node)) {
+      const lineNumber = lineNumberFromOffset(lineStarts, offset);
+      node.setAttribute("data-editor-source-index", String(offset));
+      node.setAttribute("data-editor-source-line", String(lineNumber));
+      node.setAttribute("data-editor-tag", tagName);
+      node.setAttribute("data-editor-quick-editable", "1");
+      node.setAttribute("title", `더블클릭해서 텍스트 수정 · 소스 줄 ${lineNumber}`);
+    }
+
+    searchFrom = offset + needle.length;
+  });
+}
+
+function renderClipBodyContent(contentHtml, options = {}) {
+  const html = String(contentHtml || "");
+  const liveEditEnabled =
+    typeof options.liveEditEnabled === "boolean"
+      ? options.liveEditEnabled
+      : isLiveContentDirectEditEnabled();
+
+  closeInlineQuickEditor();
+  el.clipBody.innerHTML = html || "<p>콘텐츠가 없습니다.</p>";
+  el.clipBody.classList.toggle("direct-edit-enabled", liveEditEnabled);
+  if (liveEditEnabled) {
+    annotateLiveEditorNodes(el.clipBody, html);
+  }
+  enhanceClipBody();
+  wireClipInteractions();
+}
+
+function openInlineQuickEditor(target, offset, lineNumber, options = {}) {
+  const container = options.container || el.contentEditorPreview;
+  if (!container || !target) return;
   closeInlineQuickEditor();
 
   const currentText = String(target.textContent || "");
@@ -904,8 +912,8 @@ function openInlineQuickEditor(target, offset, lineNumber) {
       <button type="button" class="practice-mini-btn" data-inline-edit-action="save">적용</button>
     </div>
   `;
-  el.contentEditorPreview.appendChild(shell);
-  positionInlineQuickEditor(target, shell);
+  container.appendChild(shell);
+  positionInlineQuickEditor(container, target, shell);
 
   const input = shell.querySelector(".content-inline-editor-input");
   if (!input) return;
@@ -929,12 +937,18 @@ function openInlineQuickEditor(target, offset, lineNumber) {
 
     if (!nextSource) {
       closeInlineQuickEditor();
-      setEditorStatus("이 요소는 빠른 수정으로 안전하게 바꿀 수 없어 소스 편집으로 이동합니다.", true);
+      setEditorStatus(
+        options.unsupportedMessage || "이 요소는 빠른 수정으로 안전하게 바꿀 수 없어 소스 편집으로 이동합니다.",
+        true
+      );
       focusContentEditorSource(offset, lineNumber);
       return;
     }
 
-    applyContentEditorDraft(nextSource, "렌더 미리보기에서 텍스트를 빠르게 수정했습니다.");
+    applyContentEditorDraft(
+      nextSource,
+      options.successMessage || "렌더 미리보기에서 텍스트를 빠르게 수정했습니다."
+    );
   };
 
   shell.addEventListener("click", (event) => {
@@ -998,6 +1012,24 @@ function onContentEditorPreviewDoubleClick(event) {
     return;
   }
   openInlineQuickEditor(target, offset, lineNumber);
+}
+
+function onClipBodyDirectEditDoubleClick(event) {
+  if (!isLiveContentDirectEditEnabled()) return;
+  const target = event.target.closest("[data-editor-source-index]");
+  if (!target || !el.clipBody.contains(target)) return;
+  if (target.closest(".content-inline-editor")) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const offset = Number(target.dataset.editorSourceIndex || 0);
+  const lineNumber = Number(target.dataset.editorSourceLine || 0);
+  openInlineQuickEditor(target, offset, lineNumber, {
+    container: el.clipBody,
+    successMessage: "본문에서 텍스트를 직접 수정했습니다.",
+    unsupportedMessage: "이 요소는 본문 직접 수정 대상이 아니라 HTML 소스에서 편집해야 합니다."
+  });
 }
 
 function renderEditorPreview(html) {
@@ -1440,6 +1472,9 @@ function applyContentEditorDraft(nextValue, statusMessage = "") {
   el.contentEditorInput.value = value;
   state.editorDirty = value !== state.editorSourceHtml;
   renderEditorPreview(value);
+  if (state.editModeOpen && state.currentClipKey === state.editorSourceClipKey) {
+    renderClipBodyContent(value, { liveEditEnabled: true });
+  }
   if (statusMessage) {
     setEditorStatus(statusMessage);
   } else if (state.editorDirty) {
@@ -1496,6 +1531,8 @@ function resetContentEditor() {
   if (el.contentAssetList) {
     el.contentAssetList.innerHTML = "<p class=\"muted\">업로드된 자산을 불러오면 여기에 표시됩니다.</p>";
   }
+  closeInlineQuickEditor();
+  el.clipBody?.classList.remove("direct-edit-enabled");
   resetContentAssetPreview();
   resetContentEmbedPreview();
   renderEditorPreview("");
@@ -1699,54 +1736,64 @@ function updateSidePanelUI() {
   el.taskPanel.classList.add("collapsed");
   el.notePanel.classList.toggle("collapsed", !state.notePanelOpen);
 
-  el.toggleTaskBtn.textContent = "오늘의 미션";
+  renderMiroLaunchButton();
   el.toggleNoteBtn.textContent = state.notePanelOpen ? "메모 닫기" : "메모 펼치기";
 }
 
-function currentChapterJourney(chapterId = state.currentChapterId) {
-  if (STATIC_MODE) {
-    return null;
-  }
-  return EXECUTIVE_JOURNEY[normalizeWs(chapterId).toLowerCase()] || null;
+function miroButtonMarkup({ compact = false } = {}) {
+  const badgeClass = compact ? "miro-logo-badge compact" : "miro-logo-badge";
+  return `
+    <span class="${badgeClass}" aria-hidden="true">
+      <svg viewBox="0 0 38 38" focusable="false" aria-hidden="true">
+        <path d="M7 8h5l3.8 7-4.3 15H7.4l3.2-15L7 8Z" fill="currentColor"></path>
+        <path d="M17 8h5.2l3.6 7-4 15H17.6l3.1-15L17 8Z" fill="currentColor"></path>
+        <path d="M27 8h5.4l2.6 7-4.8 15h-5l3.7-15L27 8Z" fill="currentColor"></path>
+      </svg>
+    </span>
+    <span class="miro-btn-label">Miro</span>
+  `;
 }
 
-function renderMissionStrip() {
-  if (!el.missionStrip) return;
-  const journey = currentChapterJourney();
-  if (!journey) {
-    el.missionStrip.innerHTML = "";
-    return;
+function renderMiroLaunchButton() {
+  if (!el.toggleTaskBtn) return;
+  el.toggleTaskBtn.classList.add("miro-launch-btn");
+  el.toggleTaskBtn.setAttribute("aria-label", "Miro 보드 열기");
+  el.toggleTaskBtn.setAttribute("title", "Miro 보드 열기");
+  el.toggleTaskBtn.innerHTML = miroButtonMarkup();
+}
+
+function decorateMiroDemoButtons(root = el.clipBody) {
+  if (!root) return;
+  root.querySelectorAll(".lms-demo-btn").forEach((button) => {
+    const label = normalizeWs(button.textContent || "");
+    if (!/^Miro(?:\.공유하기)?$/i.test(label) && label !== "Miro.공유하기") return;
+    const compact = button.classList.contains("lms-demo-btn-inline");
+    button.classList.add("miro-demo-btn");
+    button.setAttribute("aria-label", "Miro");
+    button.innerHTML = miroButtonMarkup({ compact });
+  });
+}
+
+function applySidebarCollapsedState() {
+  el.layout?.classList.toggle("sidebar-collapsed", state.sidebarCollapsed);
+  if (!el.sidebarToggleBtn) return;
+  const expanded = !state.sidebarCollapsed;
+  el.sidebarToggleBtn.classList.toggle("is-collapsed", state.sidebarCollapsed);
+  el.sidebarToggleBtn.setAttribute("aria-expanded", String(expanded));
+  el.sidebarToggleBtn.setAttribute("aria-label", expanded ? "목차 접기" : "목차 펼치기");
+  el.sidebarToggleBtn.setAttribute("title", expanded ? "목차 접기" : "목차 펼치기");
+}
+
+function setSidebarCollapsed(nextValue, { persist = true } = {}) {
+  state.sidebarCollapsed = Boolean(nextValue);
+  applySidebarCollapsedState();
+  if (persist) {
+    writeSidebarCollapsedPreference(state.sidebarCollapsed);
   }
+}
 
-  const chapterIndex = state.chapters.findIndex((item) => item.chapterId === state.currentChapterId);
-  const nextChapter = chapterIndex >= 0 ? state.chapters[chapterIndex + 1] : null;
-  const nextText = nextChapter ? `${nextChapter.chapterNum} ${nextChapter.title}` : "오늘의 마무리";
-
-  el.missionStrip.innerHTML = `
-    <div class="mission-strip-copy">
-      <p class="eyebrow">${journey.phase}</p>
-      <h3>${journey.mission}</h3>
-      <p>${journey.sidebar}</p>
-    </div>
-    <div class="mission-strip-cards">
-      <article class="mission-card">
-        <span class="mission-card-label">이번 세션 산출물</span>
-        <strong>${journey.deliverable}</strong>
-      </article>
-      <article class="mission-card">
-        <span class="mission-card-label">다음 스텝</span>
-        <strong>${journey.next}</strong>
-      </article>
-      <article class="mission-card">
-        <span class="mission-card-label">난이도</span>
-        <strong>${journey.difficulty}</strong>
-      </article>
-      <article class="mission-card">
-        <span class="mission-card-label">권장 흐름</span>
-        <strong>${nextText}</strong>
-      </article>
-    </div>
-  `;
+function onToggleSidebar() {
+  setSidebarCollapsed(!state.sidebarCollapsed);
 }
 
 function getAllClips() {
@@ -1764,8 +1811,10 @@ function updateProgressBadge() {
 function updateMarkCompleteButton() {
   const done = state.completedSet.has(state.currentClipKey);
   el.markCompleteBtn.textContent = done ? "완료 해제" : "학습 완료";
-  el.markCompleteBtn.style.background = done ? "#138246" : "";
-  el.markCompleteBtn.style.borderColor = done ? "#138246" : "";
+  el.markCompleteBtn.style.background = done ? "linear-gradient(180deg, #8f002e 0%, #7d0028 100%)" : "";
+  el.markCompleteBtn.style.borderColor = done ? "#7d0028" : "";
+  el.markCompleteBtn.style.boxShadow = done ? "0 10px 20px rgba(125, 0, 40, 0.22)" : "";
+  el.markCompleteBtn.style.color = done ? "#ffffff" : "";
 }
 
 function clipTypeLabel(clip, chapter) {
@@ -4008,7 +4057,6 @@ function renderSidebar() {
   const fragment = document.createDocumentFragment();
 
   for (const chapter of state.chapters) {
-    const journey = currentChapterJourney(chapter.chapterId);
     const chapterCard = document.createElement("section");
     chapterCard.className = "chapter-card";
     const expanded = state.expandedChapters.has(chapter.chapterId);
@@ -4020,10 +4068,7 @@ function renderSidebar() {
     header.innerHTML = `
       <span class="chapter-header-left">
         <span class="chapter-code">${chapter.chapterNum.replace(/\s+/g, "")}</span>
-        <span class="chapter-label-wrap">
-          <span class="chapter-label">${chapter.title}</span>
-          <span class="chapter-mission">${journey?.sidebar || ""}</span>
-        </span>
+        <span class="chapter-label">${chapter.title}</span>
       </span>
       <span class="chapter-header-right">
         <span class="chapter-time">${chapter.time || ""}</span>
@@ -4085,8 +4130,13 @@ function renderSidebar() {
 }
 
 function renderClipHeader(clip) {
-  el.clipTitle.textContent = clip.title || clip.clipKey;
-  el.clipOverview.textContent = clip.overview || "";
+  if (el.clipTitle) {
+    el.clipTitle.textContent = clip.title || clip.clipKey;
+  }
+  if (el.clipOverview) {
+    el.clipOverview.textContent = clip.overview || "";
+  }
+  if (!el.clipBadges) return;
   el.clipBadges.innerHTML = "";
 
   const chapterBadgePattern = /^CH\s?\d{2}$/i;
@@ -4115,8 +4165,6 @@ function renderClipHeader(clip) {
     span.textContent = badge;
     el.clipBadges.appendChild(span);
   }
-
-  renderMissionStrip();
 }
 
 function enhanceChartBlocks(root = el.clipBody) {
@@ -4191,6 +4239,7 @@ function enhanceClipBody() {
 
   renderSlideDeckPreviews();
   populateSlideDeckDownloadLinks();
+  decorateMiroDemoButtons();
   wireMarkdownLiveEditors();
   enhancePromptMarkdownBlocks();
   enhanceChartBlocks();
@@ -4255,9 +4304,7 @@ async function openClip(clipKey, updateHash = false) {
   }
 
   renderClipHeader(clip);
-  el.clipBody.innerHTML = clip.contentHtml || "<p>콘텐츠가 없습니다.</p>";
-  enhanceClipBody();
-  wireClipInteractions();
+  renderClipBodyContent(clip.contentHtml || "<p>콘텐츠가 없습니다.</p>");
   updateMarkCompleteButton();
   renderSidebar();
 
@@ -4480,6 +4527,7 @@ async function loadEditorSourceForCurrentClip() {
     el.contentEditorPath.textContent = data.source?.contentPath || "-";
     onClearContentEmbed();
     renderEditorPreview(rawHtml);
+    renderClipBodyContent(rawHtml, { liveEditEnabled: true });
     setEditorStatus("현재 클립 원본을 불러왔습니다.");
     await loadContentAssetsForCurrentClip();
   } catch (error) {
@@ -4584,6 +4632,9 @@ async function onToggleEditMode() {
     ) {
       return;
     }
+    renderClipBodyContent(state.editorSourceHtml || el.contentEditorInput?.value || "", {
+      liveEditEnabled: false
+    });
     resetContentEditor();
     updateEditorVisibility();
     return;
@@ -5250,6 +5301,7 @@ function bindEvents() {
   el.taskForm.addEventListener("submit", onTaskSubmit);
   el.toggleTaskBtn.addEventListener("click", onToggleTaskPanel);
   el.toggleNoteBtn.addEventListener("click", onToggleNotePanel);
+  el.sidebarToggleBtn?.addEventListener("click", onToggleSidebar);
   el.saveNoteBtn.addEventListener("click", () => {
     saveCurrentClipNote().catch((error) => setNoteStatus(error.message, true));
   });
@@ -5266,6 +5318,7 @@ function bindEvents() {
   el.contentEditorInput?.addEventListener("scroll", syncContentEditorScroll);
   el.contentEditorPreview?.addEventListener("click", onContentEditorPreviewClick);
   el.contentEditorPreview?.addEventListener("dblclick", onContentEditorPreviewDoubleClick);
+  el.clipBody?.addEventListener("dblclick", onClipBodyDirectEditDoubleClick);
   el.reloadContentAssetsBtn?.addEventListener("click", () => {
     reloadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
   });
@@ -5387,9 +5440,11 @@ function bindEvents() {
 
   state.taskPanelOpen = false;
   state.notePanelOpen = false;
+  setSidebarCollapsed(readSidebarCollapsedPreference(), { persist: false });
   renderSidebarMetaPreview();
   updateEditorVisibility();
   updateSidePanelUI();
+  applySidebarCollapsedState();
   renderNotePreview();
 
   let wasDesktop = window.innerWidth > 1380;

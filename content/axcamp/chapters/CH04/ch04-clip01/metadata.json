@@ -1,59 +1,52 @@
 {
-  "route": "#ch05-clip02",
-  "url": "https://lg.cmdspace.work/axcamp#ch05-clip02",
-  "pageTitle": "AX Camp for Leaders | LG",
-  "clipTitle": "Google AI Studio API 키 발급",
-  "overview": "오늘 수업에서 API 키를 깊게 쓰지는 않지만, 이후 AI Studio 앱을 내려받아 실행하거나 API 기반 실습으로 넘어갈 때를 위해 발급 위치와 보관 원칙만 간단하게 정리합니다.",
+  "route": "#ch04-clip01",
+  "clipTitle": "NotebookLM 소개 및 문서 기반 AI 연구 도우미",
+  "overview": "NotebookLM은 내가 넣은 자료를 중심으로 답하고 모든 응답에 출처를 다는 grounded research 도구다. 신뢰 가능한 분석이 필요할 때 가장 강력하다.",
   "badges": [
-    "CH 05",
-    "설정"
+    "CH 04",
+    "플랫폼"
   ],
-  "text": "Google AI Studio API 키 발급. Dashboard의 API 키 화면에서 키 만들기로 진입하고, 프로젝트를 선택한 뒤 키를 환경 변수로 보관합니다. 오늘 수업에서는 발급 위치와 보관 규칙만 다룹니다.",
   "sections": [
     {
       "index": 1,
-      "title": "현재 UI 기준 발급 위치",
-      "text": "AI Studio의 Dashboard > API 키 화면에서 API 키 만들기로 진입합니다."
+      "title": "언제 NotebookLM을 써야 하나",
+      "text": "멀티소스 분석, 출처 기반 응답, 기업 자료 기반 해석, Studio 산출물이 필요한 상황에서 NotebookLM이 적합합니다."
     },
     {
       "index": 2,
-      "title": "발급 후 바로 지켜야 할 규칙",
-      "text": "키는 코드에 직접 넣지 않고, GEMINI_API_KEY 같은 환경 변수로 분리하며, 유출 시 즉시 폐기합니다."
+      "title": "실제 NotebookLM 작업 화면으로 보기",
+      "text": "소스 패널, 채팅 패널, Studio 패널이 한 화면에서 어떻게 역할을 나누는지 실제 화면으로 본다."
     },
     {
       "index": 3,
-      "title": "오늘 수업에서는 여기까지만",
-      "text": "오늘은 복잡한 설정 실습보다, 나중에 Build 앱과 API 실습으로 넘어갈 때 필요한 최소 개념만 기억합니다."
+      "title": "Studio 패널과 채팅은 어떻게 다르나",
+      "text": "Studio는 산출물을 만들고, 채팅은 검증과 후속 토론을 이어가는 곳입니다."
+    },
+    {
+      "index": 4,
+      "title": "바로 시작하기",
+      "text": "새 노트북 생성, 소스 업로드, 질문, Studio 출력, 후속 검증 순서로 시작합니다."
     }
   ],
   "prompts": [],
   "links": [
     {
-      "href": "https://aistudio.google.com/api-keys",
-      "absolute": "https://aistudio.google.com/api-keys",
-      "text": "Google AI Studio API keys"
+      "href": "https://notebooklm.google.com",
+      "text": "notebooklm.google.com"
     },
     {
-      "href": "https://aistudio.google.com/prompts/new_chat",
-      "absolute": "https://aistudio.google.com/prompts/new_chat",
-      "text": "Google AI Studio"
+      "href": "#ch03-clip03",
+      "text": "← Gems 소개: AI 비서 만들기"
     },
     {
-      "href": "#ch05-clip01",
-      "absolute": "https://lg.cmdspace.work/axcamp#ch05-clip01",
-      "text": "← LLM 앱과 API의 동작 원리"
-    },
-    {
-      "href": "#ch06-clip01",
-      "absolute": "https://lg.cmdspace.work/axcamp#ch06-clip01",
-      "text": "바이브 코딩이란 →"
+      "href": "#ch04-clip02",
+      "text": "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑 →"
     }
   ],
   "images": [
     {
-      "src": "/assets/aistudio/ch04/aistudio-api-keys-header.png",
-      "alt": "Google AI Studio API keys 상단 헤더"
+      "src": "/assets/notebooklm/ch03-notebooklm/screens/notebooklm-grounded-research-ui.png",
+      "alt": "NotebookLM 실제 작업 화면"
     }
-  ],
-  "iframes": []
+  ]
 }
