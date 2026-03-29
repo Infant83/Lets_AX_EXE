@@ -16,13 +16,13 @@
     },
     {
       "route": "#ch06-clip02",
-      "title": "Google AI Studio Build 시작하기",
+      "title": "바이브 코딩으로 웹앱 제작하기",
       "type": "실습",
       "folder": "chapters/CH06/ch06-clip02",
-      "linkCount": 5,
+      "linkCount": 3,
       "imageCount": 4,
-      "sectionCount": 4,
-      "promptCount": 0
+      "sectionCount": 6,
+      "promptCount": 17
     },
     {
       "route": "#ch06-clip03",

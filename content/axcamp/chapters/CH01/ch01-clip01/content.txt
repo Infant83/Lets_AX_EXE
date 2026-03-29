@@ -1,14 +1,14 @@
 ~10분
-CH 01
+CH 02
 개념
 
-AI Assistant → Agent → Agentic AI
+프롬프트 엔지니어링 4가지 원칙
 
 AI를 활용하는 세 가지 수준을 이해합니다. 오늘 교육은 이 세 단계를 순서대로 체험하는 과정입니다.
 
 NotebookLM Infographic
 
-AI 활용은 질문형 Assistant에서 자율 운영형 Agentic AI로 진화한다
+AI 활용은 질문형 Assistant에서 자율 운영형 Agentic AI로 진화합니다
 
 오늘 수업은 Gemini와 NotebookLM으로 질문형 AI를 익히고, Gemini Deep Research와 AI Studio Build로 goal-based agent를 체험하며, Codex와 Cline 시연으로 agentic workflow를 본다.
 
@@ -22,9 +22,9 @@ AI 어시스턴트	AI 에이전트	에이전틱 AI
 
 사람의 개입	매 단계 지시 필요	목표만 제시, 중간 과정은 자율	최소한의 감독만 필요
 
-대표 도구	Gemini, NotebookLM	Gemini,Deep Research, AI Studio Build	Codex, Cline
+대표 도구	Gemini, NotebookLM	AI Studio Build	Codex, Cline
 
-오늘의 실습	Gemini, NotebookLM	Deep Research, AI Studio Build	강사 시연: Hi-D Code (Cline
+오늘의 실습	Gemini (ChatGPT), NotebookLM	Deep Research, Google AI Studio	강사 시연: Hi-D Code with Cline
 
 어떻게 작동하는가 — 원리와 메커니즘
 

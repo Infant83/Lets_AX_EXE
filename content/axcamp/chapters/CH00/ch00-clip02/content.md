@@ -1,17 +1,21 @@
 ---
-route: "#ch00-clip02"
-chapter: "ch00"
-title: "AI 트렌드"
-source_url: "https://lg.cmdspace.work/axcamp#ch00-clip02"
+route: "#ch01-clip01"
+chapter: "ch01"
+title: "Assistant에서 Agentic AI로"
+source_url: "https://lg.cmdspace.work/axcamp#ch01-clip01"
 exported_at: "2026-02-28T01:53:40.282Z"
 ---
 
-CH 00
-참고
+CH 01
+개념
 
-# AI 트렌드
+# Assistant에서 Agentic AI로
 
 AI 산업 생태계가 Agentic에서 Physical까지 어떻게 확장되는지, 리더 관점의 22장 브리핑과 카드뉴스로 함께 살펴보세요.
+
+![ai utilization evolution roadmap](/course-files/AXCAMP/ch01-clip01/assets/ai-utilization-evolution-roadmap.png)
+
+*ai utilization evolution roadmap*
 
 ## 추가 트렌드 카드뉴스
 

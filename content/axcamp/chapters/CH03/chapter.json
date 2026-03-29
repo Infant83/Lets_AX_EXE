@@ -16,7 +16,7 @@
     },
     {
       "route": "#ch03-clip02",
-      "title": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
+      "title": "프롬프팅 기초",
       "type": "실습",
       "folder": "chapters/CH03/ch03-clip02",
       "linkCount": 6,
@@ -26,7 +26,7 @@
     },
     {
       "route": "#ch03-clip03",
-      "title": "Gems 소개: AI 비서 만들기",
+      "title": "AI 비서 만들기: 비즈니스 프롬프팅",
       "type": "실습",
       "folder": "chapters/CH03/ch03-clip03",
       "linkCount": 4,
@@ -36,13 +36,13 @@
     },
     {
       "route": "#ch03-clip04",
-      "title": "ChatGPT 소개 및 접속 방법",
+      "title": "ChatGPT 및 GPTs 소개",
       "type": "플랫폼",
       "folder": "chapters/CH03/ch03-clip04",
-      "linkCount": 3,
+      "linkCount": 6,
       "imageCount": 0,
-      "sectionCount": 4,
-      "promptCount": 2
+      "sectionCount": 5,
+      "promptCount": 3
     }
   ]
 }

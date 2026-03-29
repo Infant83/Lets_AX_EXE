@@ -1,25 +1,70 @@
-CH 06
+~50분
+CH 04
 실습
-파라미터 직접 체험
-실습용 파일이 필요하신가요?
-참고자료 라이브러리 › 실습용 컨텍스트 파일
-Temperature와 Top-K를 직접 조절하며 AI 응답 변화를 체험합니다. (5~10분)
-이 실습에서는
-• AI Studio Chat 모드에서 파라미터를 직접 조절해봅니다
-• Temperature와 Top-K 값 변경에 따른 응답 차이를 직접 확인합니다
-• Build 모드 진입 전, AI Studio 인터페이스에 익숙해집니다
-파라미터 체험 실습
-Step 1: AI Studio 접속 → Chat 모드 선택
-Step 2: 우측 설정 패널에서 Temperature
-Temperature
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!
- 슬라이더 확인
-Step 3: 같은 질문을 Temperature 0.2 / 1.0 / 1.8로 각각 입력하여 결과 비교
-Step 4: Top-K 값을 1 / 20 / 40으로 변경하며 결과 비교
-파라미터 테스트용 프롬프트
-복사
-LG그룹의 2026년 AI 전환 전략을 3가지 키워드로 요약해줘.
-실습 팁
-각 파라미터 값에서의 결과를 비교해보세요. Temperature와 Top-K의 개념이 궁금하다면 이전 클립의 비교표를 참고하세요.
-← AI Studio 파라미터 이해
-외부 API 연동 →
+
+경쟁사 리서치 대시보드
+
+Gems로 앱 프롬프트 초안을 만들고, AI Studio Build에서 경쟁사 리서치 기능이 있는 React 대시보드를 생성한 뒤, refinement와 LG 스타일 적용, 외부 API 확장까지 이어가는 실습입니다.
+
+실습 진행 순서
+
+순서	무엇을 하나	사용 파일
+
+0
+Gems로 Build 초안 프롬프트 생성
+
+보기
+다운로드
+
+1
+기본 리서치 대시보드 생성
+
+보기
+다운로드
+
+2
+감성 분석, KPI, 정렬 등 기능 refinement
+
+보기
+다운로드
+
+3
+LG 스타일과 웹 스타일 요청 반영
+
+보기
+다운로드
+
+4
+외부 데이터 수집 API 확장
+
+보기
+다운로드
+
+구조화된 프롬프트를 한 번 더 써보자
+
+처음부터 XML을 손으로 길게 쓰기보다, Gems에서 비즈니스 brief를 먼저 정리하고 그 결과를 XML로 다시 묶는 흐름이 실습에서는 가장 안정적입니다. 아래 예시는 전체 파일의 핵심만 추린 것입니다.
+
+XML 프롬프트 예시복사
+
+<app_request>
+<goal>Create an executive competitive-intelligence dashboard</goal>
+<framework>React</framework>
+<data_flow>Search recent news, summarize findings, assign urgency, and prepare export-friendly cards.</data_flow>
+<brand_style>LG magenta accent, restrained executive tone, white background.</brand_style>
+</app_request>
+
+언제 XML을 넣는 것이 가장 좋은가
+
+초안 프롬프트를 만든 직후보다, 한두 번 refinement를 거쳐 요구사항이 굳은 다음 XML로 정리하는 편이 효율적입니다. 필요하면 Gems에 “이 프롬프트를 app_request XML 형식으로 다시 써줘”라고 맡겨 가벼운 XML 변환 보조 앱처럼 쓰는 정도면 충분하다.
+
+마지막 체크포인트
+
+완료 기준
+
+1. 검색 입력과 결과 카드가 동작합니다.
+
+2. KPI 또는 요약 카드가 추가되어 있다.
+
+3. LG 스타일 지시문이 반영되어 화면 위계가 정리되어 있다.
+
+4. 필요하면 Share 또는 Publish로 다른 사람에게 보여줄 준비가 되어 있다.

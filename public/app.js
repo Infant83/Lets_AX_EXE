@@ -107,6 +107,7 @@ const state = {
   currentChapterId: "",
   currentChapterNum: "",
   currentChapterTitle: "",
+  currentVisibleContentHtml: "",
   expandedChapters: new Set(),
   sidebarCollapsed: false,
   activeSlideDeck: null,
@@ -130,7 +131,8 @@ const state = {
   publishStatus: null,
   courses: [],
   currentCourse: null,
-  mermaidReady: false
+  mermaidReady: false,
+  catalogPatched: false
 };
 
 const el = {
@@ -195,6 +197,7 @@ const el = {
   toggleTaskBtn: document.getElementById("toggleTaskBtn"),
   toggleNoteBtn: document.getElementById("toggleNoteBtn"),
   toggleEditModeBtn: document.getElementById("toggleEditModeBtn"),
+  saveContentEditorTopBtn: document.getElementById("saveContentEditorTopBtn"),
   toggleSidebarModeBtn: document.getElementById("toggleSidebarModeBtn"),
   togglePublishModeBtn: document.getElementById("togglePublishModeBtn"),
   contentEditorPanel: document.getElementById("contentEditorPanel"),
@@ -204,6 +207,8 @@ const el = {
   contentEditorPreview: document.getElementById("contentEditorPreview"),
   contentEditorStatus: document.getElementById("contentEditorStatus"),
   contentAssetInput: document.getElementById("contentAssetInput"),
+  chooseContentAssetsBtn: document.getElementById("chooseContentAssetsBtn"),
+  contentAssetSelectionSummary: document.getElementById("contentAssetSelectionSummary"),
   contentAssetUploadHint: document.getElementById("contentAssetUploadHint"),
   contentAssetList: document.getElementById("contentAssetList"),
   contentAssetStatus: document.getElementById("contentAssetStatus"),
@@ -358,6 +363,328 @@ function normalizeClipKey(input) {
   const key = normalizeWs(input).replace(/^#/, "");
   if (!key) return "";
   return key;
+}
+
+const CLIENT_CATALOG_BLUEPRINTS = [
+  {
+    chapterId: "ch00",
+    chapterCode: "CH00",
+    chapterNum: "CH 00",
+    title: "과정 안내",
+    time: "08:30",
+    clips: [{ clipKey: "ch00-clip01", title: "오늘의 시간표", type: "개요" }]
+  },
+  {
+    chapterId: "ch01",
+    chapterCode: "CH01",
+    chapterNum: "CH 01",
+    title: "AI 핵심 개념",
+    time: "08:40",
+    clips: [
+      { clipKey: "ch00-clip02", title: "AI 트렌드", type: "참고" },
+      { clipKey: "ch01-clip01", title: "Assistant에서 Agentic AI로", type: "개념" },
+      { clipKey: "ch01-clip03", title: "기술 활용 로드맵", type: "개념" },
+      { clipKey: "ch01-clip04", title: "개념 다지기", type: "참고" }
+    ]
+  },
+  {
+    chapterId: "ch02",
+    chapterCode: "CH02",
+    chapterNum: "CH 02",
+    title: "Gemini & ChatGPT",
+    time: "09:30",
+    clips: [
+      { clipKey: "ch02-clip01", title: "Gemini 소개 및 접속 방법", type: "플랫폼" },
+      { clipKey: "ch02-clip02", title: "프롬프팅 기초", type: "실습" },
+      { clipKey: "ch02-clip03", title: "Gems 소개: 프롬프트 구조화하기", type: "참고" },
+      { clipKey: "ch02-clip04", title: "AI 비서 만들기: 비즈니스 프롬프팅", type: "실습" },
+      { clipKey: "ch02-clip05", title: "ChatGPT 및 GPTs 소개", type: "플랫폼" }
+    ]
+  },
+  {
+    chapterId: "ch03",
+    chapterCode: "CH03",
+    chapterNum: "CH 03",
+    title: "NotebookLM",
+    time: "13:00",
+    clips: [
+      { clipKey: "ch03-clip01", title: "NotebookLM 소개 및 문서 기반 AI 연구 도우미", type: "플랫폼" },
+      { clipKey: "ch03-clip02", title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑", type: "실습" },
+      { clipKey: "ch03-clip03", title: "기업 분석 코스: Gems에서 NotebookLM까지", type: "실습" }
+    ]
+  },
+  {
+    chapterId: "ch04",
+    chapterCode: "CH04",
+    chapterNum: "CH 04",
+    title: "Google AI Studio",
+    time: "14:10",
+    clips: [
+      { clipKey: "ch04-clip01", title: "Google AI Studio 소개 및 접속 방법", type: "설정" },
+      { clipKey: "ch04-clip02", title: "바이브 코딩이란", type: "개념" },
+      { clipKey: "ch04-clip03", title: "바이브 코딩으로 웹앱 제작하기", type: "실습" }
+    ]
+  }
+];
+
+function cloneChapter(chapter) {
+  return {
+    ...chapter,
+    clips: Array.isArray(chapter?.clips) ? chapter.clips.map((clip) => ({ ...clip })) : []
+  };
+}
+
+function flattenVisibleClips(chapters = state.chapters) {
+  const items = [];
+
+  for (const chapter of Array.isArray(chapters) ? chapters : []) {
+    for (const clip of Array.isArray(chapter?.clips) ? chapter.clips : []) {
+      items.push({
+        ...clip,
+        chapterId: chapter.chapterId || clip.chapterId || "",
+        chapterTitle: chapter.title || clip.chapterTitle || "",
+        chapterNum: chapter.chapterNum || clip.chapterNum || "",
+        chapterCode: chapter.chapterCode || clip.chapterCode || "",
+        chapterTime: chapter.time || clip.chapterTime || ""
+      });
+    }
+  }
+
+  return items;
+}
+
+function buildClipNavFooterHtml(clipKey) {
+  const normalized = normalizeClipKey(clipKey);
+  const orderedClips = flattenVisibleClips();
+  const currentIndex = orderedClips.findIndex(
+    (clip) => normalizeClipKey(clip.clipKey) === normalized
+  );
+
+  if (currentIndex < 0) return "";
+
+  const previousClip = orderedClips[currentIndex - 1] || null;
+  const nextClip = orderedClips[currentIndex + 1] || null;
+
+  const previousHtml = previousClip
+    ? `<a class="clip-nav-btn" href="#${escapeAttribute(previousClip.clipKey)}">← ${escapeHtml(previousClip.title || previousClip.clipKey)}</a>`
+    : '<a class="clip-nav-btn disabled" href="#">← 처음</a>';
+
+  const nextHtml = nextClip
+    ? `<a class="clip-nav-btn" href="#${escapeAttribute(nextClip.clipKey)}">${escapeHtml(nextClip.title || nextClip.clipKey)} →</a>`
+    : '<a class="clip-nav-btn disabled" href="#">끝 →</a>';
+
+  return `<div class="clip-nav-footer">${previousHtml}${nextHtml}</div>`;
+}
+
+function rewriteClipNavFooter(doc, clipKey) {
+  if (!doc?.body) return;
+
+  const footerHtml = buildClipNavFooterHtml(clipKey);
+  if (!footerHtml) return;
+
+  const footers = Array.from(doc.querySelectorAll(".clip-nav-footer"));
+  if (!footers.length) {
+    doc.body.insertAdjacentHTML("beforeend", footerHtml);
+    return;
+  }
+
+  const lastFooter = footers[footers.length - 1];
+  for (let index = 0; index < footers.length - 1; index += 1) {
+    footers[index].remove();
+  }
+  lastFooter.outerHTML = footerHtml;
+}
+
+function buildClientVisibleCatalog(rawChapters) {
+  const chapters = Array.isArray(rawChapters) ? rawChapters : [];
+  const chapterMap = new Map(
+    chapters.map((chapter) => [normalizeWs(chapter.chapterId).toLowerCase(), cloneChapter(chapter)])
+  );
+  const clipMap = new Map();
+
+  for (const chapter of chapters) {
+    for (const clip of chapter.clips || []) {
+      clipMap.set(normalizeClipKey(clip.clipKey), { ...clip });
+    }
+  }
+
+  const customChapterIds = new Set(
+    CLIENT_CATALOG_BLUEPRINTS.map((chapter) => normalizeWs(chapter.chapterId).toLowerCase())
+  );
+  const nextChapters = [];
+
+  for (const blueprint of CLIENT_CATALOG_BLUEPRINTS) {
+    const baseChapter = chapterMap.get(normalizeWs(blueprint.chapterId).toLowerCase()) || {};
+    const clips = blueprint.clips
+      .map((clipBlueprint) => {
+        const baseClip = clipMap.get(normalizeClipKey(clipBlueprint.clipKey));
+        if (!baseClip) return null;
+        return {
+          ...baseClip,
+          clipKey: clipBlueprint.clipKey,
+          title: clipBlueprint.title || baseClip.title,
+          type: clipBlueprint.type || baseClip.type,
+          chapterId: blueprint.chapterId,
+          chapterCode: blueprint.chapterCode || baseChapter.chapterCode || baseClip.chapterCode,
+          chapterNum: blueprint.chapterNum || baseChapter.chapterNum || baseClip.chapterNum,
+          chapterTitle: blueprint.title || baseChapter.title || baseClip.chapterTitle,
+          chapterTime: blueprint.time || baseChapter.time || baseClip.chapterTime || ""
+        };
+      })
+      .filter(Boolean);
+
+    nextChapters.push({
+      ...baseChapter,
+      chapterId: blueprint.chapterId,
+      chapterCode: blueprint.chapterCode || baseChapter.chapterCode,
+      chapterNum: blueprint.chapterNum || baseChapter.chapterNum,
+      title: blueprint.title || baseChapter.title,
+      time: blueprint.time || baseChapter.time || "",
+      clips
+    });
+  }
+
+  for (const chapter of chapters) {
+    if (customChapterIds.has(normalizeWs(chapter.chapterId).toLowerCase())) continue;
+    nextChapters.push(cloneChapter(chapter));
+  }
+
+  return nextChapters;
+}
+
+function needsClientCatalogPatch(rawChapters) {
+  const chapters = Array.isArray(rawChapters) ? rawChapters : [];
+  const chapterMap = new Map(
+    chapters.map((chapter) => [normalizeWs(chapter.chapterId).toLowerCase(), chapter])
+  );
+  const ch00 = chapterMap.get("ch00");
+  const ch01 = chapterMap.get("ch01");
+  const ch02 = chapterMap.get("ch02");
+  const ch03 = chapterMap.get("ch03");
+  const ch04 = chapterMap.get("ch04");
+  const ch01ClipTitles = Array.isArray(ch01?.clips)
+    ? ch01.clips.map((clip) => normalizeWs(clip.title))
+    : [];
+  const ch02ClipTitles = Array.isArray(ch02?.clips)
+    ? ch02.clips.map((clip) => normalizeWs(clip.title))
+    : [];
+  const ch03ClipTitles = Array.isArray(ch03?.clips)
+    ? ch03.clips.map((clip) => normalizeWs(clip.title))
+    : [];
+  const ch04ClipTitles = Array.isArray(ch04?.clips)
+    ? ch04.clips.map((clip) => normalizeWs(clip.title))
+    : [];
+  const ch02PromptingIndex = ch02ClipTitles.findIndex(
+    (title) => title === "프롬프팅 기초"
+  );
+  const ch02StructuredIndex = ch02ClipTitles.findIndex(
+    (title) => title === "Gems 소개: 프롬프트 구조화하기"
+  );
+
+  return Boolean(
+    (Array.isArray(ch00?.clips) && ch00.clips.length > 1) ||
+      (Array.isArray(ch01?.clips) && ch01.clips.length > 4) ||
+      (Array.isArray(ch02?.clips) && ch02.clips.length < 5) ||
+      (Array.isArray(ch03?.clips) && ch03.clips.length !== 3) ||
+      (Array.isArray(ch04?.clips) && ch04.clips.length !== 3) ||
+      normalizeWs(ch01?.clips?.[0]?.title) !== "AI 트렌드" ||
+      ch02ClipTitles.includes("프롬프트 엔지니어링 4가지 원칙") ||
+      ch04ClipTitles.includes("경쟁사 리서치 대시보드") ||
+      ch01ClipTitles.includes("프롬프트 구조화 하기") ||
+      normalizeWs(ch03?.title) !== "NotebookLM" ||
+      normalizeWs(ch04?.title) !== "Google AI Studio" ||
+      !ch03ClipTitles.includes("문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑") ||
+      !ch04ClipTitles.includes("바이브 코딩으로 웹앱 제작하기") ||
+      !ch02ClipTitles.includes("Gems 소개: 프롬프트 구조화하기") ||
+      ch02StructuredIndex !== ch02PromptingIndex + 1
+  );
+}
+
+function applyClientClipDisplay(clip, sidebarClip) {
+  if (!sidebarClip) return clip;
+  return {
+    ...clip,
+    title: sidebarClip.title || clip.title,
+    type: sidebarClip.type || clip.type,
+    chapterId: sidebarClip.chapterId || clip.chapterId,
+    chapterCode: sidebarClip.chapterCode || clip.chapterCode,
+    chapterNum: sidebarClip.chapterNum || clip.chapterNum,
+    chapterTitle: sidebarClip.chapterTitle || clip.chapterTitle,
+    chapterTime: sidebarClip.chapterTime || clip.chapterTime
+  };
+}
+
+function rewriteClientClipHtml(clipKey, contentHtml) {
+  const normalized = normalizeClipKey(clipKey);
+  const needsTimetableFix = normalized === "ch00-clip01";
+  if (!String(contentHtml || "").trim()) {
+    return contentHtml;
+  }
+
+  const doc = new DOMParser().parseFromString(String(contentHtml), "text/html");
+  const sidebarClip = state.clipMap.get(normalized) || null;
+
+  if (sidebarClip) {
+    const chapterBadge = doc.querySelector(".clip-header .clip-badges .clip-badge.chapter");
+    if (chapterBadge && sidebarClip.chapterNum) {
+      chapterBadge.textContent = sidebarClip.chapterNum;
+    }
+
+    const titleNode = doc.querySelector(".clip-header .clip-title");
+    if (titleNode && sidebarClip.title) {
+      titleNode.textContent = sidebarClip.title;
+    }
+
+    const typeBadge = Array.from(
+      doc.querySelectorAll(".clip-header .clip-badges .clip-badge")
+    ).find(
+      (badge) => !badge.classList.contains("chapter") && !badge.classList.contains("time")
+    );
+    if (typeBadge && sidebarClip.type) {
+      const normalizedType = normalizeWs(sidebarClip.type);
+      const nextTypeClass =
+        normalizedType === "실습"
+          ? "type-practice"
+          : normalizedType === "참고"
+            ? "type-reference"
+            : normalizedType === "설정"
+              ? "type-setup"
+              : normalizedType === "개요"
+                ? "type-overview"
+                : normalizedType === "개념"
+                  ? "type-concept"
+                  : normalizedType === "플랫폼"
+                    ? "type-platform"
+                    : "";
+      typeBadge.className = nextTypeClass ? `clip-badge ${nextTypeClass}` : "clip-badge";
+      typeBadge.textContent = normalizedType;
+    }
+  }
+
+  rewriteClipNavFooter(doc, normalized);
+
+  if (needsTimetableFix) {
+    const timetableAnchors = Array.from(doc.querySelectorAll(".comparison-table tbody a"));
+    timetableAnchors.forEach((anchor) => {
+      const text = String(anchor.textContent || "").replace(/\s+/g, " ").trim();
+      if (text === "CH02: NotebookLM" || text === "CH03: NotebookLM") {
+        anchor.setAttribute("href", "#ch03-clip01");
+        anchor.textContent = "CH03: NotebookLM";
+        return;
+      }
+      if (text === "CH03: Google AI Studio" || text === "CH04: Google AI Studio") {
+        anchor.setAttribute("href", "#ch04-clip01");
+        anchor.textContent = "CH04: Google AI Studio";
+        return;
+      }
+      if (text === "CH04: Hi-D Code" || text === "CH05: Hi-D Code") {
+        anchor.setAttribute("href", "#ch05-clip01");
+        anchor.textContent = "CH05: Hi-D Code";
+      }
+    });
+  }
+
+  return doc.body.innerHTML;
 }
 
 function showLogin() {
@@ -849,6 +1176,14 @@ function isLiveContentDirectEditEnabled() {
   );
 }
 
+function editorLiveRenderHtml(rawHtml) {
+  const html = String(rawHtml || "");
+  if (!state.currentClipKey || state.currentClipKey !== state.editorSourceClipKey) {
+    return html;
+  }
+  return rewriteClientClipHtml(state.currentClipKey, html);
+}
+
 function annotateLiveEditorNodes(root, source) {
   if (!(root instanceof Element)) return;
   const sourceText = String(source || "");
@@ -1044,6 +1379,21 @@ function renderEditorPreview(html) {
 function setContentAssetStatus(message, isError = false) {
   el.contentAssetStatus.textContent = message || "";
   el.contentAssetStatus.style.color = isError ? "#b42318" : "";
+}
+
+function updateContentAssetSelectionSummary(files = null) {
+  const items = Array.isArray(files) ? files : Array.from(el.contentAssetInput?.files || []);
+  if (!el.contentAssetSelectionSummary) return;
+  if (!items.length) {
+    el.contentAssetSelectionSummary.textContent = "선택된 파일 없음";
+    return;
+  }
+  if (items.length === 1) {
+    el.contentAssetSelectionSummary.textContent = items[0].name || "파일 1건 선택";
+    return;
+  }
+  const firstName = items[0]?.name || "파일";
+  el.contentAssetSelectionSummary.textContent = `${firstName} 외 ${items.length - 1}건 선택`;
 }
 
 function setContentEmbedStatus(message, isError = false) {
@@ -1469,11 +1819,13 @@ function renderContentAssetList() {
 
 function applyContentEditorDraft(nextValue, statusMessage = "") {
   const value = String(nextValue || "");
+  const liveHtml = editorLiveRenderHtml(value);
   el.contentEditorInput.value = value;
   state.editorDirty = value !== state.editorSourceHtml;
+  state.currentVisibleContentHtml = liveHtml;
   renderEditorPreview(value);
   if (state.editModeOpen && state.currentClipKey === state.editorSourceClipKey) {
-    renderClipBodyContent(value, { liveEditEnabled: true });
+    renderClipBodyContent(liveHtml, { liveEditEnabled: true });
   }
   if (statusMessage) {
     setEditorStatus(statusMessage);
@@ -1482,6 +1834,7 @@ function applyContentEditorDraft(nextValue, statusMessage = "") {
   } else {
     setEditorStatus("원본과 동일합니다.");
   }
+  updateEditorVisibility();
 }
 
 function insertIntoContentEditor(snippet) {
@@ -1525,6 +1878,7 @@ function resetContentEditor() {
   if (el.contentEditorInput) el.contentEditorInput.value = "";
   if (el.contentEditorPath) el.contentEditorPath.textContent = "-";
   if (el.contentAssetInput) el.contentAssetInput.value = "";
+  updateContentAssetSelectionSummary([]);
   if (el.contentAssetUploadHint) el.contentAssetUploadHint.textContent = "-";
   if (el.contentEmbedUrlInput) el.contentEmbedUrlInput.value = "";
   if (el.contentEmbedTitleInput) el.contentEmbedTitleInput.value = "";
@@ -1550,10 +1904,64 @@ function currentSidebarDraft() {
   };
 }
 
+function currentVisibleSidebarState() {
+  const sidebarClip = state.clipMap.get(state.currentClipKey) || null;
+  const chapterId = normalizeWs(sidebarClip?.chapterId || state.currentChapterId || "").toLowerCase();
+  const chapter = state.chapters.find(
+    (item) => normalizeWs(item.chapterId || "").toLowerCase() === chapterId
+  );
+
+  return {
+    chapterNum: normalizeWs(sidebarClip?.chapterNum || state.currentChapterNum || chapter?.chapterNum || ""),
+    chapterTitle: normalizeWs(sidebarClip?.chapterTitle || state.currentChapterTitle || chapter?.title || ""),
+    chapterTime: normalizeWs(chapter?.time || sidebarClip?.chapterTime || ""),
+    clipTitle: normalizeWs(sidebarClip?.title || ""),
+    clipType: normalizeWs(sidebarClip?.type || "")
+  };
+}
+
+function applySidebarDraftToClientState(draft) {
+  const chapterId = normalizeWs(state.currentChapterId || "").toLowerCase();
+  const clipKey = normalizeWs(state.currentClipKey || "").toLowerCase();
+  if (!chapterId || !clipKey) return;
+
+  state.chapters = state.chapters.map((chapter) => {
+    if (normalizeWs(chapter.chapterId || "").toLowerCase() !== chapterId) {
+      return chapter;
+    }
+    return {
+      ...chapter,
+      title: draft.chapterTitle,
+      time: draft.chapterTime,
+      clips: Array.isArray(chapter.clips)
+        ? chapter.clips.map((clip) =>
+            normalizeWs(clip.clipKey || "").toLowerCase() === clipKey
+              ? { ...clip, title: draft.clipTitle, type: draft.clipType }
+              : clip
+          )
+        : []
+    };
+  });
+
+  const sidebarClip = state.clipMap.get(state.currentClipKey);
+  if (sidebarClip) {
+    state.clipMap.set(state.currentClipKey, {
+      ...sidebarClip,
+      chapterTitle: draft.chapterTitle,
+      chapterTime: draft.chapterTime,
+      title: draft.clipTitle,
+      type: draft.clipType
+    });
+  }
+
+  state.currentChapterTitle = draft.chapterTitle;
+}
+
 function renderSidebarMetaPreview() {
   const draft = currentSidebarDraft();
-  el.sidebarPreviewChapterNum.textContent = state.currentChapterNum
-    ? state.currentChapterNum.replace(/\s+/g, "")
+  const visible = currentVisibleSidebarState();
+  el.sidebarPreviewChapterNum.textContent = visible.chapterNum
+    ? visible.chapterNum.replace(/\s+/g, "")
     : "CH00";
   el.sidebarPreviewChapterTitle.textContent = draft.chapterTitle || "챕터 제목";
   el.sidebarPreviewChapterTime.textContent = draft.chapterTime || "-";
@@ -1658,6 +2066,16 @@ function renderPublishPanel() {
 function updateEditorVisibility() {
   const showEditorControls = Boolean(state.isAdmin);
   el.toggleEditModeBtn.classList.toggle("hidden", !showEditorControls);
+  el.saveContentEditorTopBtn?.classList.toggle(
+    "hidden",
+    !showEditorControls || !state.editModeOpen
+  );
+  if (el.saveContentEditorTopBtn) {
+    el.saveContentEditorTopBtn.disabled = !state.editModeOpen || !state.editorDirty;
+    el.saveContentEditorTopBtn.title = state.editorDirty
+      ? "현재 본문 수정 내용을 저장합니다."
+      : "변경된 내용이 없습니다.";
+  }
   el.toggleSidebarModeBtn.classList.toggle("hidden", !showEditorControls);
   el.togglePublishModeBtn.classList.toggle("hidden", !showEditorControls);
   el.contentEditorPanel.classList.toggle(
@@ -2844,19 +3262,19 @@ function buildTechUtilizationRoadmapDeck() {
     downloadLabel: "다운로드",
     slides: [
       {
-        eyebrow: "01 / Chat UI",
+        eyebrow: "01 Gemini/ChatGPT (챗봇)",
         title: "질문-리서치-초안-수정의 협업 루프",
         imageSrc: `${basePath}/slide-1.png`,
         imageAlt: "Enterprise AI Roadmap 슬라이드 1장. Chat UI 단계에서 질문, 리서치, 초안 작성, 수정 요청을 반복하는 흐름을 설명합니다."
       },
       {
-        eyebrow: "02 / API / Build",
+        eyebrow: "02 AI Studio (바이브코딩)",
         title: "AI가 개발을 돕고 앱이 다시 AI를 호출하는 구조",
         imageSrc: `${basePath}/slide-2.png`,
         imageAlt: "Enterprise AI Roadmap 슬라이드 2장. AI Studio Build와 API를 활용해 앱을 만들고 서비스가 다시 AI를 호출하는 구조를 설명합니다."
       },
       {
-        eyebrow: "03 / CLI / Agent",
+        eyebrow: "03 Hi-D Code (Agent)",
         title: "Codex와 Cline으로 시연하는 에이전틱 워크플로우",
         imageSrc: `${basePath}/slide-3.png`,
         imageAlt: "Enterprise AI Roadmap 슬라이드 3장. Codex와 Cline을 통해 계획, 도구 호출, 실행, 검증을 잇는 CLI Agent 단계를 설명합니다."
@@ -4287,12 +4705,18 @@ async function openClip(clipKey, updateHash = false) {
   closeSlideDeck();
 
   const data = await api(`/api/clips/${encodeURIComponent(normalized)}`);
-  const clip = data.clip;
+  const sidebarClip = state.clipMap.get(normalized) || null;
+  const clip = applyClientClipDisplay(data.clip, sidebarClip);
+  const visibleContentHtml = rewriteClientClipHtml(
+    normalized,
+    clip.contentHtml || "<p>콘텐츠가 없습니다.</p>"
+  );
 
-  state.currentClipKey = clip.clipKey;
+  state.currentClipKey = normalized;
   state.currentChapterId = clip.chapterId || "";
   state.currentChapterNum = clip.chapterNum || "";
   state.currentChapterTitle = clip.chapterTitle || "";
+  state.currentVisibleContentHtml = visibleContentHtml;
   if (state.currentChapterId) {
     state.expandedChapters.add(state.currentChapterId);
   }
@@ -4304,7 +4728,7 @@ async function openClip(clipKey, updateHash = false) {
   }
 
   renderClipHeader(clip);
-  renderClipBodyContent(clip.contentHtml || "<p>콘텐츠가 없습니다.</p>");
+  renderClipBodyContent(visibleContentHtml);
   updateMarkCompleteButton();
   renderSidebar();
 
@@ -4319,14 +4743,18 @@ async function openClip(clipKey, updateHash = false) {
     await loadSidebarSourceForCurrentClip();
   }
 
-  if (updateHash || window.location.hash !== `#${clip.clipKey}`) {
-    window.location.hash = `#${clip.clipKey}`;
+  if (updateHash || window.location.hash !== `#${normalized}`) {
+    window.location.hash = `#${normalized}`;
   }
 }
 
 async function loadChaptersAndDefaultClip() {
   const data = await api("/api/chapters");
-  state.chapters = data.chapters || [];
+  const rawChapters = data.chapters || [];
+  state.catalogPatched = needsClientCatalogPatch(rawChapters);
+  state.chapters = state.catalogPatched
+    ? buildClientVisibleCatalog(rawChapters)
+    : rawChapters;
   state.clipMap = new Map();
   state.completedSet = new Set();
 
@@ -4519,15 +4947,19 @@ async function loadEditorSourceForCurrentClip() {
   setEditorStatus("원본을 불러오는 중...");
   try {
     const data = await api(`/api/admin/clip-source/${encodeURIComponent(state.currentClipKey)}`);
-    const rawHtml = String(data.source?.contentHtml || "");
     state.editorSourceClipKey = data.clip?.clipKey || state.currentClipKey;
-    state.editorSourceHtml = rawHtml;
+    const serverHtml = String(data.source?.contentHtml || "");
+    const visibleHtml =
+      state.currentVisibleContentHtml && state.currentClipKey === state.editorSourceClipKey
+        ? state.currentVisibleContentHtml
+        : rewriteClientClipHtml(state.editorSourceClipKey, serverHtml);
+    state.editorSourceHtml = visibleHtml;
     state.editorDirty = false;
-    el.contentEditorInput.value = rawHtml;
+    el.contentEditorInput.value = visibleHtml;
     el.contentEditorPath.textContent = data.source?.contentPath || "-";
     onClearContentEmbed();
-    renderEditorPreview(rawHtml);
-    renderClipBodyContent(rawHtml, { liveEditEnabled: true });
+    renderEditorPreview(visibleHtml);
+    renderClipBodyContent(visibleHtml, { liveEditEnabled: true });
     setEditorStatus("현재 클립 원본을 불러왔습니다.");
     await loadContentAssetsForCurrentClip();
   } catch (error) {
@@ -4561,12 +4993,13 @@ async function loadSidebarSourceForCurrentClip() {
   try {
     const data = await api(`/api/admin/sidebar-source/${encodeURIComponent(state.currentClipKey)}`);
     const sidebar = data.sidebar || {};
+    const visible = currentVisibleSidebarState();
     state.sidebarSourceClipKey = data.clip?.clipKey || state.currentClipKey;
     state.sidebarSourceState = {
-      chapterTitle: normalizeWs(sidebar.chapterTitle || ""),
-      chapterTime: normalizeWs(sidebar.chapterTime || ""),
-      clipTitle: normalizeWs(sidebar.clipTitle || ""),
-      clipType: normalizeWs(sidebar.clipType || "")
+      chapterTitle: visible.chapterTitle || normalizeWs(sidebar.chapterTitle || ""),
+      chapterTime: visible.chapterTime || normalizeWs(sidebar.chapterTime || ""),
+      clipTitle: visible.clipTitle || normalizeWs(sidebar.clipTitle || ""),
+      clipType: visible.clipType || normalizeWs(sidebar.clipType || "")
     };
     state.sidebarDirty = false;
     el.sidebarChapterTitleInput.value = state.sidebarSourceState.chapterTitle;
@@ -4578,14 +5011,15 @@ async function loadSidebarSourceForCurrentClip() {
         .filter(Boolean)
         .join(" | ") || "-";
     renderSidebarMetaPreview();
-    setSidebarEditorStatus("현재 클립의 사이드바 메타를 불러왔습니다.");
+    setSidebarEditorStatus("현재 화면 기준 사이드바 메타를 불러왔습니다.");
   } catch (error) {
+    const visible = currentVisibleSidebarState();
     state.sidebarSourceClipKey = state.currentClipKey || "";
     state.sidebarSourceState = {
-      chapterTitle: normalizeWs(state.currentChapterTitle || ""),
-      chapterTime: "",
-      clipTitle: "",
-      clipType: "개념"
+      chapterTitle: visible.chapterTitle || normalizeWs(state.currentChapterTitle || ""),
+      chapterTime: visible.chapterTime || "",
+      clipTitle: visible.clipTitle || "",
+      clipType: visible.clipType || "개념"
     };
     el.sidebarChapterTitleInput.value = state.sidebarSourceState.chapterTitle;
     el.sidebarChapterTimeInput.value = state.sidebarSourceState.chapterTime;
@@ -4632,9 +5066,11 @@ async function onToggleEditMode() {
     ) {
       return;
     }
-    renderClipBodyContent(state.editorSourceHtml || el.contentEditorInput?.value || "", {
-      liveEditEnabled: false
-    });
+    renderClipBodyContent(
+      state.currentVisibleContentHtml ||
+        editorLiveRenderHtml(state.editorSourceHtml || el.contentEditorInput?.value || ""),
+      { liveEditEnabled: false }
+    );
     resetContentEditor();
     updateEditorVisibility();
     return;
@@ -4699,7 +5135,8 @@ async function uploadContentAssets() {
   if (!state.isAdmin || !state.currentClipKey) return;
   const files = Array.from(el.contentAssetInput?.files || []);
   if (!files.length) {
-    setContentAssetStatus("업로드할 파일을 먼저 선택해 주세요.", true);
+    setContentAssetStatus("업로드할 파일을 먼저 선택해 주세요.");
+    el.contentAssetInput?.click();
     return;
   }
 
@@ -4721,6 +5158,7 @@ async function uploadContentAssets() {
   if (el.contentAssetInput) {
     el.contentAssetInput.value = "";
   }
+  updateContentAssetSelectionSummary([]);
   await loadContentAssetsForCurrentClip();
   const lastUploaded = uploaded[uploaded.length - 1];
   if (lastUploaded) {
@@ -4748,6 +5186,9 @@ async function saveEditorSource() {
     return;
   }
 
+  if (el.saveContentEditorTopBtn) {
+    el.saveContentEditorTopBtn.disabled = true;
+  }
   setEditorStatus("저장 중...");
   try {
     const result = await api(`/api/admin/clip-source/${encodeURIComponent(state.currentClipKey)}`, {
@@ -4758,12 +5199,18 @@ async function saveEditorSource() {
     state.editorDirty = false;
     await loadChaptersAndDefaultClip();
     renderEditorPreview(contentHtml);
+    if (state.editModeOpen && state.currentClipKey === state.editorSourceClipKey) {
+      state.currentVisibleContentHtml = editorLiveRenderHtml(contentHtml);
+      renderClipBodyContent(state.currentVisibleContentHtml, { liveEditEnabled: true });
+    }
     await loadPublishStatus();
     setEditorStatus(
       `저장 완료: ${new Date(result.savedAt).toLocaleString()} · 로컬 원본과 메타는 동기화되었습니다. Pages 반영은 배포 패널에서 commit + push 하세요.`
     );
   } catch (error) {
     setEditorStatus(error.message, true);
+  } finally {
+    updateEditorVisibility();
   }
 }
 
@@ -4791,13 +5238,23 @@ async function saveSidebarSource() {
     state.sidebarSourceState = { ...draft };
     state.sidebarDirty = false;
     await loadChaptersAndDefaultClip();
+    applySidebarDraftToClientState(draft);
+    renderSidebar();
     renderSidebarMetaPreview();
     await loadPublishStatus();
     setSidebarEditorStatus(
       `저장 완료: ${new Date(result.savedAt).toLocaleString()} · 사이드바 카탈로그는 로컬에 반영되었습니다. Pages 반영은 배포 패널에서 commit + push 하세요.`
     );
   } catch (error) {
-    setSidebarEditorStatus(error.message, true);
+    const message = String(error?.message || "");
+    if (message.includes("서버 오류")) {
+      setSidebarEditorStatus(
+        "서버 오류가 발생했습니다. 이동된 클립의 사이드바 저장 로직을 수정했고, 현재 localhost 서버가 예전 코드로 떠 있으면 재시작 후 다시 시도해 주세요.",
+        true
+      );
+      return;
+    }
+    setSidebarEditorStatus(message, true);
   }
 }
 
@@ -5272,6 +5729,7 @@ async function onLogout() {
   state.currentChapterId = "";
   state.currentChapterNum = "";
   state.currentChapterTitle = "";
+  state.currentVisibleContentHtml = "";
   state.expandedChapters = new Set();
   closeSlideDeck();
   state.taskPanelOpen = false;
@@ -5307,13 +5765,18 @@ function bindEvents() {
   });
   el.noteText.addEventListener("input", renderNotePreview);
   el.contentEditorInput?.addEventListener("input", () => {
-    state.editorDirty = el.contentEditorInput.value !== state.editorSourceHtml;
-    renderEditorPreview(el.contentEditorInput.value || "");
+    const currentHtml = String(el.contentEditorInput.value || "");
+    state.editorDirty = currentHtml !== state.editorSourceHtml;
+    renderEditorPreview(currentHtml);
+    if (state.editModeOpen && state.currentClipKey === state.editorSourceClipKey) {
+      renderClipBodyContent(editorLiveRenderHtml(currentHtml), { liveEditEnabled: true });
+    }
     if (state.editorDirty) {
       setEditorStatus("저장 전 미리보기 상태입니다.");
     } else {
       setEditorStatus("원본과 동일합니다.");
     }
+    updateEditorVisibility();
   });
   el.contentEditorInput?.addEventListener("scroll", syncContentEditorScroll);
   el.contentEditorPreview?.addEventListener("click", onContentEditorPreviewClick);
@@ -5322,11 +5785,15 @@ function bindEvents() {
   el.reloadContentAssetsBtn?.addEventListener("click", () => {
     reloadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
   });
+  el.chooseContentAssetsBtn?.addEventListener("click", () => {
+    el.contentAssetInput?.click();
+  });
   el.uploadContentAssetsBtn?.addEventListener("click", () => {
     uploadContentAssets().catch((error) => setContentAssetStatus(error.message, true));
   });
   el.contentAssetInput?.addEventListener("change", () => {
     const files = Array.from(el.contentAssetInput.files || []);
+    updateContentAssetSelectionSummary(files);
     if (!files.length) return;
     const totalBytes = files.reduce((sum, file) => sum + Number(file.size || 0), 0);
     setContentAssetStatus(`선택됨: ${files.length}건 · ${formatBytes(totalBytes)}`);
@@ -5501,6 +5968,10 @@ window.copyPrompt = async function copyPrompt(button, targetId) {
   const target = document.getElementById(targetId);
   if (!target) return;
   await copyTextWithUiFeedback(button, target.textContent || "");
+};
+
+window.copyResourceLink = async function copyResourceLink(button, url) {
+  await copyTextWithUiFeedback(button, url || "");
 };
 
 window.copyInlinePrompt = async function copyInlinePrompt(button) {

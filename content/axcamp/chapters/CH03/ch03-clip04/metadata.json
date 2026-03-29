@@ -1,32 +1,47 @@
 {
-  "route": "#ch03-clip04",
-  "url": "https://lg.cmdspace.work/axcamp#ch03-clip04",
+  "route": "#ch02-clip05",
+  "url": "https://lg.cmdspace.work/axcamp#ch02-clip05",
   "pageTitle": "AX Camp for Leaders | LG",
-  "clipTitle": "ChatGPT 소개 및 접속 방법",
-  "overview": "ChatGPT 접속과 Deep Research, GPTs/Pulse를 실습 관점에서 빠르게 확인하는 플랫폼 소개 클립.",
+  "clipTitle": "ChatGPT 및 GPTs 소개",
+  "overview": "ChatGPT는 일반 채팅만 하는 도구가 아니라, Deep Research와 GPTs를 통해 반복 업무를 구조화할 수 있는 작업 플랫폼입니다. 이번 클립에서는 GPTs를 짧게 소개하고, AI 인프라 수혜주 심층 리서치 결과를 PPT로 정리하는 실습 흐름을 단계별로 확인합니다.",
   "badges": [
     "~20분",
-    "CH 03",
+    "CH 02",
     "플랫폼"
   ],
   "links": [
     {
       "href": "https://chatgpt.com/",
       "absolute": "https://chatgpt.com/",
-      "text": "ChatGPT 접속"
+      "text": "chatgpt.com"
     },
     {
-      "href": "#ch04-clip01",
-      "absolute": "https://lg.cmdspace.work/axcamp#ch04-clip01",
-      "text": "NotebookLM로 이동"
+      "href": "https://chatgpt.com/g/g-69c236b0ec2481919676d5fc2549d675-simceungriseoci-peurompeuteu-saengseonggi",
+      "absolute": "https://chatgpt.com/g/g-69c236b0ec2481919676d5fc2549d675-simceungriseoci-peurompeuteu-saengseonggi",
+      "text": "심층 리서치 프롬프트 생성기 열기"
+    },
+    {
+      "href": "https://chatgpt.com/g/g-69c8fcb1ca6081918c05318436e0252d-peurompeuteusaengseonggi",
+      "absolute": "https://chatgpt.com/g/g-69c8fcb1ca6081918c05318436e0252d-peurompeuteusaengseonggi",
+      "text": "구조화된 프롬프트 생성기 열기"
+    },
+    {
+      "href": "https://chatgpt.com/g/g-69c9412d45d08191b8f7611850f5e4d7-munseo-tempeulriseul-json-euro-bbobajuneun-gpts",
+      "absolute": "https://chatgpt.com/g/g-69c9412d45d08191b8f7611850f5e4d7-munseo-tempeulriseul-json-euro-bbobajuneun-gpts",
+      "text": "문서 템플릿 추출기 열기"
+    },
+    {
+      "href": "https://docs.google.com/presentation/d/1ipeE5ARXYCDoqvEPU-6hB1HOYOyVE5lt/export/pptx",
+      "absolute": "https://docs.google.com/presentation/d/1ipeE5ARXYCDoqvEPU-6hB1HOYOyVE5lt/export/pptx",
+      "text": "예시 PPTX 다운로드"
     }
   ],
   "sections": [
     {
       "index": 1,
-      "title": "접속과 시작",
-      "text": "ChatGPT 접속과 기본 화면을 빠르게 익히고, 자료를 붙여 대화하는 흐름을 확인합니다.",
-      "html": "<p>ChatGPT 접속과 기본 화면을 빠르게 익히고, 자료를 붙여 대화하는 흐름을 확인합니다.</p>",
+      "title": "1. ChatGPT에서 먼저 볼 것",
+      "text": "- chatgpt.com에 접속해 로그인합니다.\n\n- 일반 채팅, Deep Research, GPTs처럼 작업 유형이 어떻게 나뉘는지 먼저 확인합니다.\n\n- 오늘은 단순한 질문보다, 반복 가능한 조사와 문서화 흐름을 만드는 관점으로 ChatGPT를 봅니다.",
+      "html": "<ol style=\"margin:0; padding-left:1.2rem; line-height:1.8; color:var(--text-body)\">\n      <li><a href=\"https://chatgpt.com/\" target=\"_blank\" rel=\"noopener noreferrer\">chatgpt.com</a>에 접속해 로그인합니다.</li>\n      <li>일반 채팅, Deep Research, GPTs처럼 <strong>작업 유형이 어떻게 나뉘는지</strong> 먼저 확인합니다.</li>\n      <li>오늘은 단순한 질문보다, <strong>반복 가능한 조사와 문서화 흐름</strong>을 만드는 관점으로 ChatGPT를 봅니다.</li>\n    </ol>",
       "images": [],
       "iframes": [],
       "audios": [],
@@ -34,9 +49,9 @@
     },
     {
       "index": 2,
-      "title": "Deep Research",
-      "text": "심층 리서치는 여러 단계를 거쳐 자료를 모으고 구조화하는 방식입니다.",
-      "html": "<p>심층 리서치는 여러 단계를 거쳐 자료를 모으고 구조화하는 방식입니다.</p>",
+      "title": "2. GPTs를 어떻게 이해하면 좋은가",
+      "text": "구분\n일반 ChatGPT\nGPTs\n\n사용 방식\n대화마다 역할과 형식을 다시 설명\n자주 쓰는 역할과 지시문을 미리 저장해 재사용\n\n잘 맞는 일\n빠른 질의응답, 초안 작성, 아이디어 정리\n반복 리서치, 프롬프트 생성, 문서 템플릿 작업\n\n오늘 수업 연결\n심층 리서치 결과를 직접 확인\n리서치 프롬프트 만들기, 구조화된 PPT 출력 흐름 고정\n\n한 줄 정리\n\nGPTs는 ChatGPT 안에 자주 쓰는 역할과 출력 형식을 저장해 두는 작업 전용 비서입니다. Gemini의 Gems와 같은 맥락으로 이해하면 됩니다.",
+      "html": "<table class=\"comparison-table\">\n      <thead>\n        <tr>\n          <th>구분</th>\n          <th>일반 ChatGPT</th>\n          <th>GPTs</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>사용 방식</td>\n          <td>대화마다 역할과 형식을 다시 설명</td>\n          <td>자주 쓰는 역할과 지시문을 미리 저장해 재사용</td>\n        </tr>\n        <tr>\n          <td>잘 맞는 일</td>\n          <td>빠른 질의응답, 초안 작성, 아이디어 정리</td>\n          <td>반복 리서치, 프롬프트 생성, 문서 템플릿 작업</td>\n        </tr>\n        <tr>\n          <td>오늘 수업 연결</td>\n          <td>심층 리서치 결과를 직접 확인</td>\n          <td>리서치 프롬프트 만들기, 구조화된 PPT 출력 흐름 고정</td>\n        </tr>\n      </tbody>\n    </table>\n    <div class=\"tip-block\" style=\"margin-top:14px\">\n      <div class=\"tip-block-title\">한 줄 정리</div>\n      <div class=\"tip-block-content\">GPTs는 ChatGPT 안에 자주 쓰는 역할과 출력 형식을 저장해 두는 <strong>작업 전용 비서</strong>입니다. Gemini의 Gems와 같은 맥락으로 이해하면 됩니다.</div>\n    </div>",
       "images": [],
       "iframes": [],
       "audios": [],
@@ -44,9 +59,9 @@
     },
     {
       "index": 3,
-      "title": "GPTs와 Pulse",
-      "text": "GPTs는 반복 업무를 위한 맞춤형 비서이고, Pulse는 트렌드 모니터링 흐름입니다.",
-      "html": "<p>GPTs는 반복 업무를 위한 맞춤형 비서이고, Pulse는 트렌드 모니터링 흐름입니다.</p>",
+      "title": "3. 이번에 소개하는 GPTs",
+      "text": "GPT\n무엇을 해주나\n언제 쓰나\n\n심층 리서치 프롬프트 생성기\n조사 주제와 독자, 목적을 받아 Deep Research용 질문을 설계\n리서치를 시작하기 전에 조사 프롬프트를 잘 만들고 싶을 때\n\n구조화된 프롬프트 생성기\n원하는 입력과 출력 형식을 반영해 구조화된 프롬프트로 재정리\n리서치 결과를 문서, 보고서, 슬라이드 형식으로 바꾸고 싶을 때\n\n문서 템플릿 추출기\nPPTX나 문서를 보고 JSON 구조의 템플릿으로 변환\n기존 산출물 형식을 재사용 가능한 템플릿으로 뽑고 싶을 때\n\n심층 리서치 프롬프트 생성기 열기\n구조화된 프롬프트 생성기 열기\n문서 템플릿 추출기 열기",
+      "html": "<table class=\"comparison-table\">\n      <thead>\n        <tr>\n          <th>GPT</th>\n          <th>무엇을 해주나</th>\n          <th>언제 쓰나</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td><strong>심층 리서치 프롬프트 생성기</strong></td>\n          <td>조사 주제와 독자, 목적을 받아 Deep Research용 질문을 설계</td>\n          <td>리서치를 시작하기 전에 조사 프롬프트를 잘 만들고 싶을 때</td>\n        </tr>\n        <tr>\n          <td><strong>구조화된 프롬프트 생성기</strong></td>\n          <td>원하는 입력과 출력 형식을 반영해 구조화된 프롬프트로 재정리</td>\n          <td>리서치 결과를 문서, 보고서, 슬라이드 형식으로 바꾸고 싶을 때</td>\n        </tr>\n        <tr>\n          <td><strong>문서 템플릿 추출기</strong></td>\n          <td>PPTX나 문서를 보고 JSON 구조의 템플릿으로 변환</td>\n          <td>기존 산출물 형식을 재사용 가능한 템플릿으로 뽑고 싶을 때</td>\n        </tr>\n      </tbody>\n    </table>\n    <div style=\"display:flex;gap:10px;flex-wrap:wrap;margin-top:14px\">\n      <a class=\"slide-briefing-link\" href=\"https://chatgpt.com/g/g-69c236b0ec2481919676d5fc2549d675-simceungriseoci-peurompeuteu-saengseonggi\" target=\"_blank\" rel=\"noopener noreferrer\">심층 리서치 프롬프트 생성기 열기</a>\n      <a class=\"slide-briefing-link\" href=\"https://chatgpt.com/g/g-69c8fcb1ca6081918c05318436e0252d-peurompeuteusaengseonggi\" target=\"_blank\" rel=\"noopener noreferrer\">구조화된 프롬프트 생성기 열기</a>\n      <a class=\"slide-briefing-link\" href=\"https://chatgpt.com/g/g-69c9412d45d08191b8f7611850f5e4d7-munseo-tempeulriseul-json-euro-bbobajuneun-gpts\" target=\"_blank\" rel=\"noopener noreferrer\">문서 템플릿 추출기 열기</a>\n    </div>",
       "images": [],
       "iframes": [],
       "audios": [],
@@ -54,18 +69,40 @@
     },
     {
       "index": 4,
-      "title": "실습 포인트",
-      "text": "Gemini에서 익힌 프롬프트 구조를 ChatGPT에도 그대로 적용합니다.",
-      "html": "<p>Gemini에서 익힌 프롬프트 구조를 ChatGPT에도 그대로 적용합니다.</p>",
+      "title": "4. 단계별 실습: 리서치 결과를 PPT로 바꾸기",
+      "text": "여기서는 AI 인프라 수혜주 심층 리서치를 예시로, 템플릿 추출부터 최종 PPT 초안 생성까지 연결해 봅니다.\n\n예시 PPTX 다운로드\n\n단계\n무엇을 하나\n사용 도구\n\nStep 1\n예시 PPTX를 내려받아 기존 슬라이드 구조를 확인합니다.\n예시 PPTX 파일\n\nStep 2\nPPTX를 업로드해 슬라이드 구조를 JSON 템플릿으로 추출합니다.\n문서 템플릿 추출기\n\nStep 3\nAI 인프라 수혜주에 대한 Deep Research용 질문을 생성합니다.\n심층 리서치 프롬프트 생성기\n\nStep 4\n생성된 질문으로 Deep Research를 수행해 핵심 결과를 확보합니다.\nChatGPT Deep Research\n\nStep 5\nJSON 템플릿과 리서치 결과를 합쳐 PPT 출력용 구조화 프롬프트를 만듭니다.\n구조화된 프롬프트 생성기\n\nStep 6\n최종 프롬프트를 ChatGPT에 넣어 슬라이드별 텍스트 초안을 생성합니다.\nChatGPT",
+      "html": "<p style=\"font-size:0.85rem; color:var(--text-secondary); margin-bottom:14px;\">\n      여기서는 <strong>AI 인프라 수혜주 심층 리서치</strong>를 예시로, 템플릿 추출부터 최종 PPT 초안 생성까지 연결해 봅니다.\n    </p>\n    <div style=\"display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px\">\n      <a class=\"slide-briefing-link\" href=\"https://docs.google.com/presentation/d/1ipeE5ARXYCDoqvEPU-6hB1HOYOyVE5lt/export/pptx\" onclick=\"downloadFile('https://docs.google.com/presentation/d/1ipeE5ARXYCDoqvEPU-6hB1HOYOyVE5lt/export/pptx','example-template.pptx',event)\">예시 PPTX 다운로드</a>\n    </div>\n    <table class=\"comparison-table\">\n      <thead>\n        <tr>\n          <th>단계</th>\n          <th>무엇을 하나</th>\n          <th>사용 도구</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>Step 1</td>\n          <td>예시 PPTX를 내려받아 기존 슬라이드 구조를 확인합니다.</td>\n          <td>예시 PPTX 파일</td>\n        </tr>\n        <tr>\n          <td>Step 2</td>\n          <td>PPTX를 업로드해 슬라이드 구조를 JSON 템플릿으로 추출합니다.</td>\n          <td>문서 템플릿 추출기</td>\n        </tr>\n        <tr>\n          <td>Step 3</td>\n          <td>AI 인프라 수혜주에 대한 Deep Research용 질문을 생성합니다.</td>\n          <td>심층 리서치 프롬프트 생성기</td>\n        </tr>\n        <tr>\n          <td>Step 4</td>\n          <td>생성된 질문으로 Deep Research를 수행해 핵심 결과를 확보합니다.</td>\n          <td>ChatGPT Deep Research</td>\n        </tr>\n        <tr>\n          <td>Step 5</td>\n          <td>JSON 템플릿과 리서치 결과를 합쳐 PPT 출력용 구조화 프롬프트를 만듭니다.</td>\n          <td>구조화된 프롬프트 생성기</td>\n        </tr>\n        <tr>\n          <td>Step 6</td>\n          <td>최종 프롬프트를 ChatGPT에 넣어 슬라이드별 텍스트 초안을 생성합니다.</td>\n          <td>ChatGPT</td>\n        </tr>\n      </tbody>\n    </table>",
+      "images": [],
+      "iframes": [],
+      "audios": [],
+      "videos": []
+    },
+    {
+      "index": 5,
+      "title": "5. 바로 복사해 쓰는 요청 예시",
+      "text": "심층 리서치 프롬프트 생성기 요청복사\n\n기술에 익숙한 임원진을 위한 심층 리서치 프롬프트를 만들어 주세요.\n\n주제: AI 인프라 수혜주 비교\n대상 기업: NVIDIA, Broadcom, TSMC, SK hynix, Vertiv\n목적: 향후 12~24개월 관점에서 어떤 기업이 가장 구조적 수혜를 받을지 비교\n원하는 산출물: 1페이지 투자 메모 + 기업별 비교 표 + 리스크 3개 + 추가 확인 질문 3개\n\n구조화된 프롬프트 생성기 요청복사\n\n문서 템플릿 추출기로 얻은 JSON 템플릿과 심층 리서치 결과를 입력하면, 이를 PPT 초안으로 출력하는 구조화 프롬프트를 만들어 주세요.\n\n목적:\n- 임원 보고용 PPT 텍스트 초안 생성\n- 각 슬라이드는 제목, 핵심 메시지, 데이터 포인트, 시사점으로 구성\n- 장표 수는 산출물당 1장씩.\n\n최종 PPT 생성 요청복사\n\n아래 두 자료를 바탕으로 임원 보고용 PPT 초안을 작성해 주세요.\n\n자료 1: 문서 템플릿 추출기로 뽑은 JSON 템플릿\n자료 2: AI 인프라 수혜주 심층 리서치 결과\n\n작성 조건:\n- 슬라이드 구조는 JSON 템플릿을 참고한다.\n- 각 슬라이드는 제목, 핵심 메시지, 근거 데이터, 시사점을 포함한다.\n- 불필요한 수사는 줄이고, 투자위원회 메모 톤으로 쓴다.\n- 마지막 장에는 권고안과 추가 확인 질문을 넣는다.",
+      "html": "<div class=\"prompt-block\">\n      <div class=\"prompt-header\"><span class=\"prompt-label\">심층 리서치 프롬프트 생성기 요청</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'ch02-chatgpt-gpt1')\">복사</button></div>\n      <div class=\"prompt-content\" id=\"ch02-chatgpt-gpt1\">기술에 익숙한 임원진을 위한 심층 리서치 프롬프트를 만들어 주세요.\n\n주제: AI 인프라 수혜주 비교\n대상 기업: NVIDIA, Broadcom, TSMC, SK hynix, Vertiv\n목적: 향후 12~24개월 관점에서 어떤 기업이 가장 구조적 수혜를 받을지 비교\n원하는 산출물: 1페이지 투자 메모 + 기업별 비교 표 + 리스크 3개 + 추가 확인 질문 3개\n</div>\n    </div>\n\n    <div class=\"prompt-block\">\n      <div class=\"prompt-header\"><span class=\"prompt-label\">구조화된 프롬프트 생성기 요청</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'ch02-chatgpt-gpt2')\">복사</button></div>\n      <div class=\"prompt-content\" id=\"ch02-chatgpt-gpt2\">문서 템플릿 추출기로 얻은 JSON 템플릿과 심층 리서치 결과를 입력하면, 이를 PPT 초안으로 출력하는 구조화 프롬프트를 만들어 주세요.\n\n목적:\n- 임원 보고용 PPT 텍스트 초안 생성\n- 각 슬라이드는 제목, 핵심 메시지, 데이터 포인트, 시사점으로 구성\n- 장표 수는 산출물당 1장씩.\n</div>\n    </div>\n\n    <div class=\"prompt-block\">\n      <div class=\"prompt-header\"><span class=\"prompt-label\">최종 PPT 생성 요청</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'ch02-chatgpt-gpt3')\">복사</button></div>\n      <div class=\"prompt-content\" id=\"ch02-chatgpt-gpt3\">아래 두 자료를 바탕으로 임원 보고용 PPT 초안을 작성해 주세요.\n\n자료 1: 문서 템플릿 추출기로 뽑은 JSON 템플릿\n자료 2: AI 인프라 수혜주 심층 리서치 결과\n\n작성 조건:\n- 슬라이드 구조는 JSON 템플릿을 참고한다.\n- 각 슬라이드는 제목, 핵심 메시지, 근거 데이터, 시사점을 포함한다.\n- 불필요한 수사는 줄이고, 투자위원회 메모 톤으로 쓴다.\n- 마지막 장에는 권고안과 추가 확인 질문을 넣는다.\n</div>\n    </div>",
       "images": [],
       "iframes": [],
       "audios": [],
       "videos": []
     }
   ],
-  "prompts": [],
+  "prompts": [
+    {
+      "label": "심층 리서치 프롬프트 생성기 요청"
+    },
+    {
+      "label": "구조화된 프롬프트 생성기 요청"
+    },
+    {
+      "label": "최종 PPT 생성 요청"
+    }
+  ],
   "images": [],
   "iframes": [],
   "audios": [],
-  "videos": []
+  "videos": [],
+  "html": "<div class=\"clip-header\">\n  <div class=\"clip-badges\">\n    <span class=\"clip-badge time\">~20분</span>\n    <span class=\"clip-badge chapter\">CH 02</span>\n    <span class=\"clip-badge type-platform\">플랫폼</span>\n  </div>\n  <h1 class=\"clip-title\">ChatGPT 및 GPTs 소개</h1>\n</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-overview\">\n    ChatGPT는 일반 채팅만 하는 도구가 아니라, <strong>Deep Research</strong>와 <strong>GPTs</strong>를 통해 반복 업무를 구조화할 수 있는 작업 플랫폼입니다.\n    이번 클립에서는 GPTs를 짧게 소개하고, <strong>AI 인프라 수혜주 심층 리서치 결과를 PPT로 정리하는 실습 흐름</strong>을 단계별로 확인합니다.\n  </div>\n</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">1. ChatGPT에서 먼저 볼 것</div>\n  <div class=\"clip-section-content\">\n    <ol style=\"margin:0; padding-left:1.2rem; line-height:1.8; color:var(--text-body)\">\n      <li><a href=\"https://chatgpt.com/\" target=\"_blank\" rel=\"noopener noreferrer\">chatgpt.com</a>에 접속해 로그인합니다.</li>\n      <li>일반 채팅, Deep Research, GPTs처럼 <strong>작업 유형이 어떻게 나뉘는지</strong> 먼저 확인합니다.</li>\n      <li>오늘은 단순한 질문보다, <strong>반복 가능한 조사와 문서화 흐름</strong>을 만드는 관점으로 ChatGPT를 봅니다.</li>\n    </ol>\n  </div>\n</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">2. GPTs를 어떻게 이해하면 좋은가</div>\n  <div class=\"clip-section-content\">\n    <table class=\"comparison-table\">\n      <thead>\n        <tr>\n          <th>구분</th>\n          <th>일반 ChatGPT</th>\n          <th>GPTs</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>사용 방식</td>\n          <td>대화마다 역할과 형식을 다시 설명</td>\n          <td>자주 쓰는 역할과 지시문을 미리 저장해 재사용</td>\n        </tr>\n        <tr>\n          <td>잘 맞는 일</td>\n          <td>빠른 질의응답, 초안 작성, 아이디어 정리</td>\n          <td>반복 리서치, 프롬프트 생성, 문서 템플릿 작업</td>\n        </tr>\n        <tr>\n          <td>오늘 수업 연결</td>\n          <td>심층 리서치 결과를 직접 확인</td>\n          <td>리서치 프롬프트 만들기, 구조화된 PPT 출력 흐름 고정</td>\n        </tr>\n      </tbody>\n    </table>\n    <div class=\"tip-block\" style=\"margin-top:14px\">\n      <div class=\"tip-block-title\">한 줄 정리</div>\n      <div class=\"tip-block-content\">GPTs는 ChatGPT 안에 자주 쓰는 역할과 출력 형식을 저장해 두는 <strong>작업 전용 비서</strong>입니다. Gemini의 Gems와 같은 맥락으로 이해하면 됩니다.</div>\n    </div>\n  </div>\n</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">3. 이번에 소개하는 GPTs</div>\n  <div class=\"clip-section-content\">\n    <table class=\"comparison-table\">\n      <thead>\n        <tr>\n          <th>GPT</th>\n          <th>무엇을 해주나</th>\n          <th>언제 쓰나</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td><strong>심층 리서치 프롬프트 생성기</strong></td>\n          <td>조사 주제와 독자, 목적을 받아 Deep Research용 질문을 설계</td>\n          <td>리서치를 시작하기 전에 조사 프롬프트를 잘 만들고 싶을 때</td>\n        </tr>\n        <tr>\n          <td><strong>구조화된 프롬프트 생성기</strong></td>\n          <td>원하는 입력과 출력 형식을 반영해 구조화된 프롬프트로 재정리</td>\n          <td>리서치 결과를 문서, 보고서, 슬라이드 형식으로 바꾸고 싶을 때</td>\n        </tr>\n        <tr>\n          <td><strong>문서 템플릿 추출기</strong></td>\n          <td>PPTX나 문서를 보고 JSON 구조의 템플릿으로 변환</td>\n          <td>기존 산출물 형식을 재사용 가능한 템플릿으로 뽑고 싶을 때</td>\n        </tr>\n      </tbody>\n    </table>\n    <div style=\"display:flex;gap:10px;flex-wrap:wrap;margin-top:14px\">\n      <a class=\"slide-briefing-link\" href=\"https://chatgpt.com/g/g-69c236b0ec2481919676d5fc2549d675-simceungriseoci-peurompeuteu-saengseonggi\" target=\"_blank\" rel=\"noopener noreferrer\">심층 리서치 프롬프트 생성기 열기</a>\n      <a class=\"slide-briefing-link\" href=\"https://chatgpt.com/g/g-69c8fcb1ca6081918c05318436e0252d-peurompeuteusaengseonggi\" target=\"_blank\" rel=\"noopener noreferrer\">구조화된 프롬프트 생성기 열기</a>\n      <a class=\"slide-briefing-link\" href=\"https://chatgpt.com/g/g-69c9412d45d08191b8f7611850f5e4d7-munseo-tempeulriseul-json-euro-bbobajuneun-gpts\" target=\"_blank\" rel=\"noopener noreferrer\">문서 템플릿 추출기 열기</a>\n    </div>\n  </div>\n</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">4. 단계별 실습: 리서치 결과를 PPT로 바꾸기</div>\n  <div class=\"clip-section-content\">\n    <p style=\"font-size:0.85rem; color:var(--text-secondary); margin-bottom:14px;\">\n      여기서는 <strong>AI 인프라 수혜주 심층 리서치</strong>를 예시로, 템플릿 추출부터 최종 PPT 초안 생성까지 연결해 봅니다.\n    </p>\n    <div style=\"display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px\">\n      <a class=\"slide-briefing-link\" href=\"https://docs.google.com/presentation/d/1ipeE5ARXYCDoqvEPU-6hB1HOYOyVE5lt/export/pptx\" onclick=\"downloadFile('https://docs.google.com/presentation/d/1ipeE5ARXYCDoqvEPU-6hB1HOYOyVE5lt/export/pptx','example-template.pptx',event)\">예시 PPTX 다운로드</a>\n    </div>\n    <table class=\"comparison-table\">\n      <thead>\n        <tr>\n          <th>단계</th>\n          <th>무엇을 하나</th>\n          <th>사용 도구</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr>\n          <td>Step 1</td>\n          <td>예시 PPTX를 내려받아 기존 슬라이드 구조를 확인합니다.</td>\n          <td>예시 PPTX 파일</td>\n        </tr>\n        <tr>\n          <td>Step 2</td>\n          <td>PPTX를 업로드해 슬라이드 구조를 JSON 템플릿으로 추출합니다.</td>\n          <td>문서 템플릿 추출기</td>\n        </tr>\n        <tr>\n          <td>Step 3</td>\n          <td>AI 인프라 수혜주에 대한 Deep Research용 질문을 생성합니다.</td>\n          <td>심층 리서치 프롬프트 생성기</td>\n        </tr>\n        <tr>\n          <td>Step 4</td>\n          <td>생성된 질문으로 Deep Research를 수행해 핵심 결과를 확보합니다.</td>\n          <td>ChatGPT Deep Research</td>\n        </tr>\n        <tr>\n          <td>Step 5</td>\n          <td>JSON 템플릿과 리서치 결과를 합쳐 PPT 출력용 구조화 프롬프트를 만듭니다.</td>\n          <td>구조화된 프롬프트 생성기</td>\n        </tr>\n        <tr>\n          <td>Step 6</td>\n          <td>최종 프롬프트를 ChatGPT에 넣어 슬라이드별 텍스트 초안을 생성합니다.</td>\n          <td>ChatGPT</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</div>\n\n<div class=\"clip-section\">\n  <div class=\"clip-section-title\">5. 바로 복사해 쓰는 요청 예시</div>\n  <div class=\"clip-section-content\">\n    <div class=\"prompt-block\">\n      <div class=\"prompt-header\"><span class=\"prompt-label\">심층 리서치 프롬프트 생성기 요청</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'ch02-chatgpt-gpt1')\">복사</button></div>\n      <div class=\"prompt-content\" id=\"ch02-chatgpt-gpt1\">기술에 익숙한 임원진을 위한 심층 리서치 프롬프트를 만들어 주세요.\n\n주제: AI 인프라 수혜주 비교\n대상 기업: NVIDIA, Broadcom, TSMC, SK hynix, Vertiv\n목적: 향후 12~24개월 관점에서 어떤 기업이 가장 구조적 수혜를 받을지 비교\n원하는 산출물: 1페이지 투자 메모 + 기업별 비교 표 + 리스크 3개 + 추가 확인 질문 3개\n</div>\n    </div>\n\n    <div class=\"prompt-block\">\n      <div class=\"prompt-header\"><span class=\"prompt-label\">구조화된 프롬프트 생성기 요청</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'ch02-chatgpt-gpt2')\">복사</button></div>\n      <div class=\"prompt-content\" id=\"ch02-chatgpt-gpt2\">문서 템플릿 추출기로 얻은 JSON 템플릿과 심층 리서치 결과를 입력하면, 이를 PPT 초안으로 출력하는 구조화 프롬프트를 만들어 주세요.\n\n목적:\n- 임원 보고용 PPT 텍스트 초안 생성\n- 각 슬라이드는 제목, 핵심 메시지, 데이터 포인트, 시사점으로 구성\n- 장표 수는 산출물당 1장씩.\n</div>\n    </div>\n\n    <div class=\"prompt-block\">\n      <div class=\"prompt-header\"><span class=\"prompt-label\">최종 PPT 생성 요청</span><button class=\"copy-btn\" onclick=\"copyPrompt(this,'ch02-chatgpt-gpt3')\">복사</button></div>\n      <div class=\"prompt-content\" id=\"ch02-chatgpt-gpt3\">아래 두 자료를 바탕으로 임원 보고용 PPT 초안을 작성해 주세요.\n\n자료 1: 문서 템플릿 추출기로 뽑은 JSON 템플릿\n자료 2: AI 인프라 수혜주 심층 리서치 결과\n\n작성 조건:\n- 슬라이드 구조는 JSON 템플릿을 참고한다.\n- 각 슬라이드는 제목, 핵심 메시지, 근거 데이터, 시사점을 포함한다.\n- 불필요한 수사는 줄이고, 투자위원회 메모 톤으로 쓴다.\n- 마지막 장에는 권고안과 추가 확인 질문을 넣는다.\n</div>\n    </div>\n  </div>\n</div>\n\n<div class=\"tip-block\">\n  <div class=\"tip-block-title\">실습 포인트</div>\n  <div class=\"tip-block-content\">\n    이 클립의 핵심은 ChatGPT를 단순 질의응답 도구로 보는 것이 아니라, <strong>GPTs로 작업 단위를 고정하고 Deep Research 결과를 문서 산출물로 연결하는 플랫폼</strong>으로 이해하는 것입니다.\n  </div>\n</div>\n\n<div class=\"clip-nav-footer\"><a class=\"clip-nav-btn\" href=\"#ch02-clip04\">← AI 비서 만들기: 비즈니스 프롬프팅</a><a class=\"clip-nav-btn\" href=\"#ch03-clip01\">NotebookLM 소개 및 문서 기반 AI 연구 도우미 →</a></div>\n",
+  "text": "~20분\nCH 02\n플랫폼\n\nChatGPT 및 GPTs 소개\n\nChatGPT는 일반 채팅만 하는 도구가 아니라, Deep Research와 GPTs를 통해 반복 업무를 구조화할 수 있는 작업 플랫폼입니다.\n이번 클립에서는 GPTs를 짧게 소개하고, AI 인프라 수혜주 심층 리서치 결과를 PPT로 정리하는 실습 흐름을 단계별로 확인합니다.\n\n1. ChatGPT에서 먼저 볼 것\n\n- chatgpt.com에 접속해 로그인합니다.\n\n- 일반 채팅, Deep Research, GPTs처럼 작업 유형이 어떻게 나뉘는지 먼저 확인합니다.\n\n- 오늘은 단순한 질문보다, 반복 가능한 조사와 문서화 흐름을 만드는 관점으로 ChatGPT를 봅니다.\n\n2. GPTs를 어떻게 이해하면 좋은가\n\n구분\n일반 ChatGPT\nGPTs\n\n사용 방식\n대화마다 역할과 형식을 다시 설명\n자주 쓰는 역할과 지시문을 미리 저장해 재사용\n\n잘 맞는 일\n빠른 질의응답, 초안 작성, 아이디어 정리\n반복 리서치, 프롬프트 생성, 문서 템플릿 작업\n\n오늘 수업 연결\n심층 리서치 결과를 직접 확인\n리서치 프롬프트 만들기, 구조화된 PPT 출력 흐름 고정\n\n한 줄 정리\n\nGPTs는 ChatGPT 안에 자주 쓰는 역할과 출력 형식을 저장해 두는 작업 전용 비서입니다. Gemini의 Gems와 같은 맥락으로 이해하면 됩니다.\n\n3. 이번에 소개하는 GPTs\n\nGPT\n무엇을 해주나\n언제 쓰나\n\n심층 리서치 프롬프트 생성기\n조사 주제와 독자, 목적을 받아 Deep Research용 질문을 설계\n리서치를 시작하기 전에 조사 프롬프트를 잘 만들고 싶을 때\n\n구조화된 프롬프트 생성기\n원하는 입력과 출력 형식을 반영해 구조화된 프롬프트로 재정리\n리서치 결과를 문서, 보고서, 슬라이드 형식으로 바꾸고 싶을 때\n\n문서 템플릿 추출기\nPPTX나 문서를 보고 JSON 구조의 템플릿으로 변환\n기존 산출물 형식을 재사용 가능한 템플릿으로 뽑고 싶을 때\n\n심층 리서치 프롬프트 생성기 열기\n구조화된 프롬프트 생성기 열기\n문서 템플릿 추출기 열기\n\n4. 단계별 실습: 리서치 결과를 PPT로 바꾸기\n\n여기서는 AI 인프라 수혜주 심층 리서치를 예시로, 템플릿 추출부터 최종 PPT 초안 생성까지 연결해 봅니다.\n\n예시 PPTX 다운로드\n\n단계\n무엇을 하나\n사용 도구\n\nStep 1\n예시 PPTX를 내려받아 기존 슬라이드 구조를 확인합니다.\n예시 PPTX 파일\n\nStep 2\nPPTX를 업로드해 슬라이드 구조를 JSON 템플릿으로 추출합니다.\n문서 템플릿 추출기\n\nStep 3\nAI 인프라 수혜주에 대한 Deep Research용 질문을 생성합니다.\n심층 리서치 프롬프트 생성기\n\nStep 4\n생성된 질문으로 Deep Research를 수행해 핵심 결과를 확보합니다.\nChatGPT Deep Research\n\nStep 5\nJSON 템플릿과 리서치 결과를 합쳐 PPT 출력용 구조화 프롬프트를 만듭니다.\n구조화된 프롬프트 생성기\n\nStep 6\n최종 프롬프트를 ChatGPT에 넣어 슬라이드별 텍스트 초안을 생성합니다.\nChatGPT\n\n5. 바로 복사해 쓰는 요청 예시\n\n심층 리서치 프롬프트 생성기 요청복사\n\n기술에 익숙한 임원진을 위한 심층 리서치 프롬프트를 만들어 주세요.\n\n주제: AI 인프라 수혜주 비교\n대상 기업: NVIDIA, Broadcom, TSMC, SK hynix, Vertiv\n목적: 향후 12~24개월 관점에서 어떤 기업이 가장 구조적 수혜를 받을지 비교\n원하는 산출물: 1페이지 투자 메모 + 기업별 비교 표 + 리스크 3개 + 추가 확인 질문 3개\n\n구조화된 프롬프트 생성기 요청복사\n\n문서 템플릿 추출기로 얻은 JSON 템플릿과 심층 리서치 결과를 입력하면, 이를 PPT 초안으로 출력하는 구조화 프롬프트를 만들어 주세요.\n\n목적:\n- 임원 보고용 PPT 텍스트 초안 생성\n- 각 슬라이드는 제목, 핵심 메시지, 데이터 포인트, 시사점으로 구성\n- 장표 수는 산출물당 1장씩.\n\n최종 PPT 생성 요청복사\n\n아래 두 자료를 바탕으로 임원 보고용 PPT 초안을 작성해 주세요.\n\n자료 1: 문서 템플릿 추출기로 뽑은 JSON 템플릿\n자료 2: AI 인프라 수혜주 심층 리서치 결과\n\n작성 조건:\n- 슬라이드 구조는 JSON 템플릿을 참고한다.\n- 각 슬라이드는 제목, 핵심 메시지, 근거 데이터, 시사점을 포함한다.\n- 불필요한 수사는 줄이고, 투자위원회 메모 톤으로 쓴다.\n- 마지막 장에는 권고안과 추가 확인 질문을 넣는다.\n\n실습 포인트\n\n이 클립의 핵심은 ChatGPT를 단순 질의응답 도구로 보는 것이 아니라, GPTs로 작업 단위를 고정하고 Deep Research 결과를 문서 산출물로 연결하는 플랫폼으로 이해하는 것입니다."
 }

@@ -1,9 +1,11 @@
-CH 00
-참고
+CH 01
+개념
 
-AI 트렌드
+Assistant에서 Agentic AI로
 
 AI 산업 생태계가 Agentic에서 Physical까지 어떻게 확장되는지, 리더 관점의 22장 브리핑과 카드뉴스로 함께 살펴보세요.
+
+ai utilization evolution roadmap
 
 추가 트렌드 카드뉴스
 

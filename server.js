@@ -975,13 +975,16 @@ function clipSuffixFromKey(clipKey) {
 function toVisibleClipKey(catalog, clipKey) {
   const normalized = normalizeWs(clipKey).toLowerCase();
   if (!normalized) return "";
+  if (catalog?.visibleClipsByKey?.has(normalized)) {
+    return normalized;
+  }
   return catalog?.visibleClipKeyByCanonicalKey?.get(normalized) || normalized;
 }
 
 function toCanonicalClipKey(catalog, clipKey) {
   const normalized = normalizeWs(clipKey).toLowerCase();
   if (!normalized) return "";
-  const clip = catalog?.clipsByKey?.get(normalized);
+  const clip = resolveCatalogClip(catalog, normalized);
   return clip?.canonicalClipKey || normalized;
 }
 
@@ -1009,6 +1012,17 @@ function toVisibleCompletedClipKeys(catalog, clipKeys) {
   }
 
   return output;
+}
+
+function resolveCatalogClip(catalog, clipKey) {
+  const normalized = normalizeWs(clipKey).toLowerCase();
+  if (!normalized || !catalog) return null;
+  return (
+    catalog.visibleClipsByKey?.get(normalized) ||
+    catalog.canonicalClipsByKey?.get(normalized) ||
+    catalog.clipsByKey?.get(normalized) ||
+    null
+  );
 }
 
 async function readJsonFileSafe(filePath, fallback) {
@@ -2014,35 +2028,33 @@ async function buildCatalog(sourceRoot) {
   const visibleBlueprints = [
     {
       visibleChapterId: "ch00",
-      title: "오늘의 여정",
+      title: "과정 안내",
       time: "10:00",
       sourceChapterIds: ["ch00"],
-      clipKeys: ["ch00-clip01", "ch00-clip02"]
+      clipKeys: ["ch00-clip01"]
     },
     {
       visibleChapterId: "ch01",
       title: "AI 핵심 개념",
       time: "10:25",
       sourceChapterIds: ["ch01"],
-      clipKeys: [
-        "ch01-clip01",
-        "ch01-clip02",
-        "ch01-clip03",
-        "ch01-clip04",
-        "ch01-clip05"
-      ]
+      clipKeys: ["ch00-clip02", "ch01-clip01", "ch01-clip03", "ch01-clip04"],
+      clipTitles: {
+        "ch01-clip01": "Assistant에서 Agentic AI로"
+      }
     },
     {
       visibleChapterId: "ch02",
       title: "Gemini & ChatGPT",
       time: "09:30",
       sourceChapterIds: ["ch03"],
-      clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch03-clip04"],
+      clipKeys: ["ch03-clip01", "ch03-clip02", "ch01-clip05", "ch03-clip03", "ch03-clip04"],
       clipTitles: {
         "ch03-clip01": "Gemini 소개 및 접속 방법",
-        "ch03-clip02": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
-        "ch03-clip03": "Gems 소개: AI 비서 만들기",
-        "ch03-clip04": "ChatGPT 소개 및 접속 방법"
+        "ch03-clip02": "프롬프팅 기초",
+        "ch01-clip05": "Gems 소개: 프롬프트 구조화하기",
+        "ch03-clip03": "AI 비서 만들기: 비즈니스 프롬프팅",
+        "ch03-clip04": "ChatGPT 및 GPTs 소개"
       }
     },
     {
@@ -2060,14 +2072,12 @@ async function buildCatalog(sourceRoot) {
       clipKeys: [
         "ch05-clip02",
         "ch06-clip01",
-        "ch06-clip02",
-        "ch06-clip03"
+        "ch06-clip02"
       ],
       clipTitles: {
         "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
         "ch06-clip01": "바이브 코딩이란",
-        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기",
-        "ch06-clip03": "경쟁사 리서치 대시보드"
+        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기"
       }
     },
     {
@@ -2117,10 +2127,30 @@ async function buildCatalog(sourceRoot) {
 
   const chapters = [];
   const clipsByKey = new Map();
+  const visibleClipsByKey = new Map();
+  const canonicalVisibleClipsByKey = new Map();
   const visibleChapterIdByCanonicalId = new Map();
   const canonicalChapterIdByVisibleId = new Map();
   const visibleClipKeyByCanonicalKey = new Map();
   const sourceChapterIdsByVisibleId = new Map();
+  const registerClipObject = (clipObj) => {
+    if (!clipObj?.clipKey) return;
+
+    const visibleKey = normalizeWs(clipObj.clipKey).toLowerCase();
+    const canonicalKey = normalizeWs(clipObj.canonicalClipKey || clipObj.clipKey).toLowerCase();
+    if (!visibleKey) return;
+
+    visibleClipsByKey.set(visibleKey, clipObj);
+    clipsByKey.set(visibleKey, clipObj);
+
+    if (canonicalKey) {
+      canonicalVisibleClipsByKey.set(canonicalKey, clipObj);
+      visibleClipKeyByCanonicalKey.set(canonicalKey, visibleKey);
+      if (!clipsByKey.has(canonicalKey)) {
+        clipsByKey.set(canonicalKey, clipObj);
+      }
+    }
+  };
 
   for (const [chapterIndex, blueprint] of visibleBlueprints.entries()) {
     const visibleChapterId = blueprint.visibleChapterId;
@@ -2182,23 +2212,9 @@ async function buildCatalog(sourceRoot) {
           canonicalClipKey: sourceClip.canonicalClipKey,
           canonicalRoute: sourceClip.canonicalRoute
         };
-
-        visibleClipKeyByCanonicalKey.set(sourceClip.canonicalClipKey, clipObj.clipKey);
-        clipsByKey.set(clipObj.clipKey, clipObj);
-        if (clipObj.clipKey !== sourceClip.canonicalClipKey) {
-          clipsByKey.set(sourceClip.canonicalClipKey, clipObj);
-        }
       }
 
       if (!clipObj) continue;
-
-      const clipOverride = overrides.clips?.[clipObj.clipKey] || {};
-      if (clipOverride.title) {
-        clipObj.title = clipOverride.title;
-      }
-      if (clipOverride.type) {
-        clipObj.type = clipOverride.type;
-      }
 
       if (clipSpec.synthetic) {
         clipObj.chapterId = visibleChapterId;
@@ -2210,10 +2226,17 @@ async function buildCatalog(sourceRoot) {
         clipObj.route = `#${clipObj.clipKey}`;
         clipObj.canonicalClipKey = clipObj.clipKey;
         clipObj.canonicalRoute = clipObj.route;
-        clipsByKey.set(clipObj.clipKey, clipObj);
-        visibleClipKeyByCanonicalKey.set(clipObj.canonicalClipKey, clipObj.clipKey);
       }
 
+      const clipOverride = overrides.clips?.[clipObj.clipKey] || {};
+      if (clipOverride.title) {
+        clipObj.title = clipOverride.title;
+      }
+      if (clipOverride.type) {
+        clipObj.type = clipOverride.type;
+      }
+
+      registerClipObject(clipObj);
       chapterObj.clipObjects.push(clipObj);
     }
 
@@ -2232,6 +2255,8 @@ async function buildCatalog(sourceRoot) {
   return {
     chapters,
     clipsByKey,
+    visibleClipsByKey,
+    canonicalClipsByKey: canonicalVisibleClipsByKey,
     visibleChapterIdByCanonicalId,
     canonicalChapterIdByVisibleId,
     visibleClipKeyByCanonicalKey,
@@ -2726,7 +2751,7 @@ async function resolveClipPayload(clipKey, course) {
   const activeCourse = course || defaultCourseContext();
   const catalog = await getCatalog(activeCourse);
   const normalizedClipKey = normalizeWs(clipKey).toLowerCase();
-  const clip = catalog.clipsByKey.get(normalizedClipKey);
+  const clip = resolveCatalogClip(catalog, normalizedClipKey);
   if (!clip) return null;
 
   const metadata = await readJsonFileSafe(clip.metadataPath, {});
@@ -2830,7 +2855,7 @@ async function handleProgress(req, res, urlObj) {
     return sendJson(res, 400, { ok: false, error: "clipKey가 필요합니다." });
   }
 
-  const clip = catalog.clipsByKey.get(clipKey);
+  const clip = resolveCatalogClip(catalog, clipKey);
   if (!clip) {
     return sendJson(res, 400, { ok: false, error: "유효하지 않은 clipKey입니다." });
   }
@@ -2990,7 +3015,7 @@ async function handleNotes(req, res, urlObj) {
     });
   }
 
-  const clip = catalog.clipsByKey.get(clipKey);
+  const clip = resolveCatalogClip(catalog, clipKey);
   if (!clip) {
     return sendJson(res, 400, {
       ok: false,
@@ -3104,7 +3129,7 @@ async function handleAdminClipSource(req, res, urlObj) {
   const catalog = await getCatalog(activeCourse);
   const pathnameParts = urlObj.pathname.split("/").filter(Boolean);
   const clipKey = normalizeWs(decodeURIComponent(pathnameParts[pathnameParts.length - 1] || "")).toLowerCase();
-  const clip = catalog.clipsByKey.get(clipKey);
+  const clip = resolveCatalogClip(catalog, clipKey);
 
   if (!clip) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
@@ -3202,7 +3227,7 @@ async function handleAdminSidebarSource(req, res, urlObj) {
   const clipKey = normalizeWs(
     decodeURIComponent(pathnameParts[pathnameParts.length - 1] || "")
   ).toLowerCase();
-  const clip = catalog.clipsByKey.get(clipKey);
+  const clip = resolveCatalogClip(catalog, clipKey);
 
   if (!clip) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
@@ -3310,7 +3335,7 @@ async function handleAdminSidebarSource(req, res, urlObj) {
   const clipTitle = normalizeWs(payload.clipTitle || "");
   const clipType = normalizeSidebarClipType(
     payload.clipType,
-    reportClip.type || chapterClip.type || clip.type
+    reportClip?.type || reportFlatClip?.type || chapterClip?.type || visibleClip?.type || clip.type
   );
 
   if (!chapterTitle) {
@@ -3332,31 +3357,46 @@ async function handleAdminSidebarSource(req, res, urlObj) {
   const nextMetadata = { ...metadata, navTitle: clipTitle };
 
   const historyFiles = [overridesPath, metadataPath];
-  if (reportClip && chapterJson && chapterClip) {
-    if (hasSingleSourceChapter && reportChapter) {
-      reportChapter.title = chapterTitle;
-      reportChapter.time = chapterTime;
-    }
+  let shouldWriteReport = false;
+  let shouldWriteChapterJson = false;
+
+  if (hasSingleSourceChapter && reportChapter) {
+    reportChapter.title = chapterTitle;
+    reportChapter.time = chapterTime;
+    shouldWriteReport = true;
+  }
+  if (reportClip) {
     reportClip.title = clipTitle;
     reportClip.type = clipType;
-    if (reportFlatClip) {
-      reportFlatClip.title = clipTitle;
-      reportFlatClip.type = clipType;
-    }
-
-    if (hasSingleSourceChapter) {
-      chapterJson.title = chapterTitle;
-      chapterJson.time = chapterTime;
-    }
+    shouldWriteReport = true;
+  }
+  if (reportFlatClip) {
+    reportFlatClip.title = clipTitle;
+    reportFlatClip.type = clipType;
+    shouldWriteReport = true;
+  }
+  if (chapterJson && hasSingleSourceChapter) {
+    chapterJson.title = chapterTitle;
+    chapterJson.time = chapterTime;
+    shouldWriteChapterJson = true;
+  }
+  if (chapterClip) {
     chapterClip.title = clipTitle;
     chapterClip.type = clipType;
-
-    historyFiles.push(reportFile, chapterJsonPath);
+    shouldWriteChapterJson = true;
+  }
+  if (shouldWriteReport) {
+    historyFiles.push(reportFile);
+  }
+  if (shouldWriteChapterJson) {
+    historyFiles.push(chapterJsonPath);
   }
 
   await writeAdminHistorySnapshot(`sidebar-${clip.clipKey}`, historyFiles);
-  if (reportClip && chapterJson && chapterClip) {
+  if (shouldWriteReport) {
     await writeJsonFile(reportFile, report);
+  }
+  if (shouldWriteChapterJson) {
     await writeJsonFile(chapterJsonPath, chapterJson);
   }
   await writeJsonFile(overridesPath, nextOverrides);
@@ -3391,7 +3431,7 @@ async function handleAdminClipAssets(req, res, urlObj) {
   const clipKey = normalizeWs(
     decodeURIComponent(pathnameParts[pathnameParts.length - 1] || "")
   ).toLowerCase();
-  const clip = catalog.clipsByKey.get(clipKey);
+  const clip = resolveCatalogClip(catalog, clipKey);
 
   if (!clip) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
@@ -3725,8 +3765,8 @@ async function handleCourseFile(req, res, urlObj) {
     requested = parts.slice(2).join("/");
   }
 
-  const { clipsByKey } = await getCatalog(course);
-  const clip = clipsByKey.get(clipKey);
+  const catalog = await getCatalog(course);
+  const clip = resolveCatalogClip(catalog, clipKey);
   if (!clip) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
   }

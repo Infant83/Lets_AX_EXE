@@ -1,22 +1,22 @@
 ---
-route: "#ch01-clip01"
+route: "#ch01-clip02"
 chapter: "ch01"
-title: "AI Assistant → Agent → Agentic AI"
-source_url: "https://lg.cmdspace.work/axcamp#ch01-clip01"
+title: "프롬프트 엔지니어링 4가지 원칙"
+source_url: "https://lg.cmdspace.work/axcamp#ch01-clip02"
 exported_at: "2026-02-28T01:53:41.410Z"
 ---
 
 ~10분
-CH 01
+CH 02
 개념
 
-# AI Assistant → Agent → Agentic AI
+# 프롬프트 엔지니어링 4가지 원칙
 
 AI를 활용하는 세 가지 수준을 이해합니다. 오늘 교육은 이 세 단계를 순서대로 체험하는 과정입니다.
 
 NotebookLM Infographic
 
-## AI 활용은 질문형 Assistant에서 자율 운영형 Agentic AI로 진화한다
+## AI 활용은 질문형 Assistant에서 자율 운영형 Agentic AI로 진화합니다
 
 오늘 수업은 Gemini와 NotebookLM으로 질문형 AI를 익히고, Gemini Deep Research와 AI Studio Build로 goal-based agent를 체험하며, Codex와 Cline 시연으로 agentic workflow를 본다.
 
@@ -27,8 +27,8 @@ NotebookLM Infographic
 | **비유** | 유능한 비서 | 프로젝트 매니저 | 자율 운영 부서 |
 | **작동 방식** | 질문 → 답변 (1회성) | 목표 → 계획 → 실행 (자율) | 여러 에이전트가 협업하여 복잡한 업무 자동 처리 |
 | **사람의 개입** | 매 단계 지시 필요 | 목표만 제시, 중간 과정은 자율 | 최소한의 감독만 필요 |
-| **대표 도구** | Gemini, NotebookLM | Gemini,Deep Research, AI Studio Build | Codex, Cline |
-| **오늘의 실습** | Gemini, NotebookLM | Deep Research, AI Studio Build | 강사 시연: Hi-D Code (Cline |
+| **대표 도구** | Gemini, NotebookLM | AI Studio Build | Codex, Cline |
+| **오늘의 실습** | Gemini (ChatGPT), NotebookLM | Deep Research, Google AI Studio | 강사 시연: Hi-D Code with Cline |
 ## 어떻게 작동하는가 — 원리와 메커니즘
 
 | 구분 | 작동 원리 | 비유 |

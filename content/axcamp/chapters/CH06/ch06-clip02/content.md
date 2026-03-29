@@ -1,55 +1,527 @@
 ---
-route: "#ch06-clip02"
-chapter: "ch06"
-title: "AI Studio 파라미터 이해"
-source_url: "https://lg.cmdspace.work/axcamp#ch06-clip02"
-exported_at: "2026-02-28T01:54:10.306Z"
+route: "#ch04-clip03"
+chapter: "ch04"
+title: "바이브 코딩으로 웹앱 제작하기"
+source_url: "https://lg.cmdspace.work/axcamp#ch04-clip03"
+exported_at: "2026-03-30T11:15:00.000Z"
 ---
-CH 06 개념
 
-# AI Studio 파라미터 이해
+~25분
+CH 04
+실습
 
-![AI Studio Build](https://upload.wikimedia.org/wikipedia/commons/c/c5/Google_AI_Studio_icon_%28July_2025%29.svg)
+# 바이브 코딩으로 웹앱 제작하기
 
-AI Studio Build
+AI Studio Build는 자연어로 React 웹앱을 만들고 고치고 공유할 수 있는 작업대입니다. 이번 클립에서는 **Gems로 시스템 개발 기술명세서를 먼저 만들고**, 그 결과를 Build 시작창에 붙여 넣어 앱 제작을 시작하는 흐름까지 함께 익힙니다.
 
-자연어로 웹앱을 생성하는 빌더
+## AI Studio로 바로 이동
 
-[aistudio.google.com →](https://aistudio.google.com)
+Google AI Studio Build
 
-AI Studio의 핵심 파라미터인 Temperature**Temperature**  
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!와 Top-P의 개념을 이해합니다.
+자연어로 앱을 만들고, React 코드로 내려받고, 링크로 공유하는 빌더
 
-핵심 3가지만 기억하세요
+[aistudio.google.com/apps →](https://aistudio.google.com/apps)
 
-**1\. 모델 선택** — 어떤 AI 엔진을 사용할지 (Gemini**Gemini**  
-Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요. 3.1 Pro 등)  
-**2\. 시스템 지침** — Gems**Gems**  
-Gemini 안에서 만드는 나만의 맞춤형 AI 비서예요. "당신은 경영 전략 컨설턴트입니다" 같은 역할과 규칙을 미리 저장해두면, 매번 지시하지 않아도 그 역할대로 동작해요.에서 배운 것과 같은 개념! AI의 역할과 규칙을 설정합니다  
-**3\. Temperature**Temperature**  
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!** — 낮으면 정확, 높으면 창의적. 업무 보고는 낮게(0.2~0.5), 아이디어는 높게(0.8~1.2)
+### 오늘은 React를 사용합니다
 
-이 클립에서는
+Advanced settings에서 프레임워크를 고를 수 있지만, 오늘 실습은 **React**를 기준으로 진행합니다. 컴포넌트 단위로 고치기 쉽고, AI와의 반복 대화에서 수정 방향이 가장 직관적이기 때문입니다.
 
-• Temperature**Temperature**  
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!와 Top-P 파라미터가 AI 응답에 미치는 영향을 이해합니다  
-• 파라미터 조절로 창의적 답변 vs 정확한 답변을 제어하는 원리를 배웁니다  
-• 업무 상황별 적절한 파라미터 설정 기준을 파악합니다
+## 실제 화면으로 보는 Build 인터페이스
 
-Temperature**Temperature**  
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게! & Top-P 비교
+![AI Studio Build Advanced settings와 Framework 선택 화면](/assets/aistudio/ch05/framework-dropdown.png)
 
-<table class="comparison-table" style="margin-top:8px"><thead><tr><th>파라미터</th><th>낮은 값</th><th>높은 값</th></tr></thead><tbody><tr><td><strong><span class="glossary-term">Temperature<span class="glossary-tooltip"><strong>Temperature</strong><br>AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!</span></span></strong></td><td>정확하고 일관된 응답 (보고서, 데이터 분석)</td><td>창의적이고 다양한 응답 (브레인스토밍, 카피라이팅)</td></tr><tr><td><strong>Top-P</strong></td><td>확률 상위 소수 단어만 선택 (안정적, 예측 가능)</td><td>더 넓은 범위의 단어를 고려 (다양하고 자연스러운 표현)</td></tr></tbody></table>
+Advanced settings에서는 모델, 시스템 지침, 프레임워크, 마이크 입력 등을 정합니다. 여기서 React / Next.js / Angular 중 하나를 고를 수 있습니다.
 
-파라미터 활용 포인트
+![Google AI Studio Build로 만든 Lotto Lucky Draw 앱 작업 화면](/assets/aistudio/ch05/lotto-app-workspace.png)
 
-같은 질문인데도 Temperature**Temperature**  
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!에 따라 전혀 다른 스타일의 답변이 나옵니다. **업무 보고용은 Temperature**Temperature**  
-AI 답변의 창의성 조절 다이얼이에요. 낮추면(0.2) 정확하고 일관된 답, 높이면(1.5+) 창의적이고 다양한 답이 나옵니다. 업무 보고는 낮게, 아이디어 회의는 높게!를 낮게, 아이디어 발산은 높게** 설정하는 것이 핵심입니다. 이 원리를 이해하면, 이후 Build 실습에서 AI를 더 효과적으로 활용할 수 있습니다.
+실제 생성된 앱 화면입니다. 프롬프트를 주면 오른쪽 preview가 바뀌고, 같은 대화에서 계속 기능을 덧붙이며 앱을 발전시킬 수 있습니다.
 
-토큰과 컨텍스트 윈도우
+## Advanced settings에서 볼 5가지
 
-AI가 처리하는 텍스트의 최소 단위를 **토큰**이라 합니다. Gemini**Gemini**  
-Google이 만든 AI예요. 텍스트뿐 아니라 이미지, 음성, 영상까지 한꺼번에 이해하고 처리할 수 있습니다. 오늘 실습에서 주로 사용하는 AI예요. 3.1 Pro는 **100만 토큰**까지 처리할 수 있어서, 일반적인 보고서 수백 페이지를 한 번에 분석할 수 있습니다. 이 거대한 컨텍스트 윈도우가 오전에 배운 **컨텍스트 엔지니어링**을 가능하게 하는 기술적 기반입니다.
+| 항목 | 무엇을 정하나 | 오늘 실습 기준 |
+| --- | --- | --- |
+| **Model** | 어떤 Gemini 엔진으로 앱 생성과 대화를 할지 | 기본 추천 모델을 쓰되, 응답 품질이 아쉬우면 상위 모델로 바꾸는 정도만 익힙니다. |
+| **System instructions** | 앱의 역할과 성격, 작성 규칙 | “임원용 보고 앱”, “LG 스타일”, “React로 작성” 같은 기준을 넣습니다. |
+| **Framework** | 어떤 웹 프레임워크로 앱을 생성할지 | **React**를 선택합니다. 반복 수정과 코드 확인이 가장 직관적입니다. |
+| **Preview / Assistant** | 채팅과 결과 화면을 어떻게 같이 볼지 | 한쪽에서 수정 요청, 다른 쪽에서 바로 결과 검수하는 리듬을 만듭니다. |
+| **Share / Publish** | 앱을 동료와 공유할지, 공개 링크로 배포할지 | 내부 실습은 공유 링크 중심, 외부 공개는 Publish 패널을 따로 봅니다. |
+### React / Next.js / Angular를 어떻게 구분하면 되나
 
-[← 바이브 코딩이란](#ch06-clip01) [파라미터 직접 체험 →](#ch06-clip03)
+**React**는 빠른 프로토타이핑과 컴포넌트 수정에 유리해서 오늘 실습용으로 가장 적합합니다.
+
+**Next.js**는 라우팅, 서버 기능, 정식 배포까지 염두에 둘 때 좋습니다.
+
+**Angular**는 기업 표준과 복잡한 대형 화면 구조를 강하게 통제해야 할 때 어울립니다.
+
+## Gems로 시스템개발 프롬프트 작성하기
+
+### 시스템 개발 기술명세서 작성기
+
+만들고 싶은 앱의 컨셉만 넣으면 AI가 **기능 명세, 화면 구조, 데이터 모델, 구현 체크리스트**까지 포함한 lean spec을 작성해 주는 Gem입니다.
+
+예를 들어 **포켓몬 배틀 게임**처럼 간단한 아이디어를 넣어도, 참가자는 생성된 기술명세서를 **AI Studio Build 시작창에 그대로 붙여 넣는 것만으로** 앱 개발을 시작할 수 있습니다.
+
+요청사항 미리보기
+
+시스템 개발 프롬프트
+
+You are Simple React App Builder Agent.
+
+## Principles
+- MVP-focused
+- React-first
+- client-first architecture
+- avoid over-engineering
+
+## Mandatory Sections
+## 1) App Summary
+## 2) MVP Scope
+## 3) UX / UI (React 기준)
+## 4) Data Model (Minimal)
+## 5) State & Logic
+## 6) API/Integration (Optional)
+## 7) Build Plan
+## 8) Assumptions & Open Questions
+
+시스템 개발 기술명세서 작성기 전체 요청사항전체 복사
+
+화면에는 일부만 보이고, 아래 복사 버튼은 전체 요청사항을 복사합니다. Gems 설정의 요청사항에 그대로 붙여 넣으세요.
+
+시스템 개발 프롬프트
+
+You are Simple React App Builder Agent.
+
+Your job is to convert a user's keywords/needs into a simple, buildable React-first spec (MVP-focused). Keep it lean: UI/UX + core features + minimal data model + minimal API/contracts + implementation checklist. Assume a small team and fast iteration.
+
+## Principles
+
+- Output language: Korean, but keep key jargon as Korean (English) or English.
+
+- Default stack: React + TypeScript + Vite (or Next.js if routing/SSR is needed). Choose one and justify in 1 line.
+
+- Prefer client-first architecture: LocalStorage/IndexedDB first, then optional backend.
+
+- Avoid over-engineering: no microservices, no heavy infra. Minimize dependencies.
+
+- Never omit sections; if unknown, make assumptions and label them.
+
+## Input You Will Receive
+
+- Keywords, problem, target users, scenario, constraints.
+
+## Output Format Rules
+
+- Use markdown headings H2 and H4 only.
+
+- Use bullet lists only ("- ").
+
+- Nested bullets must be tab-indented.
+
+- No blank lines between headings/sections/bullets.
+
+## Mandatory Sections (Lean)
+
+## 1) App Summary
+
+#### 1.1 One-liner
+
+#### 1.2 Target User
+
+#### 1.3 Core Workflow (3 steps)
+
+## 2) MVP Scope
+
+#### 2.1 Must-have
+
+#### 2.2 Nice-to-have
+
+#### 2.3 Out-of-scope
+
+## 3) UX / UI (React 기준)
+
+#### 3.1 Screens (routes)
+
+#### 3.2 Components (per screen)
+
+#### 3.3 States (empty/loading/error)
+
+## 4) Data Model (Minimal)
+
+#### 4.1 Types (TypeScript interfaces)
+
+#### 4.2 Storage strategy (LocalStorage vs IndexedDB)
+
+## 5) State & Logic
+
+#### 5.1 State management choice (useState/useReducer/Zustand)
+
+#### 5.2 Validation rules
+
+#### 5.3 Edge cases
+
+## 6) API/Integration (Optional)
+
+#### 6.1 When needed
+
+#### 6.2 Contract shapes (request/response) in JSON
+
+## 7) Build Plan
+
+#### 7.1 Folder structure
+
+#### 7.2 Implementation checklist (step-by-step)
+
+#### 7.3 Test checklist (smoke tests)
+
+## 8) Assumptions & Open Questions
+
+#### 8.1 Assumptions
+
+#### 8.2 Open Questions (max 8)
+
+## Defaults
+
+- Auth: none for MVP unless the user explicitly needs accounts.
+
+- Persistence: LocalStorage for small data; IndexedDB for large/structured data.
+
+- Styling: Tailwind or CSS Modules (pick one).
+
+- Forms: React Hook Form only if forms are complex; otherwise controlled inputs.
+
+- Routing: React Router if multi-screen; otherwise single page.
+
+## Behavior
+
+- Do NOT ask many clarifying questions upfront.
+
+- Produce a complete lean spec with assumptions.
+
+- Keep total length practical: prefer checklists and concrete names.
+
+Now wait. When the user provides the idea, generate the full lean spec.
+
+### 권장 사용 흐름
+
+1. Gem에 앱 아이디어를 입력합니다. 2. 나온 기술명세서를 읽고 필요한 가정만 고칩니다. 3. 수정된 spec 전체를 AI Studio Build 시작창에 붙여 넣습니다. 4. 앱이 생성되면 다시 대화로 기능을 추가합니다.
+
+## 처음 만들어보기 좋은 예제 8가지
+
+아래 예제들은 바로 Build에 넣어도 되고, 방금 만든 **시스템 개발 기술명세서 작성기**에 먼저 넣어 더 상세한 spec으로 바꾼 뒤 시작해도 됩니다.
+
+Warm-up Demo
+
+**Lotto Lucky Draw**
+회의 초반 분위기를 풀기 좋고, 버튼·랜덤 로직·상태 저장·애니메이션을 빠르게 확인할 수 있는 가벼운 데모입니다.
+
+Lotto Lucky Draw 시작 프롬프트복사
+
+React로 동작하는 간단한 웹앱을 만들어줘.
+
+목표:
+- 사용자가 버튼을 누르면 1~45 사이의 중복 없는 로또 번호 6개를 생성한다.
+- 번호는 색이 다른 공(ball) 형태로 보여준다.
+- 최근 생성 이력을 최대 20개까지 저장한다.
+- 각 이력은 개별 삭제 가능하게 한다.
+
+UI 요구사항:
+- 한 화면에서 바로 사용할 수 있게 단순하게 구성
+- 밝은 배경, 큰 번호 공, 명확한 CTA 버튼
+- 모바일에서도 보기 쉽게 반응형으로 구성
+
+기술 요구사항:
+- Framework는 React
+- 브라우저 localStorage에 이력 저장
+- 코드는 읽기 쉽게 분리
+
+마무리:
+- 사용자가 한 번 더 번호를 뽑고 싶게 만드는 가벼운 애니메이션을 추가해줘.
+
+Lotto Lucky Draw 기능 추가복사
+
+다음을 추가해줘:
+- 지난 회차와의 중복 개수를 보여주는 비교 영역
+- 번호 합계, 홀짝 비율, 구간 분포를 보여주는 통계 카드
+- 자동 생성과 수동 선택을 전환하는 탭
+- 생성 결과를 이미지 카드처럼 저장하고 공유하는 버튼
+
+Executive Utility
+
+**Executive Briefing Formatter**
+긴 메모나 기사 모음을 1페이지 임원 브리핑처럼 정리하는 앱입니다. 실무 활용성이 바로 느껴지는 대표 예제입니다.
+
+Executive Briefing Formatter 시작 프롬프트복사
+
+경영진 보고용 초안을 빠르게 정리하는 React 웹앱을 만들어줘.
+
+핵심 기능:
+- 긴 메모나 회의 내용을 붙여넣으면
+- 1페이지 브리핑 형식으로 요약한다
+- 아래 4개 블록으로 출력한다
+- Situation
+- Key Signals
+- Decision Points
+- Recommended Actions
+
+UI 요구사항:
+- 임원 보고 문서처럼 차분하고 정돈된 레이아웃
+- 카드형 섹션
+- 복사 버튼과 Markdown 다운로드 버튼 제공
+
+스타일:
+- 화이트 배경
+- 짙은 네이비 텍스트
+- 액센트 컬러는 #A50034
+
+출력 톤:
+- 간결하고 격식 있는 비즈니스 문체
+
+Executive Briefing Formatter 수정 요청복사
+
+다음을 추가해줘:
+- 원문과 요약문을 나란히 비교하는 split view
+- 출력 톤을 보고용 / 이메일용 / 발표용으로 바꾸는 옵션
+- Markdown 외에 PPT 아웃라인과 회의 메모 형식으로도 내보내는 탭
+- 추천 액션 항목을 체크리스트로 저장하는 기능
+
+Board Signal
+
+**Boardroom Signal Radar**
+시장 신호를 기회·위험으로 나눠 보여주는 앱입니다. 전략회의, 투자 검토, 사업 포트폴리오 논의 맥락에 잘 맞습니다.
+
+Boardroom Signal Radar 시작 프롬프트복사
+
+Google AI Studio Build에서 React 프레임워크로 다음 앱을 만들어줘.
+
+목표:
+- 임원진이 최근 시장 신호를 5분 안에 훑어볼 수 있는 `Boardroom Signal Radar` 앱
+
+핵심 기능:
+1. 회사명 또는 산업 키워드 입력
+2. 최근 뉴스/리포트/규제 이슈를 카드 형태로 정리
+3. 각 항목에 `기회`, `위험`, `관망` 태그 부여
+4. 중요도 순 정렬과 카테고리 필터 제공
+5. `한 장 브리핑` 영역에 핵심 시사점 3줄 요약 표시
+
+UI 요구사항:
+- 데스크톱 우선 레이아웃
+- 좌측 필터, 우측 메인 대시보드
+- KPI 카드 3개: 총 신호 수 / 위험 비중 / 기회 비중
+- 깔끔한 화이트 배경과 절제된 카드 UI
+
+출력 톤:
+- 경영진 보고용
+- 군더더기 없는 문장
+- 중요도와 액션 포인트가 바로 보이게
+
+Boardroom Signal Radar 기능 추가복사
+
+다음을 고도화해줘:
+- Watchlist 기업 5개를 고정 비교하는 보드
+- 주간 변화량과 언급량 추이를 보여주는 라인 차트
+- 기회/위험 판단의 근거 출처 링크 표시
+- `이번 주 경영진 한 장 브리핑`을 자동 생성하는 버튼
+- 특정 기업을 클릭하면 액션 아이템까지 정리하는 상세 패널
+
+Meeting Ops
+
+**회의 액션 아이템 트래커**
+회의 직후 해야 할 일을 담당자·우선순위·마감일 중심으로 정리하는 실무형 앱입니다. AI가 정리한 결과를 곧바로 실행 계획으로 연결하는 흐름을 보여주기 좋습니다.
+
+회의 액션 아이템 트래커 시작 프롬프트복사
+
+React로 동작하는 회의 액션 아이템 트래커 앱을 만들어줘.
+
+목표:
+- 회의 메모를 붙여넣으면 액션 아이템을 자동으로 정리한다.
+- 각 항목은 담당자, 우선순위, 마감일, 리스크, 상태를 포함한다.
+- 사용자는 항목을 직접 수정하고 완료 체크할 수 있다.
+
+UI 요구사항:
+- 좌측은 원문 메모 입력, 우측은 추출된 액션 아이템 보드
+- 우선순위별 색상 구분
+- 모바일에서도 카드 단위로 읽기 쉽게 구성
+
+기술 요구사항:
+- Framework는 React
+- localStorage에 저장
+- 샘플 데이터 1세트를 기본 제공
+
+출력 톤:
+- 실행 중심
+- 짧고 명확한 업무 문장
+
+회의 액션 아이템 트래커 기능 추가복사
+
+다음을 추가해줘:
+- 담당자별 필터와 이번 주 마감만 보기 토글
+- 칸반 보드 보기와 테이블 보기 전환
+- 지연 항목을 자동 강조하는 경고 배지
+- 회의별로 액션 아이템 묶음을 저장하는 기능
+- 완료율과 미완료 리스크를 보여주는 KPI 카드
+
+Strategy Memo
+
+**원페이지 전략 메모 생성기**
+긴 기사, 보고서, 회의 메모를 1장짜리 전략 메모로 정리하는 앱입니다. 임원 보고와 전략 회의 준비라는 교육 맥락에 매우 잘 맞습니다.
+
+원페이지 전략 메모 생성기 시작 프롬프트복사
+
+React 웹앱으로 원페이지 전략 메모 생성기를 만들어줘.
+
+목표:
+- 긴 텍스트를 붙여넣으면 한 장짜리 전략 메모로 재구성한다.
+- 결과는 Situation, Why Now, Key Signals, Strategic Options, Recommended Next Step 5개 블록으로 보여준다.
+
+UI 요구사항:
+- 입력 영역과 결과 영역을 나란히 배치
+- 임원 보고 문서 같은 정돈된 화이트 기반 레이아웃
+- 복사 버튼과 Markdown 내보내기 버튼 제공
+
+기술 요구사항:
+- React 기반
+- 결과를 localStorage에 최근 10건 저장
+- 샘플 입력 문단 2개 제공
+
+출력 톤:
+- 간결한 경영진 보고체
+- 길지 않고 판단 가능한 문장
+
+원페이지 전략 메모 생성기 기능 추가복사
+
+다음을 추가해줘:
+- 메모 길이를 3줄 / 1페이지 / 발표용 버전으로 전환하는 옵션
+- 시그널별 중요도를 슬라이더로 조정하는 기능
+- PPT 아웃라인과 발표 대본으로 전환하는 탭
+- 여러 입력 문서를 병합해서 비교 메모를 만드는 기능
+- 마지막 생성 결과를 PDF 느낌 카드로 저장하는 버튼
+
+Board Prep
+
+**이사회 질문 시뮬레이터**
+사업 계획이나 투자 안건을 넣으면 이사회에서 나올 법한 질문을 생성하는 앱입니다. 답변 준비와 발표 리허설 흐름까지 자연스럽게 확장할 수 있습니다.
+
+이사회 질문 시뮬레이터 시작 프롬프트복사
+
+React 기반 이사회 질문 시뮬레이터 앱을 만들어줘.
+
+목표:
+- 사업 계획 요약이나 투자 제안서를 넣으면 이사회가 물을 법한 질문 10개를 생성한다.
+- 질문마다 질문 의도, 우려 포인트, 추천 답변 방향을 함께 보여준다.
+
+UI 요구사항:
+- 상단에는 안건 제목과 요약 입력
+- 하단에는 질문 카드 리스트
+- 질문 카드는 난이도와 관점 태그를 포함
+
+관점 태그 예시:
+- CEO
+- CFO
+- 사외이사
+- 리스크관리
+
+기술 요구사항:
+- React
+- 카드 펼침/접힘 인터랙션
+- 최근 안건 5개 저장
+
+출력 톤:
+- 날카롭지만 실무적인 질문
+- 실제 회의에서 나올 법한 어조
+
+이사회 질문 시뮬레이터 기능 추가복사
+
+다음을 추가해줘:
+- 공격적 질문 모드와 우호적 질문 모드 전환
+- 질문별 모범 답변 초안 생성 버튼
+- CFO 관점 질문만 따로 모아보는 필터
+- 답변 준비 상태를 체크하는 리허설 체크리스트
+- 회의 직전 5분 요약 브리핑 생성 패널
+
+Market Dashboard
+
+**시장 시그널 요약 대시보드**
+특정 회사나 산업 키워드를 기준으로 시장 신호를 요약해서 보여주는 앱입니다. 전략팀이나 투자 검토 조직의 빠른 스캐닝 도구로 설명하기 좋습니다.
+
+시장 시그널 요약 대시보드 시작 프롬프트복사
+
+React로 시장 시그널 요약 대시보드 앱을 만들어줘.
+
+목표:
+- 회사명 또는 산업 키워드를 넣으면 최근 시장 시그널을 요약한다.
+- 결과는 기회, 위험, 관망 세 그룹으로 나눠 보여준다.
+
+핵심 기능:
+- 입력 키워드 저장
+- 시그널 카드 정렬
+- 중요도 필터
+- 한 줄 요약 생성
+
+UI 요구사항:
+- 좌측에는 검색과 필터
+- 우측에는 시그널 카드와 상단 KPI
+- 화이트 배경, 차분한 카드 UI
+
+기술 요구사항:
+- React
+- 더미 데이터 기반으로 먼저 동작
+- 추후 API 연결이 쉬운 구조
+
+출력 톤:
+- 임원 보고형
+- 과장 없이 핵심만 정리
+
+시장 시그널 요약 대시보드 기능 추가복사
+
+다음을 추가해줘:
+- 기업 3개를 나란히 비교하는 비교 보기
+- 시그널 발생일 기준 타임라인 보기
+- 시그널별 출처 링크와 메모 필드
+- 주간 브리핑 요약문 자동 생성 버튼
+- 중요 시그널을 즐겨찾기하고 별도 패널에 모으는 기능
+
+MVP Planner
+
+**제품 아이디어 스펙 정리기**
+아이디어 한 줄을 입력하면 MVP 기능, 화면 구조, 데이터 모델을 정리하는 앱입니다. 바로 위의 시스템 개발 기술명세서 작성기와도 가장 직접적으로 연결됩니다.
+
+제품 아이디어 스펙 정리기 시작 프롬프트복사
+
+React 웹앱으로 제품 아이디어 스펙 정리기를 만들어줘.
+
+목표:
+- 사용자가 아이디어 한 줄을 입력하면 MVP 스펙 초안을 생성한다.
+- 결과에는 문제 정의, 타깃 사용자, 핵심 기능, 화면 구성, 데이터 모델, 오픈 이슈가 포함된다.
+
+UI 요구사항:
+- 상단 입력창과 생성 버튼
+- 하단에 스펙 카드 5개 이상으로 결과 정리
+- 복사와 Markdown 저장 기능 제공
+
+기술 요구사항:
+- React
+- 예시 아이디어 3개 제공
+- 생성 이력을 localStorage에 저장
+
+출력 톤:
+- 제품 기획 문서처럼 구조적
+- 추상적이지 않고 실행 가능한 수준
+
+제품 아이디어 스펙 정리기 기능 추가복사
+
+다음을 추가해줘:
+- 사용자 스토리와 acceptance criteria를 자동 생성하는 탭
+- 데이터 모델을 TypeScript 인터페이스 코드 블록으로 보여주는 영역
+- 리스크와 가정을 점수화하는 우선순위 매트릭스
+- 개발 체크리스트를 단계별로 접고 펼치는 아코디언
+- Figma나 AI Studio로 넘길 요약 spec 카드 생성 버튼
+
+## 공유와 Publish는 다르다
+
+![AI Studio Build 공유 설정 화면](/assets/aistudio/ch05/share-settings.png)
+
+Share는 특정 동료와 앱을 같이 보는 협업 설정입니다. 링크 공유나 사람별 권한 지정이 이 단계입니다.
+
+![AI Studio Build Publish 패널](/assets/aistudio/ch05/publish-panel.png)
+
+Publish는 공개 URL 배포에 가깝습니다. Notebook 기록이나 코드 편집 내역은 private로 두고, 결과 앱만 외부에 보여주는 흐름으로 이해하면 됩니다.

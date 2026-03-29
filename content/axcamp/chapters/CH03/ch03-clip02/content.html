@@ -4,10 +4,10 @@
     <span class="clip-badge chapter">CH 03</span>
     <span class="clip-badge type-practice">실습</span>
   </div>
-  <h1 class="clip-title">프롬프팅 기초 및 비즈니스 프롬프트 연습</h1>
+  <h1 class="clip-title">프롬프팅 기초</h1>
 </div>
 
-<div class="clip-overview">앞에서 본 Gemini 화면 위에서 이제 실제 업무 프롬프트를 다룹니다. 짧고 명확한 지시, 파일 첨부, 멀티턴 대화를 결합해 회의 분석과 경영진 브리핑까지 연결하는 것이 목표다.</div>
+<div class="clip-overview">이제 실제 업무 프롬프트를 다루며, 역할·맥락·형식·단계라는 기본 요소를 회의 분석과 경영진 브리핑 사례에 적용합니다.</div>
 
 <div class="clip-section slide-preview-shell">
   <div class="slide-preview-head">
@@ -23,14 +23,6 @@
     </div>
   </div>
   <div class="slide-preview-gallery" data-slide-deck-preview="business-prompting-workshop"></div>
-</div>
-
-<div class="practice-shortcut-bar" style="margin-top:20px">
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;flex-shrink:0"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg>
-  <span class="practice-shortcut-text">실습 파일을 바로 내려받아 Gemini에 붙여 넣으세요.</span>
-  <a href="/assets/practice/ch02/meeting-audio.wav" class="practice-shortcut-link" download>회의 오디오 다운로드</a>
-  <a href="/assets/practice/ch02/meeting-context.md" class="practice-shortcut-link" download>회의 맥락 자료 다운로드</a>
-  <a href="/assets/practice/ch02/single-flow-prompt.md" class="practice-shortcut-link" download>전체 흐름 프롬프트 다운로드</a>
 </div>
 
 <div class="clip-section">
@@ -51,72 +43,6 @@
   </div>
 </div>
 
-<div class="clip-section">
-  <div class="clip-section-title">비즈니스 프롬프트 4종</div>
-  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px">아래 프롬프트를 그대로 붙여 넣은 뒤, <span class="prompt-fill">이런 블록</span>만 본인 상황에 맞게 채우면 된다. 처음부터 완벽한 문장을 쓰는 것보다 <strong>역할, 맥락, 출력 형식</strong>을 빠뜨리지 않는 것이 더 중요합니다.</p>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">산업 트렌드 분석</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp1')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp1">당신은 글로벌 전략 컨설팅 펌의 시니어 파트너입니다.
-산업: <span class="prompt-fill">가전, 화학, 배터리 등 본인의 산업</span>
-분석 기간: 최근 6개월
-분석 관점: CEO 의사결정 지원용
-
-다음 구조로 작성해 주세요:
-1. 핵심 요약 (3줄 이내)
-2. 주요 트렌드 Top 5 - 표 형태 (트렌드명/현황/영향/시급도)
-3. 경쟁 환경 변화 - 글로벌 경쟁사 움직임, 신규 위협
-4. CEO 관점 시사점 - 12개월 내 의사결정 3가지 + 추천 액션
-5. 추가 모니터링 필요 항목</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">회의 준비 브리핑</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp2')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp2">당신은 CEO의 수석 비서관입니다.
-회의 유형: <span class="prompt-fill">이사회 / 전략회의 / 파트너 미팅 등</span>
-회의 주제: <span class="prompt-fill">회의 주제 입력</span>
-참석자: <span class="prompt-fill">주요 참석자와 직책</span>
-회의 시간: <span class="prompt-fill">예: 60분</span>
-
-다음 내용을 포함한 브리핑 자료를 작성해 주세요:
-1. 회의 배경 및 목적 (3줄)
-2. 핵심 안건별 요약 - 현황, 쟁점, CEO 포지션 제안
-3. 참석자별 예상 입장과 반대 의견 대응 논리
-4. 의사결정 포인트 (예/아니오)
-5. CEO 발언 제안 - 오프닝 멘트 + 질문 3~5개
-6. Follow-up 액션 템플릿</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">보고서 분석 및 요약</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp3')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp3">당신은 CEO 직속 전략기획실의 수석 애널리스트입니다.
-아래 보고서를 분석하여 경영진 의사결정에 필요한 핵심 정보를 추출해 주세요.
-
-<span class="prompt-fill">보고서 내용을 여기에 붙여넣기</span>
-
-다음 형식으로 정리해 주세요:
-1. Executive Summary (5줄 이내)
-2. 핵심 수치 Dashboard - 표 형태
-3. 리스크와 기회 요인 - 각 3개
-4. 추가 확인이 필요한 사항</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">경쟁사 분석</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp4')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp4">당신은 <span class="prompt-fill">본인의 산업</span> 분야의 경쟁 전략 전문가입니다.
-경쟁사명: <span class="prompt-fill">경쟁사명 입력</span>
-우리 회사: <span class="prompt-fill">우리 회사명 입력</span>
-분석 목적: <span class="prompt-fill">신규 시장 진출 / 방어 전략 / 협력 가능성 등</span>
-
-다음 프레임워크로 분석해 주세요:
-1. 경쟁사 프로필
-2. SWOT 분석 - 표 형태
-3. 최근 전략적 행보
-4. 우리 vs 경쟁사 비교 - 표 형태
-5. 경쟁사의 다음 수 예측
-6. 우리의 대응 전략 제안 3가지</div>
-  </div>
-</div>
 
 <div class="clip-section">
   <div class="clip-section-title">회의 오디오로 실습하는 4단계</div>
@@ -136,24 +62,168 @@
         <tr><td><strong>Step 4</strong></td><td>앞선 모든 분석 결과</td><td>CEO용 의사결정 브리프 작성</td><td>핵심 요약, 옵션 비교, 추천 액션</td></tr>
       </tbody>
     </table>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-      <a class="slide-briefing-link" href="/assets/practice/ch02/meeting-audio.wav" download>회의 오디오 받기</a>
-      <a class="slide-briefing-link" href="/assets/practice/ch02/meeting-context.md" download>맥락 문서 받기</a>
-      <a class="slide-briefing-link" href="/assets/practice/ch02/single-flow-prompt.md" download>4단계 프롬프트 받기</a>
+    <p style="margin:14px 0 10px;font-size:0.82rem;color:var(--text-secondary)">버튼을 누르면 실습용 구글 드라이브 링크가 클립보드에 복사됩니다.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" class="slide-briefing-link" onclick="copyResourceLink(this,'https://drive.google.com/file/d/1f4hFD1fopkkupS0cgIR9Qdmhc0CqNdoy/view?usp=drive_link')">회의 오디오</button>
+      <button type="button" class="slide-briefing-link" onclick="copyResourceLink(this,'https://drive.google.com/file/d/17dJHDavHIyBOPOZ3_rCNo9rrfSRGIkFl/view?usp=drive_link')">맥락 문서</button>
     </div>
   </div>
 </div>
+
+
+<div class="clip-section">
+  <div class="clip-section-title">프롬프트 Steps</div>
+  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px">아래 프롬프트를 그대로 붙여 넣은 뒤, 역할, 맥락, 출력 형식에 기반한 프롬프팅 기법의 중요성을 학습한다.</p>
+
+  <div class="prompt-block">
+    <div class="prompt-header"><span class="prompt-label">1. 음성 기반 AI 회의록 작성</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp1')">복사</button></div>
+    <div class="prompt-content" id="ch02-gp1">
+첨부한 음성 파일은 LG그룹 하반기 AX(AI 전환) 전략 회의 녹음입니다.
+
+이 음성을 듣고 아래 형식으로 구조화된 회의록을 작성해 주세요.
+
+## 출력 형식
+
+### 1. 회의 기본 정보
+- 회의명, 일시, 참석자(직책 포함)
+
+### 2. 안건별 논의 내용
+각 안건마다:
+- **안건 제목**
+- **발언 요약**: 누가 무슨 말을 했는지 핵심만
+- **쟁점**: 의견이 갈린 부분
+
+### 3. 결정사항
+- 번호 매기기, 담당자 명시
+
+### 4. 후속조치(Action Items)
+| 번호 | 조치 내용 | 담당자 | 기한 |
+|------|----------|--------|------|
+
+### 5. 미결 사항
+- 추가 논의가 필요한 이슈
+</div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header"><span class="prompt-label">2. 회의록 기반 핵심 이슈 추출</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp2')">복사</button></div>
+    <div class="prompt-content" id="ch02-gp2">방금 작성한 회의록을 기반으로, 경영 전략 애널리스트 관점에서 분석해 주세요.
+
+## 요청 사항
+
+### 1. 핵심 전략 이슈 TOP 3
+각 이슈마다:
+- **이슈명**: 한 줄 요약
+- **배경**: 왜 이것이 중요한지
+- **회의에서의 논의 수준**: 충분 / 부분적 / 미흡
+- **리스크 수준**: 🔴 높음 / 🟡 중간 / 🟢 낮음
+
+### 2. 의사결정 갭 분석
+- 결정은 됐지만 실행 방안이 불명확한 항목
+- 논의는 됐지만 결정이 안 된 항목
+- 아예 다뤄지지 않았지만 다뤄졌어야 할 항목
+
+### 3. CEO 어젠다 추천
+- 다음 회의에서 반드시 다뤄야 할 안건 2~3개
+- 각 안건의 예상 소요 시간과 필요 참석자
+</div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header"><span class="prompt-label">3. 참고자료 첨부 + 멀티턴 분석</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp3')">복사</button></div>
+    <div class="prompt-content" id="ch02-gp3">방금 첨부한 문서는 이번 회의의 배경이 되는 브리핑 자료입니다.
+(경쟁사 동향, 시장 데이터, 내부 KPI 등)
+
+이 참고자료와 앞서 정리한 회의록을 교차 분석해서 다음을 정리해 주세요.
+
+## 요청 사항
+
+### 1. 회의 논의 vs 실제 데이터 대조표
+| 회의에서 언급된 내용 | 참고자료의 실제 데이터 | 일치 여부 | 비고 |
+|---------------------|----------------------|----------|------|
+
+### 2. 계획 대비 실적 갭
+- 상반기 목표 대비 실제 달성률
+- 경쟁사 대비 상대적 위치
+- 가장 큰 괴리가 발생한 영역과 원인 분석
+
+### 3. 회의에서 놓친 포인트
+- 참고자료에는 있지만 회의에서 전혀 논의되지 않은 중요 데이터
+- 해당 데이터가 의사결정에 미칠 수 있는 영향
+
+### 4. 데이터 기반 수정 권고
+- 회의 결정사항 중 참고자료 데이터에 비춰 재검토가 필요한 항목
+- 수정 방향 제안
+</div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header"><span class="prompt-label">4. 전략 추론 - CEO 의사결정 프레임워크</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp4')">복사</button></div>
+    <div class="prompt-content" id="ch02-gp4">앞선 분석에서 가장 중요한 전략 이슈로 도출된 주제에 대해
+딥 리서치를 실행해 주세요.
+
+## 리서치 주제
+"글로벌 AI 가전 시장에서 LG전자의 포지셔닝 전략:
+삼성·중국 업체 대비 경쟁 우위 확보 방안"
+
+## 리서치에 포함할 내용
+1. 글로벌 AI 가전 시장 규모 및 성장 전망 (2025-2030)
+2. 주요 경쟁사(삼성, 하이센스, 샤오미 등) AI 전략 비교
+3. LG의 현재 AI 역량(EXAONE, ThinQ AI)의 시장 평가
+4. 소비자 관점에서 AI 가전의 실질적 가치
+5. LG가 집중해야 할 차별화 영역 제안
+
+## 출력 요건
+- 각 항목에 출처 명시
+- 데이터는 가능한 최신 자료 기반
+- 최종 섹션에 'So What: LG 경영진을 위한 시사점' 포함
+</div>
+  </div>
+
+  <div class="prompt-block">
+    <div class="prompt-header"><span class="prompt-label">5. 딥 리서치 연계(추가)</span>
+    <button class="copy-btn" onclick="copyPrompt(this,'ch02-gp5')">복사</button></div>
+    <div class="prompt-content" id="ch02-gp5">지금까지의 모든 분석(회의록, 핵심이슈, 참고자료 교차분석)을 종합하여,
+CEO의 의사결정을 돕는 전략 보좌관 역할로 최종 권고안을 작성해 주세요.
+
+## 출력 형식
+
+### 1. 상황 종합 (Executive Summary)
+- 3문장 이내로 현재 상황의 핵심을 요약
+
+### 2. 전략 옵션 비교표
+
+각 주요 의사결정 사안에 대해:
+
+| 구분 | 옵션 A (공격적) | 옵션 B (점진적) | 옵션 C (보수적) |
+|------|----------------|----------------|----------------|
+| 핵심 내용 | | | |
+| 예상 투자 규모 | | | |
+| 기대 효과 | | | |
+| 주요 리스크 | | | |
+| 실현 가능성 | 상/중/하 | 상/중/하 | 상/중/하 |
+| 경쟁사 대비 포지션 | | | |
+
+### 3. 추천안 및 근거
+- 최우선 추천 옵션과 그 이유 (데이터 기반)
+- 차선책과 전환 트리거 조건
+
+### 4. 실행 로드맵
+- 즉시 (1주 내):
+- 단기 (1개월 내):
+- 중기 (분기 내):
+
+### 5. 모니터링 KPI
+- 핵심 지표 3~5개와 목표치
+</div>
+  </div>
+
+</div>
+
 
 <div class="info-block" style="margin-top:20px">
   <div class="info-block-title">기억할 점</div>
   <div style="font-size:0.85rem;line-height:1.7;color:var(--text-body)">이 실습은 Gemini에만 묶인 테크닉이 아니다. 오늘은 Gemini를 쓰지만, <strong>역할 지정, 자료 첨부, 멀티턴 대화, 출력 형식 지정</strong>이라는 원칙 자체는 ChatGPT, Claude, Copilot 등 대부분의 주요 AI에서 그대로 통합니다.</div>
 </div>
 
-<div class="clip-nav-footer">
-  <a class="clip-nav-btn" href="#ch03-clip01">
-    ← Gemini 소개 및 접속 방법
-  </a>
-  <a class="clip-nav-btn" href="#ch03-clip03">
-    Gems 소개: AI 비서 만들기 →
-  </a>
-</div>
+<div class="clip-nav-footer"><a class="clip-nav-btn" href="#ch01-clip05">← 프롬프트 구조화 하기</a><a class="clip-nav-btn" href="#ch03-clip03">ChatGPT 소개 및 접속 방법 →</a></div>

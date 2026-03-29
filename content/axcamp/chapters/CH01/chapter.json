@@ -1,12 +1,12 @@
 {
   "chapterId": "ch01",
   "chapterNum": "CH 01",
-  "title": "AI 핵심 개념",
-  "time": "08:40",
+  "title": "Gemini & ChatGPT",
+  "time": "09:30",
   "clips": [
     {
       "route": "#ch01-clip01",
-      "title": "AI Assistant → Agent → Agentic AI",
+      "title": "Assistant에서 Agentic AI로",
       "type": "개념",
       "folder": "chapters/CH01/ch01-clip01",
       "linkCount": 2,
@@ -16,8 +16,8 @@
     },
     {
       "route": "#ch01-clip02",
-      "title": "Context & Prompt EngineeringPrompt EngineeringAI에게 효과적으로 지시하는 기술이에요. \"잘 물어봐야 좋은 답이 나온다\"는 원리로, 역할 부여·맥락 제공·형식 지정·단계적 사고 유도가 핵심 4원칙입니다.",
-      "type": "개념",
+      "title": "프롬프팅 기초",
+      "type": "실습",
       "folder": "chapters/CH01/ch01-clip02",
       "linkCount": 2,
       "imageCount": 0,
@@ -46,7 +46,7 @@
     },
     {
       "route": "#ch01-clip05",
-      "title": "프롬프트 구조화 하기",
+      "title": "Gems 소개: 프롬프트 구조화하기",
       "type": "참고",
       "folder": "chapters/CH01/ch01-clip05",
       "linkCount": 2,
