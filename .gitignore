@@ -1,5 +1,8 @@
 data/
+.codex/
 .admin-history/
+docs/
+output/
 preview/
 dist-pages/
 node_modules/
