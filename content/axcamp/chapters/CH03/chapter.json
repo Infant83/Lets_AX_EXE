@@ -1,0 +1,18 @@
+{
+  "title": "NotebookLM",
+  "time": "13:00",
+  "clips": [
+    {
+      "route": "#ch04-clip01",
+      "title": "NotebookLM: 출처 기반 리서치 워크벤치",
+      "type": "플랫폼",
+      "folder": "chapters/CH03/ch03-clip01"
+    },
+    {
+      "route": "#ch04-clip02",
+      "title": "문서 교차분석으로 1페이지 브리핑 만들기",
+      "type": "실습",
+      "folder": "chapters/CH03/ch03-clip02"
+    }
+  ]
+}

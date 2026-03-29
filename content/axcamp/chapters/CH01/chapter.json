@@ -1,0 +1,24 @@
+{
+  "title": "AI 핵심 개념",
+  "time": "09:20",
+  "clips": [
+    {
+      "route": "#ch01-clip01",
+      "title": "Assistant에서 Agent Team까지",
+      "type": "개념",
+      "folder": "chapters/CH01/ch01-clip01"
+    },
+    {
+      "route": "#ch01-clip02",
+      "title": "위임형 프롬프트 4원칙",
+      "type": "개념",
+      "folder": "chapters/CH01/ch01-clip02"
+    },
+    {
+      "route": "#ch01-clip03",
+      "title": "오늘의 4단계 실습 로드맵",
+      "type": "개념",
+      "folder": "chapters/CH01/ch01-clip03"
+    }
+  ]
+}

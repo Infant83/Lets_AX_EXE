@@ -17,7 +17,7 @@ const STATIC_PUBLIC_USER = Object.freeze({
 });
 const STATIC_PUBLIC_COURSE = Object.freeze({
   courseCode: String(STATIC_CONFIG?.courseCode || "AXCAMP"),
-  courseName: String(STATIC_CONFIG?.courseName || "AX Camp Repro"),
+  courseName: String(STATIC_CONFIG?.courseName || "AXCAMP"),
   launchUrl: STATIC_BASE_PATH || "/"
 });
 const QUICK_EDITABLE_TAGS = new Set([
@@ -4404,12 +4404,11 @@ async function loadCourseDirectory() {
 function renderCurrentCourse() {
   if (!el.currentCourseBadge) return;
   const code = normalizeCourseCode(state.currentCourse?.courseCode || state.user?.courseCode || "");
-  const name = normalizeWs(state.currentCourse?.courseName || "");
   if (!code) {
     el.currentCourseBadge.textContent = "코스 -";
     return;
   }
-  el.currentCourseBadge.textContent = name ? `코스 ${code} · ${name}` : `코스 ${code}`;
+  el.currentCourseBadge.textContent = `코스 ${code}`;
 }
 
 function renderCurrentUser() {

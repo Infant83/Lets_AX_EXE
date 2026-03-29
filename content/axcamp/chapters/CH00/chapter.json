@@ -1,0 +1,18 @@
+{
+  "title": "오늘의 여정",
+  "time": "09:00",
+  "clips": [
+    {
+      "route": "#ch00-clip01",
+      "title": "오늘의 시간표",
+      "type": "개요",
+      "folder": "chapters/CH00/ch00-clip01"
+    },
+    {
+      "route": "#ch00-clip02",
+      "title": "왜 지금 임원이 AI를 직접 만져봐야 하나",
+      "type": "개념",
+      "folder": "chapters/CH00/ch00-clip02"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Gemini & ChatGPT",
+  "time": "10:00",
+  "clips": [
+    {
+      "route": "#ch03-clip01",
+      "title": "Gemini로 임원 비서 시작하기",
+      "type": "플랫폼",
+      "folder": "chapters/CH02/ch02-clip01"
+    },
+    {
+      "route": "#ch03-clip03",
+      "title": "Gems로 나만의 임원 비서 만들기",
+      "type": "실습",
+      "folder": "chapters/CH02/ch02-clip02"
+    },
+    {
+      "route": "#ch03-clip04",
+      "title": "ChatGPT로 세컨드 오피니언 받기",
+      "type": "플랫폼",
+      "folder": "chapters/CH02/ch02-clip03"
+    }
+  ]
+}

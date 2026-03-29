@@ -1,0 +1,18 @@
+{
+  "title": "Key Takeaways & Q/A",
+  "time": "17:10",
+  "clips": [
+    {
+      "route": "#ch09-clip01",
+      "title": "오늘의 핵심 정리",
+      "type": "개요",
+      "folder": "chapters/CH06/ch06-clip01"
+    },
+    {
+      "route": "#ch09-clip02",
+      "title": "조직에서의 다음 단계",
+      "type": "참고",
+      "folder": "chapters/CH06/ch06-clip02"
+    }
+  ]
+}

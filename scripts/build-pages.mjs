@@ -169,7 +169,7 @@ function buildStaticConfig(downloadFilenames) {
     mode: "static",
     basePath: BASE_PATH,
     courseCode: "AXCAMP",
-    courseName: "AX Camp Repro",
+    courseName: "AXCAMP",
     downloadFilenames
   };
 }

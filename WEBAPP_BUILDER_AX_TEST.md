@@ -29,7 +29,7 @@ This means the real product is not a single webpage. It is:
 
 ## Content structure observed
 
-The `content/axcamp_repro` package is the important part for authoring:
+The `content/axcamp` package is the important part for authoring:
 
 - `export-report.json`: course catalog with chapter order and clip list
 - `chapters/CHxx/chxx-clipyy/`
@@ -50,7 +50,7 @@ The learner UI loads chapter and clip data, not one giant HTML file.
 
 ## AX Camp content pattern
 
-Briefly from `axcamp_repro`:
+Briefly from `axcamp`:
 
 - CH00 sets the day narrative and urgency
 - CH01 covers AI core concepts

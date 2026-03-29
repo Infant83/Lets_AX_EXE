@@ -1,0 +1,575 @@
+{
+  "startedAt": "2026-02-28T01:53:00.023Z",
+  "baseUrl": "https://lg.cmdspace.work/axcamp",
+  "login": {
+    "name": "테스트20",
+    "email": "test20@lgacademy.com"
+  },
+  "chapters": [
+    {
+      "chapterId": "ch00",
+      "chapterNum": "CH 00",
+      "title": "오늘의 여정",
+      "time": "08:30",
+      "clips": [
+        {
+          "route": "#ch00-clip01",
+          "title": "오늘의 시간표",
+          "type": "개요",
+          "folder": "chapters/CH00/ch00-clip01",
+          "linkCount": 7,
+          "imageCount": 0,
+          "sectionCount": 3,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch00-clip02",
+          "title": "왜 지금 임원이 AI를 직접 만져봐야 하나",
+          "type": "개념",
+          "folder": "chapters/CH00/ch00-clip02",
+          "linkCount": 13,
+          "imageCount": 0,
+          "sectionCount": 1,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch01",
+      "chapterNum": "CH 01",
+      "title": "AI 핵심 개념",
+      "time": "08:40",
+      "clips": [
+        {
+          "route": "#ch01-clip01",
+          "title": "Assistant에서 Agent Team까지",
+          "type": "개념",
+          "folder": "chapters/CH01/ch01-clip01",
+          "linkCount": 0,
+          "imageCount": 0,
+          "sectionCount": 1,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch01-clip02",
+          "title": "위임형 프롬프트 4원칙",
+          "type": "개념",
+          "folder": "chapters/CH01/ch01-clip02",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 5,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch01-clip03",
+          "title": "오늘의 4단계 실습 로드맵",
+          "type": "개념",
+          "folder": "chapters/CH01/ch01-clip03",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 0,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch03",
+      "chapterNum": "CH 03",
+      "title": "Gemini & ChatGPT",
+      "time": "09:30",
+      "clips": [
+        {
+          "route": "#ch03-clip01",
+          "title": "Gemini로 임원 비서 시작하기",
+          "type": "플랫폼",
+          "folder": "chapters/CH02/ch02-clip01",
+          "linkCount": 1,
+          "imageCount": 3,
+          "sectionCount": 4,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch03-clip03",
+          "title": "Gems로 나만의 임원 비서 만들기",
+          "type": "실습",
+          "folder": "chapters/CH02/ch02-clip02",
+          "linkCount": 2,
+          "imageCount": 3,
+          "sectionCount": 4,
+          "promptCount": 3
+        },
+        {
+          "route": "#ch03-clip04",
+          "title": "ChatGPT로 세컨드 오피니언 받기",
+          "type": "플랫폼",
+          "folder": "chapters/CH02/ch02-clip03",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 4,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch04",
+      "chapterNum": "CH 04",
+      "title": "NotebookLM",
+      "time": "13:00",
+      "clips": [
+        {
+          "route": "#ch04-clip01",
+          "title": "NotebookLM: 출처 기반 리서치 워크벤치",
+          "type": "플랫폼",
+          "folder": "chapters/CH03/ch03-clip01",
+          "linkCount": 3,
+          "imageCount": 1,
+          "sectionCount": 4,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch04-clip02",
+          "title": "문서 교차분석으로 1페이지 브리핑 만들기",
+          "type": "실습",
+          "folder": "chapters/CH03/ch03-clip02",
+          "linkCount": 6,
+          "imageCount": 1,
+          "sectionCount": 4,
+          "promptCount": 2
+        }
+      ]
+    },
+    {
+      "chapterId": "ch05",
+      "chapterNum": "CH 05",
+      "title": "AI Studio와 API 이해",
+      "time": "13:45",
+      "clips": [
+        {
+          "route": "#ch05-clip01",
+          "title": "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+          "type": "개요",
+          "folder": "chapters/CH05/ch05-clip01",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 3,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch05-clip02",
+          "title": "Google AI Studio 빠르게 시작하기",
+          "type": "설정",
+          "folder": "chapters/CH04/ch04-clip01",
+          "linkCount": 4,
+          "imageCount": 1,
+          "sectionCount": 3,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch06",
+      "chapterNum": "CH 06",
+      "title": "Vibe Coding",
+      "time": "13:55",
+      "clips": [
+        {
+          "route": "#ch06-clip05",
+          "title": "3분 이사회 브리핑 앱 만들기",
+          "type": "실습",
+          "folder": "chapters/CH04/ch04-clip02",
+          "linkCount": 3,
+          "imageCount": 0,
+          "sectionCount": 5,
+          "promptCount": 8
+        },
+        {
+          "route": "#ch06-clip04",
+          "title": "나만의 스킬 초안 만들기",
+          "type": "실습",
+          "folder": "chapters/CH04/ch04-clip03",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 2,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch07",
+      "chapterNum": "CH 07",
+      "title": "Agentic AI",
+      "time": "16:00",
+      "clips": [
+        {
+          "route": "#ch07-clip01",
+          "title": "에이전트는 왜 조직 운영 비유로 설명해야 하나",
+          "type": "개념",
+          "folder": "chapters/CH07/ch07-clip01",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 6,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch07-clip03",
+          "title": "시연: 여러 보고서를 한 화면으로 묶기",
+          "type": "개요",
+          "folder": "chapters/CH07/ch07-clip02",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 4,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch07-clip06",
+          "title": "스킬을 SOP처럼 쓰는 법",
+          "type": "참고",
+          "folder": "chapters/CH07/ch07-clip03",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 2,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch07-clip07",
+          "title": "스킬 저장과 재사용 심화",
+          "type": "참고",
+          "folder": "chapters/CH07/ch07-clip04",
+          "linkCount": 2,
+          "imageCount": 0,
+          "sectionCount": 1,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch08",
+      "chapterNum": "CH 08",
+      "title": "참고자료 라이브러리",
+      "time": "",
+      "clips": [
+        {
+          "route": "#ch08-clip03",
+          "title": "추가 읽을거리",
+          "type": "참고",
+          "folder": "chapters/CH07/ch07-clip05",
+          "linkCount": 0,
+          "imageCount": 0,
+          "sectionCount": 0,
+          "promptCount": 0
+        }
+      ]
+    },
+    {
+      "chapterId": "ch09",
+      "chapterNum": "CH 09",
+      "title": "Key Takeaways & Q/A",
+      "time": "17:00",
+      "clips": [
+        {
+          "route": "#ch09-clip01",
+          "title": "오늘의 핵심 정리",
+          "type": "개요",
+          "folder": "chapters/CH06/ch06-clip01",
+          "linkCount": 0,
+          "imageCount": 0,
+          "sectionCount": 5,
+          "promptCount": 0
+        },
+        {
+          "route": "#ch09-clip02",
+          "title": "조직에서의 다음 단계",
+          "type": "참고",
+          "folder": "chapters/CH06/ch06-clip02",
+          "linkCount": 0,
+          "imageCount": 0,
+          "sectionCount": 2,
+          "promptCount": 0
+        }
+      ]
+    }
+  ],
+  "clips": [
+    {
+      "chapterId": "ch00",
+      "route": "#ch00-clip01",
+      "title": "오늘의 시간표",
+      "folder": "chapters/CH00/ch00-clip01",
+      "textLength": 1436,
+      "htmlLength": 5869,
+      "sectionCount": 3,
+      "promptCount": 0,
+      "linkCount": 7,
+      "imageCount": 0,
+      "type": "개요"
+    },
+    {
+      "chapterId": "ch00",
+      "route": "#ch00-clip02",
+      "title": "왜 지금 임원이 AI를 직접 만져봐야 하나",
+      "folder": "chapters/CH00/ch00-clip02",
+      "textLength": 2428,
+      "htmlLength": 10226,
+      "sectionCount": 1,
+      "promptCount": 0,
+      "linkCount": 13,
+      "imageCount": 0,
+      "type": "개념"
+    },
+    {
+      "chapterId": "ch01",
+      "route": "#ch01-clip01",
+      "title": "Assistant에서 Agent Team까지",
+      "folder": "chapters/CH01/ch01-clip01",
+      "textLength": 1212,
+      "htmlLength": 5026,
+      "sectionCount": 1,
+      "promptCount": 0,
+      "linkCount": 0,
+      "imageCount": 0,
+      "type": "개념"
+    },
+    {
+      "chapterId": "ch01",
+      "route": "#ch01-clip02",
+      "title": "위임형 프롬프트 4원칙",
+      "folder": "chapters/CH01/ch01-clip02",
+      "textLength": 1885,
+      "htmlLength": 8285,
+      "sectionCount": 5,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "개념"
+    },
+    {
+      "chapterId": "ch01",
+      "route": "#ch01-clip03",
+      "title": "오늘의 4단계 실습 로드맵",
+      "folder": "chapters/CH01/ch01-clip03",
+      "textLength": 305,
+      "htmlLength": 5068,
+      "sectionCount": 0,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "개념"
+    },
+    {
+      "chapterId": "ch03",
+      "route": "#ch03-clip01",
+      "title": "Gemini로 임원 비서 시작하기",
+      "folder": "chapters/CH02/ch02-clip01",
+      "textLength": 1225,
+      "htmlLength": 5327,
+      "sectionCount": 4,
+      "promptCount": 0,
+      "linkCount": 1,
+      "imageCount": 3,
+      "type": "플랫폼"
+    },
+    {
+      "chapterId": "ch03",
+      "route": "#ch03-clip03",
+      "title": "Gems로 나만의 임원 비서 만들기",
+      "folder": "chapters/CH02/ch02-clip02",
+      "textLength": 1563,
+      "htmlLength": 4670,
+      "sectionCount": 4,
+      "promptCount": 3,
+      "linkCount": 2,
+      "imageCount": 3,
+      "type": "실습"
+    },
+    {
+      "chapterId": "ch03",
+      "route": "#ch03-clip04",
+      "title": "ChatGPT로 세컨드 오피니언 받기",
+      "folder": "chapters/CH02/ch02-clip03",
+      "textLength": 539,
+      "htmlLength": 2695,
+      "sectionCount": 4,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "플랫폼"
+    },
+    {
+      "chapterId": "ch04",
+      "route": "#ch04-clip01",
+      "title": "NotebookLM: 출처 기반 리서치 워크벤치",
+      "folder": "chapters/CH03/ch03-clip01",
+      "textLength": 2659,
+      "htmlLength": 6416,
+      "sectionCount": 4,
+      "promptCount": 0,
+      "linkCount": 3,
+      "imageCount": 1,
+      "type": "플랫폼"
+    },
+    {
+      "chapterId": "ch04",
+      "route": "#ch04-clip02",
+      "title": "문서 교차분석으로 1페이지 브리핑 만들기",
+      "folder": "chapters/CH03/ch03-clip02",
+      "textLength": 1730,
+      "htmlLength": 8088,
+      "sectionCount": 4,
+      "promptCount": 2,
+      "linkCount": 6,
+      "imageCount": 1,
+      "type": "실습"
+    },
+    {
+      "chapterId": "ch05",
+      "route": "#ch05-clip01",
+      "title": "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+      "folder": "chapters/CH05/ch05-clip01",
+      "textLength": 296,
+      "htmlLength": 1931,
+      "sectionCount": 3,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "개요"
+    },
+    {
+      "chapterId": "ch05",
+      "route": "#ch05-clip02",
+      "title": "Google AI Studio 빠르게 시작하기",
+      "folder": "chapters/CH04/ch04-clip01",
+      "textLength": 828,
+      "htmlLength": 4823,
+      "sectionCount": 3,
+      "promptCount": 0,
+      "linkCount": 4,
+      "imageCount": 1,
+      "type": "설정"
+    },
+    {
+      "chapterId": "ch06",
+      "route": "#ch06-clip05",
+      "title": "3분 이사회 브리핑 앱 만들기",
+      "folder": "chapters/CH04/ch04-clip02",
+      "textLength": 3103,
+      "htmlLength": 12519,
+      "sectionCount": 5,
+      "promptCount": 8,
+      "linkCount": 3,
+      "imageCount": 0,
+      "type": "실습"
+    },
+    {
+      "chapterId": "ch06",
+      "route": "#ch06-clip04",
+      "title": "나만의 스킬 초안 만들기",
+      "folder": "chapters/CH04/ch04-clip03",
+      "textLength": 817,
+      "htmlLength": 4085,
+      "sectionCount": 2,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "실습"
+    },
+    {
+      "chapterId": "ch07",
+      "route": "#ch07-clip01",
+      "title": "에이전트는 왜 조직 운영 비유로 설명해야 하나",
+      "folder": "chapters/CH07/ch07-clip01",
+      "textLength": 1883,
+      "htmlLength": 5383,
+      "sectionCount": 6,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "개념"
+    },
+    {
+      "chapterId": "ch07",
+      "route": "#ch07-clip03",
+      "title": "시연: 여러 보고서를 한 화면으로 묶기",
+      "folder": "chapters/CH07/ch07-clip02",
+      "textLength": 1890,
+      "htmlLength": 4037,
+      "sectionCount": 4,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "개요"
+    },
+    {
+      "chapterId": "ch07",
+      "route": "#ch07-clip06",
+      "title": "스킬을 SOP처럼 쓰는 법",
+      "folder": "chapters/CH07/ch07-clip03",
+      "textLength": 835,
+      "htmlLength": 3409,
+      "sectionCount": 2,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "참고"
+    },
+    {
+      "chapterId": "ch07",
+      "route": "#ch07-clip07",
+      "title": "스킬 저장과 재사용 심화",
+      "folder": "chapters/CH07/ch07-clip04",
+      "textLength": 492,
+      "htmlLength": 3253,
+      "sectionCount": 1,
+      "promptCount": 0,
+      "linkCount": 2,
+      "imageCount": 0,
+      "type": "참고"
+    },
+    {
+      "chapterId": "ch08",
+      "route": "#ch08-clip03",
+      "title": "추가 읽을거리",
+      "folder": "chapters/CH07/ch07-clip05",
+      "textLength": 3495,
+      "htmlLength": 5912,
+      "sectionCount": 0,
+      "promptCount": 0,
+      "linkCount": 0,
+      "imageCount": 0,
+      "type": "참고"
+    },
+    {
+      "chapterId": "ch09",
+      "route": "#ch09-clip01",
+      "title": "오늘의 핵심 정리",
+      "folder": "chapters/CH06/ch06-clip01",
+      "textLength": 1823,
+      "htmlLength": 7745,
+      "sectionCount": 5,
+      "promptCount": 0,
+      "linkCount": 0,
+      "imageCount": 0,
+      "type": "개요"
+    },
+    {
+      "chapterId": "ch09",
+      "route": "#ch09-clip02",
+      "title": "조직에서의 다음 단계",
+      "folder": "chapters/CH06/ch06-clip02",
+      "textLength": 535,
+      "htmlLength": 1596,
+      "sectionCount": 2,
+      "promptCount": 0,
+      "linkCount": 0,
+      "imageCount": 0,
+      "type": "참고"
+    }
+  ],
+  "links": {
+    "discoveredTotal": 94,
+    "queuedExternal": 92,
+    "downloaded": 85,
+    "failed": 7
+  },
+  "warnings": [],
+  "finishedAt": "2026-02-28T01:54:59.032Z"
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Google AI Studio & Vibe Coding",
+  "time": "14:20",
+  "clips": [
+    {
+      "route": "#ch05-clip02",
+      "title": "Google AI Studio 빠르게 시작하기",
+      "type": "설정",
+      "folder": "chapters/CH04/ch04-clip01"
+    },
+    {
+      "route": "#ch06-clip05",
+      "title": "3분 이사회 브리핑 앱 만들기",
+      "type": "실습",
+      "folder": "chapters/CH04/ch04-clip02"
+    },
+    {
+      "route": "#ch06-clip04",
+      "title": "나만의 스킬 초안 만들기",
+      "type": "실습",
+      "folder": "chapters/CH04/ch04-clip03"
+    }
+  ]
+}
