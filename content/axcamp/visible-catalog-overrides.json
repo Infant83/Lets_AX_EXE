@@ -19,6 +19,10 @@
     "ch05": {
       "title": "Hi-D Code",
       "time": "16:10"
+    },
+    "ch07": {
+      "title": "참고자료 라이브러리",
+      "time": ""
     }
   },
   "clips": {
@@ -65,6 +69,10 @@
     "ch05-clip01": {
       "title": "Hi-D Code 소개 및 시연",
       "type": "개요"
+    },
+    "ch07-clip01": {
+      "title": "에이전틱 AI란",
+      "type": "개념"
     }
   }
 }
