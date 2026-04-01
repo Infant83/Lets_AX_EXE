@@ -372,14 +372,17 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     chapterNum: "CH 00",
     title: "과정 안내",
     time: "08:30",
-    clips: [{ clipKey: "ch00-clip01", title: "오늘의 시간표", type: "개요" }]
+    clips: [
+      { clipKey: "ch00-clip01", title: "오늘의 시간표", type: "개요" },
+      { clipKey: "ch00-clip02", title: "자사 생성형 AI 서비스 현황", type: "개요" }
+    ]
   },
   {
     chapterId: "ch01",
     chapterCode: "CH01",
     chapterNum: "CH 01",
     title: "AI 핵심 개념",
-    time: "08:40",
+    time: "08:50",
     clips: [
       { clipKey: "ch00-clip02", title: "AI 트렌드", type: "참고" },
       { clipKey: "ch01-clip01", title: "Assistant에서 Agentic AI로", type: "개념" },
@@ -582,12 +585,13 @@ function needsClientCatalogPatch(rawChapters) {
   );
 
   return Boolean(
-    (Array.isArray(ch00?.clips) && ch00.clips.length > 1) ||
+    (Array.isArray(ch00?.clips) && ch00.clips.length !== 2) ||
       (Array.isArray(ch01?.clips) && ch01.clips.length > 4) ||
       (Array.isArray(ch02?.clips) && ch02.clips.length < 5) ||
       (Array.isArray(ch03?.clips) && ch03.clips.length !== 3) ||
       (Array.isArray(ch04?.clips) && ch04.clips.length !== 3) ||
       normalizeWs(ch01?.clips?.[0]?.title) !== "AI 트렌드" ||
+      normalizeWs(ch00?.clips?.[1]?.title) !== "자사 생성형 AI 서비스 현황" ||
       ch02ClipTitles.includes("프롬프트 엔지니어링 4가지 원칙") ||
       ch04ClipTitles.includes("경쟁사 리서치 대시보드") ||
       ch01ClipTitles.includes("프롬프트 구조화 하기") ||

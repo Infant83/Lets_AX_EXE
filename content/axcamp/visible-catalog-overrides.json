@@ -10,7 +10,7 @@
     },
     "ch01": {
       "title": "AI 핵심 개념",
-      "time": "08:40"
+      "time": "08:50"
     },
     "ch04": {
       "title": "Google AI Studio",
@@ -44,6 +44,10 @@
     },
     "ch00-clip01": {
       "title": "오늘의 시간표",
+      "type": "개요"
+    },
+    "ch00-clip02": {
+      "title": "자사 생성형 AI 서비스 현황",
       "type": "개요"
     },
     "ch01-clip01": {

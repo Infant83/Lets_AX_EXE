@@ -2029,14 +2029,17 @@ async function buildCatalog(sourceRoot) {
     {
       visibleChapterId: "ch00",
       title: "과정 안내",
-      time: "10:00",
-      sourceChapterIds: ["ch00"],
-      clipKeys: ["ch00-clip01"]
+      time: "08:30",
+      sourceChapterIds: ["ch00", "ch01"],
+      clipKeys: ["ch00-clip01", "ch01-clip02"],
+      clipTitles: {
+        "ch01-clip02": "자사 생성형 AI 서비스 현황"
+      }
     },
     {
       visibleChapterId: "ch01",
       title: "AI 핵심 개념",
-      time: "10:25",
+      time: "08:50",
       sourceChapterIds: ["ch01"],
       clipKeys: ["ch00-clip02", "ch01-clip01", "ch01-clip03", "ch01-clip04"],
       clipTitles: {
