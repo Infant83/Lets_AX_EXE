@@ -1,13 +1,13 @@
 {
   "chapterId": "ch01",
   "chapterNum": "CH 01",
-  "title": "Gemini & ChatGPT",
-  "time": "09:30",
+  "title": "AI 핵심 개념",
+  "time": "08:50",
   "clips": [
     {
       "route": "#ch01-clip01",
-      "title": "Assistant에서 Agentic AI로",
-      "type": "개념",
+      "title": "AI 트렌드",
+      "type": "참고",
       "folder": "chapters/CH01/ch01-clip01",
       "linkCount": 2,
       "imageCount": 0,
@@ -16,8 +16,8 @@
     },
     {
       "route": "#ch01-clip02",
-      "title": "프롬프팅 기초",
-      "type": "실습",
+      "title": "Assistant에서 Agentic AI로",
+      "type": "개념",
       "folder": "chapters/CH01/ch01-clip02",
       "linkCount": 2,
       "imageCount": 0,

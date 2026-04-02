@@ -9,7 +9,7 @@
     {
       "chapterId": "ch00",
       "chapterNum": "CH 00",
-      "title": "오늘의 여정",
+      "title": "과정 안내",
       "time": "08:30",
       "clips": [
         {
@@ -24,8 +24,8 @@
         },
         {
           "route": "#ch00-clip02",
-          "title": "AI 트렌드",
-          "type": "참고",
+          "title": "자사 생성형 AI 서비스 현황",
+          "type": "개요",
           "folder": "chapters/CH00/ch00-clip02",
           "linkCount": 15,
           "imageCount": 0,
@@ -38,12 +38,12 @@
       "chapterId": "ch01",
       "chapterNum": "CH 01",
       "title": "AI 핵심 개념",
-      "time": "08:40",
+      "time": "08:50",
       "clips": [
         {
           "route": "#ch01-clip01",
-          "title": "Assistant에서 Agentic AI로",
-          "type": "개념",
+          "title": "AI 트렌드",
+          "type": "참고",
           "folder": "chapters/CH01/ch01-clip01",
           "linkCount": 2,
           "imageCount": 0,
@@ -52,7 +52,7 @@
         },
         {
           "route": "#ch01-clip02",
-          "title": "프롬프트 엔지니어링 4가지 원칙",
+          "title": "Assistant에서 Agentic AI로",
           "type": "개념",
           "folder": "chapters/CH01/ch01-clip02",
           "linkCount": 2,
@@ -82,7 +82,7 @@
         },
         {
           "route": "#ch01-clip05",
-          "title": "프롬프트 구조화 하기",
+          "title": "Gems 소개: 프롬프트 구조화하기",
           "type": "참고",
           "folder": "chapters/CH01/ch01-clip05",
           "linkCount": 2,
@@ -216,7 +216,7 @@
         },
         {
           "route": "#ch04-clip03",
-          "title": "기업 분석 코스: Gems에서 NotebookLM까지",
+          "title": "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석",
           "type": "실습",
           "folder": "chapters/CH04/ch04-clip03",
           "linkCount": 6,
@@ -494,7 +494,7 @@
     {
       "chapterId": "ch00",
       "route": "#ch00-clip02",
-      "title": "AI 트렌드",
+      "title": "자사 생성형 AI 서비스 현황",
       "folder": "chapters/CH00/ch00-clip02",
       "textLength": 1993,
       "htmlLength": 8881,
@@ -502,12 +502,12 @@
       "promptCount": 0,
       "linkCount": 15,
       "imageCount": 0,
-      "type": "참고"
+      "type": "개요"
     },
     {
       "chapterId": "ch01",
       "route": "#ch01-clip01",
-      "title": "Assistant에서 Agentic AI로",
+      "title": "AI 트렌드",
       "folder": "chapters/CH01/ch01-clip01",
       "textLength": 1060,
       "htmlLength": 5930,
@@ -515,12 +515,12 @@
       "promptCount": 0,
       "linkCount": 2,
       "imageCount": 0,
-      "type": "개념"
+      "type": "참고"
     },
     {
       "chapterId": "ch01",
       "route": "#ch01-clip02",
-      "title": "프롬프팅 기초",
+      "title": "Assistant에서 Agentic AI로",
       "folder": "chapters/CH01/ch01-clip02",
       "textLength": 1493,
       "htmlLength": 7260,
@@ -528,7 +528,7 @@
       "promptCount": 0,
       "linkCount": 2,
       "imageCount": 0,
-      "type": "실습"
+      "type": "개념"
     },
     {
       "chapterId": "ch01",
@@ -540,7 +540,8 @@
       "sectionCount": 0,
       "promptCount": 0,
       "linkCount": 2,
-      "imageCount": 0
+      "imageCount": 0,
+      "type": "개념"
     },
     {
       "chapterId": "ch01",
@@ -558,14 +559,15 @@
     {
       "chapterId": "ch01",
       "route": "#ch01-clip05",
-      "title": "프롬프트 구조화 하기",
+      "title": "Gems 소개: 프롬프트 구조화하기",
       "folder": "chapters/CH01/ch01-clip05",
       "textLength": 824,
       "htmlLength": 3354,
       "sectionCount": 3,
       "promptCount": 0,
       "linkCount": 2,
-      "imageCount": 0
+      "imageCount": 0,
+      "type": "실습"
     },
     {
       "chapterId": "ch02",
@@ -679,7 +681,7 @@
     {
       "chapterId": "ch04",
       "route": "#ch04-clip03",
-      "title": "기업 분석 코스: Gems에서 NotebookLM까지",
+      "title": "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석",
       "folder": "chapters/CH04/ch04-clip03",
       "textLength": 0,
       "htmlLength": 0,

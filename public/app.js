@@ -384,8 +384,8 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     title: "AI 핵심 개념",
     time: "08:50",
     clips: [
-      { clipKey: "ch00-clip02", title: "AI 트렌드", type: "참고" },
-      { clipKey: "ch01-clip01", title: "Assistant에서 Agentic AI로", type: "개념" },
+      { clipKey: "ch01-clip01", title: "AI 트렌드", type: "참고" },
+      { clipKey: "ch01-clip02", title: "Assistant에서 Agentic AI로", type: "개념" },
       { clipKey: "ch01-clip03", title: "기술 활용 로드맵", type: "개념" },
       { clipKey: "ch01-clip04", title: "개념 다지기", type: "참고" }
     ]
@@ -399,8 +399,8 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     clips: [
       { clipKey: "ch02-clip01", title: "Gemini 소개 및 접속 방법", type: "플랫폼" },
       { clipKey: "ch02-clip02", title: "프롬프팅 기초", type: "실습" },
-      { clipKey: "ch02-clip03", title: "Gems 소개: 프롬프트 구조화하기", type: "참고" },
       { clipKey: "ch02-clip04", title: "AI 비서 만들기: 비즈니스 프롬프팅", type: "실습" },
+      { clipKey: "ch02-clip03", title: "Gems 소개: 프롬프트 구조화하기", type: "실습" },
       { clipKey: "ch02-clip05", title: "ChatGPT 및 GPTs 소개", type: "플랫폼" }
     ]
   },
@@ -413,7 +413,7 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     clips: [
       { clipKey: "ch03-clip01", title: "NotebookLM 소개 및 문서 기반 AI 연구 도우미", type: "플랫폼" },
       { clipKey: "ch03-clip02", title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑", type: "실습" },
-      { clipKey: "ch03-clip03", title: "기업 분석 코스: Gems에서 NotebookLM까지", type: "실습" }
+      { clipKey: "ch03-clip03", title: "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석", type: "실습" }
     ]
   },
   {
@@ -429,6 +429,44 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     ]
   }
 ];
+
+const CLIENT_RUNTIME_CLIP_OVERRIDE_URLS = {
+  "ch00-clip02": "/runtime-overrides/ch00-clip02.html",
+  "ch01-clip01": "/runtime-overrides/ch01-clip01.html",
+  "ch01-clip02": "/runtime-overrides/ch01-clip02.html"
+};
+
+async function applyRuntimeClipOverride(clipKey, payload) {
+  const normalized = normalizeClipKey(clipKey);
+  const overrideUrl = CLIENT_RUNTIME_CLIP_OVERRIDE_URLS[normalized];
+  if (!overrideUrl) return payload;
+
+  try {
+    const response = await fetch(resolveRuntimeUrl(overrideUrl), { cache: "no-store" });
+    if (!response.ok) return payload;
+
+    const contentHtml = await response.text();
+    if (!contentHtml.trim()) return payload;
+
+    const doc = new DOMParser().parseFromString(contentHtml, "text/html");
+    const overview = normalizeWs(doc.querySelector(".clip-overview")?.textContent || "");
+    const badges = Array.from(doc.querySelectorAll(".clip-header .clip-badge"))
+      .map((badge) => normalizeWs(badge.textContent || ""))
+      .filter(Boolean);
+
+    return {
+      ...payload,
+      clip: {
+        ...(payload?.clip || {}),
+        overview: overview || payload?.clip?.overview || "",
+        badges: badges.length ? badges : payload?.clip?.badges || []
+      },
+      contentHtml
+    };
+  } catch {
+    return payload;
+  }
+}
 
 function cloneChapter(chapter) {
   return {
@@ -549,7 +587,14 @@ function buildClientVisibleCatalog(rawChapters) {
 
   for (const chapter of chapters) {
     if (customChapterIds.has(normalizeWs(chapter.chapterId).toLowerCase())) continue;
-    nextChapters.push(cloneChapter(chapter));
+    const clonedChapter = cloneChapter(chapter);
+    if (normalizeWs(clonedChapter.chapterId).toLowerCase() === "ch07") {
+      clonedChapter.clips = (clonedChapter.clips || []).filter((clip) => {
+        const title = normalizeWs(clip?.title);
+        return !["Copilot 참고자료", "실습용 컨텍스트 파일", "AI Readiness 분석"].includes(title);
+      });
+    }
+    nextChapters.push(clonedChapter);
   }
 
   return nextChapters;
@@ -580,6 +625,9 @@ function needsClientCatalogPatch(rawChapters) {
   const ch02PromptingIndex = ch02ClipTitles.findIndex(
     (title) => title === "프롬프팅 기초"
   );
+  const ch02BusinessIndex = ch02ClipTitles.findIndex(
+    (title) => title === "AI 비서 만들기: 비즈니스 프롬프팅"
+  );
   const ch02StructuredIndex = ch02ClipTitles.findIndex(
     (title) => title === "Gems 소개: 프롬프트 구조화하기"
   );
@@ -600,7 +648,8 @@ function needsClientCatalogPatch(rawChapters) {
       !ch03ClipTitles.includes("문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑") ||
       !ch04ClipTitles.includes("바이브 코딩으로 웹앱 제작하기") ||
       !ch02ClipTitles.includes("Gems 소개: 프롬프트 구조화하기") ||
-      ch02StructuredIndex !== ch02PromptingIndex + 1
+      ch02BusinessIndex !== ch02PromptingIndex + 1 ||
+      ch02StructuredIndex !== ch02BusinessIndex + 1
   );
 }
 
@@ -684,6 +733,16 @@ function rewriteClientClipHtml(clipKey, contentHtml) {
       if (text === "CH04: Hi-D Code" || text === "CH05: Hi-D Code") {
         anchor.setAttribute("href", "#ch05-clip01");
         anchor.textContent = "CH05: Hi-D Code";
+        return;
+      }
+      if (text === "CH04: Key Takeaways & Q/A" || text === "CH06: Key Takeaways & Q/A") {
+        anchor.setAttribute("href", "#ch06-clip01");
+        anchor.textContent = "CH06: Key Takeaways & Q/A";
+        return;
+      }
+      if (text === "CH07: 참고자료 라이브러리" || text === "CH08: 참고자료 라이브러리") {
+        anchor.setAttribute("href", "#ch07-clip09");
+        anchor.textContent = "CH07: 참고자료 라이브러리";
       }
     });
   }
@@ -2734,6 +2793,7 @@ const SLIDE_DECK_BUILDERS = {
   "tech-utilization-roadmap": buildTechUtilizationRoadmapDeck,
   "concept-foundation-guide": buildConceptFoundationGuideDeck,
   "gemini-access-roadshow": buildGeminiAccessRoadshowDeck,
+  "gemini-screen-quick-tour": buildGeminiScreenQuickTourDeck,
   "business-prompting-workshop": buildBusinessPromptingWorkshopDeck,
   "gemini-gems-roadshow": buildGeminiGemsRoadshowDeck,
   "gems-create-steps": buildGemsCreateStepsDeck,
@@ -3351,6 +3411,41 @@ function buildGeminiAccessRoadshowDeck() {
         title: "표 구조화, 요약, 초안 작성까지 한 화면에서",
         imageSrc: `${basePath}/slide-05.png`,
         imageAlt: "표 구조화, 핵심 요약, 초안 작성 등 모든 분석 작업이 하나의 직관적인 인터페이스에서 가능함을 보여줍니다."
+      }
+    ]
+  };
+}
+
+function buildGeminiScreenQuickTourDeck() {
+  const basePath = withBase("/assets/gemini/ch02");
+
+  return {
+    id: "gemini-screen-quick-tour",
+    previewColumns: 3,
+    kicker: "Gemini Practice",
+    title: "Gemini 화면 간단 소개",
+    subtitle: "실습에 들어가기 전 먼저 볼 3가지 화면",
+    slides: [
+      {
+        eyebrow: "01 / Home",
+        title: "홈 화면",
+        imageSrc: `${basePath}/gemini-home.png`,
+        imageAlt: "Gemini 홈 화면",
+        summary: "왼쪽에는 대화 이력과 Gems, 아래에는 입력창과 파일 첨부 버튼이 있습니다. 오늘 대부분의 실습은 이 화면에서 시작합니다."
+      },
+      {
+        eyebrow: "02 / Mode",
+        title: "모드 선택 메뉴",
+        imageSrc: `${basePath}/gemini-mode-menu.png`,
+        imageAlt: "Gemini 모드 선택 메뉴",
+        summary: "빠른 답이 필요한 작업과 더 깊은 추론이 필요한 작업을 구분해 모델 사용 감각을 잡는 화면입니다."
+      },
+      {
+        eyebrow: "03 / Upload",
+        title: "파일 업로드 메뉴",
+        imageSrc: `${basePath}/gemini-upload-menu.png`,
+        imageAlt: "Gemini 파일 업로드 메뉴",
+        summary: "문서, 데이터, 코드 파일, Drive 자료를 붙여서 컨텍스트를 키우면 결과 품질이 확 달라집니다."
       }
     ]
   };
@@ -4337,15 +4432,37 @@ function showCopyButtonState(button, copied, label) {
   if (!button.dataset.defaultLabel) {
     button.dataset.defaultLabel = normalizeWs(button.textContent) || "복사";
   }
+  if (!button.dataset.defaultHtml) {
+    button.dataset.defaultHtml = button.innerHTML;
+  }
 
-  button.textContent = label || button.dataset.defaultLabel;
+  const isResourceCard = button.classList.contains("ref-link-item");
+  if (label && isResourceCard) {
+    const title = document.createElement("strong");
+    title.style.display = "block";
+    title.textContent = label;
+    const sub = document.createElement("span");
+    sub.style.display = "block";
+    sub.style.marginTop = "6px";
+    sub.style.fontSize = "0.76rem";
+    sub.style.color = "inherit";
+    sub.style.opacity = "0.92";
+    sub.textContent = copied ? "클립보드에 복사되었습니다" : "다시 시도해 주세요";
+    button.replaceChildren(title, sub);
+  } else {
+    button.textContent = label || button.dataset.defaultLabel;
+  }
   button.classList.toggle("copied", Boolean(copied));
   button.classList.toggle("failed", !copied && Boolean(label));
 
   if (!label) return;
 
   setTimeout(() => {
-    button.textContent = button.dataset.defaultLabel || "복사";
+    if (button.dataset.defaultHtml) {
+      button.innerHTML = button.dataset.defaultHtml;
+    } else {
+      button.textContent = button.dataset.defaultLabel || "복사";
+    }
     button.classList.remove("copied");
     button.classList.remove("failed");
   }, COPY_FEEDBACK_MS);
@@ -4708,13 +4825,15 @@ async function openClip(clipKey, updateHash = false) {
   }
   closeSlideDeck();
 
-  const data = await api(`/api/clips/${encodeURIComponent(normalized)}`);
+  const rawData = await api(`/api/clips/${encodeURIComponent(normalized)}`);
+  const data = await applyRuntimeClipOverride(normalized, rawData);
   const sidebarClip = state.clipMap.get(normalized) || null;
   const clip = applyClientClipDisplay(data.clip, sidebarClip);
-  const visibleContentHtml = rewriteClientClipHtml(
-    normalized,
-    clip.contentHtml || "<p>콘텐츠가 없습니다.</p>"
-  );
+  const sourceContentHtml =
+    typeof data?.contentHtml === "string" && data.contentHtml.trim()
+      ? data.contentHtml
+      : clip.contentHtml || "<p>콘텐츠가 없습니다.</p>";
+  const visibleContentHtml = rewriteClientClipHtml(normalized, sourceContentHtml);
 
   state.currentClipKey = normalized;
   state.currentChapterId = clip.chapterId || "";
@@ -4952,7 +5071,11 @@ async function loadEditorSourceForCurrentClip() {
   try {
     const data = await api(`/api/admin/clip-source/${encodeURIComponent(state.currentClipKey)}`);
     state.editorSourceClipKey = data.clip?.clipKey || state.currentClipKey;
-    const serverHtml = String(data.source?.contentHtml || "");
+    const overridden = await applyRuntimeClipOverride(state.editorSourceClipKey, {
+      clip: data.clip || {},
+      contentHtml: String(data.source?.contentHtml || "")
+    });
+    const serverHtml = String(overridden?.contentHtml || data.source?.contentHtml || "");
     const visibleHtml =
       state.currentVisibleContentHtml && state.currentClipKey === state.editorSourceClipKey
         ? state.currentVisibleContentHtml

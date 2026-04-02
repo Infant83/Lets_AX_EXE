@@ -1,229 +1,163 @@
 <div class="clip-header">
   <div class="clip-badges">
     <span class="clip-badge time">~35분</span>
-    <span class="clip-badge chapter">CH 03</span>
+    <span class="clip-badge chapter">CH 04</span>
     <span class="clip-badge type-practice">실습</span>
   </div>
   <h1 class="clip-title">프롬프팅 기초</h1>
 </div>
 
-<div class="clip-overview">이제 실제 업무 프롬프트를 다루며, 역할·맥락·형식·단계라는 기본 요소를 회의 분석과 경영진 브리핑 사례에 적용합니다.</div>
+<div class="clip-overview">처음부터 무거운 업무 프롬프트로 들어가기보다, Gemini와 자연스럽게 대화하며 <strong>페르소나 설정</strong>, <strong>맥락 누적</strong>, <strong>구조화된 정리</strong>를 몸으로 익히는 클립입니다.</div>
 
-<div class="clip-section slide-preview-shell">
-  <div class="slide-preview-head">
-    <p class="slide-briefing-eyebrow">NotebookLM Infographic</p>
-    <div class="slide-preview-top">
-      <div>
-        <h2 class="slide-briefing-title">비즈니스 프롬프트를 업무 위임 구조로 바꾸는 법</h2>
-        <p class="slide-briefing-desc">NotebookLM이 현재 실습 자료를 바탕으로 정리한 한 장짜리 인포그래픽입니다. 프롬프트 4종, 회의 오디오 분석, 자료 교차검증, 전략 브리핑 흐름을 한 번에 묶어 보여줍니다.</p>
+<div class="clip-section">
+  <div class="clip-section-title">이번 실습의 흐름</div>
+  <div class="clip-section-content">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:8px 0 18px">
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">1. Self Intro</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">자기소개 템플릿으로 대화를 시작하며 Gemini에게 <strong>대화 목적</strong>과 <strong>역할</strong>을 먼저 알려줍니다.</div>
       </div>
-      <div class="slide-preview-actions">
-        <a class="slide-briefing-link" data-slide-deck-download="business-prompting-workshop">다운로드</a>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">2. Follow-up</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">Gemini가 추가 질문을 하게 만들어 대화를 풍성하게 하고, 내 프로필과 관심사를 자연스럽게 구체화합니다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">3. Structured Output</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">대화 내용을 표, 불릿, Markdown 코드블록으로 정리하게 하면서 AI가 좋아하는 입력 형식을 체험합니다.</div>
+      </div>
+      <div style="background:var(--bg-offwhite);border:1px solid var(--border);border-radius:16px;padding:16px">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--brand);margin-bottom:8px">4. Canvas</div>
+        <div style="font-size:0.84rem;line-height:1.65;color:var(--text-body)">정리된 프로필을 바탕으로 간단한 자기소개 웹페이지까지 요청해 보며 Gemini의 확장 기능을 가볍게 맛봅니다.</div>
       </div>
     </div>
+    <div class="tip-block">
+      <div class="tip-block-title">오늘 이 클립에서 익히는 것</div>
+      <div class="tip-block-content">좋은 프롬프트는 처음부터 복잡한 업무 지시문을 쓰는 것이 아닙니다. <strong>대화의 목적을 먼저 정하고, 필요한 맥락을 쌓고, 결과를 구조화</strong>하는 습관이 출발점입니다.</div>
+    </div>
   </div>
-  <div class="slide-preview-gallery" data-slide-deck-preview="business-prompting-workshop"></div>
 </div>
 
 <div class="clip-section">
-  <div class="clip-section-title">짧게 기억할 실전 원칙</div>
+  <div class="clip-section-title">1. 먼저 이렇게 시작해보세요</div>
+  <div class="clip-section-content">
+    <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:14px">아래 프롬프트는 자기소개를 매개로 Gemini와의 첫 대화를 여는 템플릿입니다. 단순히 정보만 던지는 것이 아니라, <strong>Gemini가 인터뷰어처럼 질문을 이어가게</strong> 만드는 것이 핵심입니다.</p>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">자기소개 대화 시작 템플릿</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-intro-prompt-1')">복사</button></div>
+      <div class="prompt-content" id="ch02-intro-prompt-1">당신은 AX Camp를 함께하는 AI 인터뷰어이자 프로필 정리 비서입니다.
+
+지금부터 나와 대화하면서 내 업무 프로필을 함께 완성해 주세요.
+
+규칙:
+- 한 번에 질문은 1~2개만 해주세요.
+- 내가 말한 내용은 기억하고, 다음 질문에 반영해 주세요.
+- 답변 말미에는 "현재까지 이해한 나의 프로필"을 3줄 이내로 갱신해 주세요.
+- 빠진 정보가 있으면 억지로 추정하지 말고 질문으로 채워 주세요.
+
+먼저 아래 자기소개를 바탕으로 대화를 시작해 주세요.
+
+- 이름:
+- 소속/역할:
+- 주요 경력:
+- 관심 분야:
+- 이번 교육에서 얻고 싶은 것:
+- AI로 풀고 싶은 업무 문제:</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">2. Gemini에게 추가 질문을 부탁해보세요</div>
+  <div class="clip-section-content">
+    <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:14px">한 번 답하고 끝내지 말고, Gemini가 나를 더 잘 이해하도록 <strong>질문을 이어가게</strong> 만드는 것이 중요합니다. 아래 요청을 한두 번 넣으면 프로필이 훨씬 입체적으로 잡힙니다.</p>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">추가 질문 요청</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-intro-prompt-2')">복사</button></div>
+      <div class="prompt-content" id="ch02-intro-prompt-2">지금까지의 대화를 바탕으로, 내 프로필을 더 잘 이해하기 위해 필요한 질문을 5개만 골라 순서대로 해줘.
+
+조건:
+- 한 번에 1~2개씩만 질문
+- 왜 이 질문이 필요한지도 한 줄로 덧붙이기
+- 내 답변을 반영해서 다음 질문을 조정하기</div>
+    </div>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">프로필 보강 요청</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-intro-prompt-3')">복사</button></div>
+      <div class="prompt-content" id="ch02-intro-prompt-3">지금까지 내용을 기준으로 내 프로필의 빈칸을 찾아줘.
+
+아래 관점으로 아직 부족한 정보를 짚어주고, 필요한 것만 추가 질문해줘.
+- 현재 맡고 있는 일
+- 잘 아는 산업/도메인
+- AI를 통해 바꾸고 싶은 업무
+- 이번 교육에서 실제로 만들어보고 싶은 결과물</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">3. 대화 내용을 구조화해 보세요</div>
+  <div class="clip-section-content">
+    <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:14px">여기서부터 <strong>구조화된 프롬프트</strong>의 가치가 드러납니다. 대화로 쌓은 내용을 일정한 형식으로 정리하게 만들면, 나중에 다시 쓰거나 다른 도구에 넘기기 쉬워집니다.</p>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">프로필 요약 요청</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-intro-prompt-4')">복사</button></div>
+      <div class="prompt-content" id="ch02-intro-prompt-4">지금까지 대화를 바탕으로 내 프로필을 아래 형식으로 정리해줘.
+
+## 기본 정보
+## 핵심 경력
+## 관심 산업 / 업무 영역
+## 이번 교육에서 실험해보고 싶은 것
+## AI와 함께 만들고 싶은 결과물
+
+마지막에는 내가 Gemini에게 앞으로 어떤 질문을 하면 좋을지 3개 제안해줘.</div>
+    </div>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">Markdown 코드블록으로 저장하기</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-intro-prompt-5')">복사</button></div>
+      <div class="prompt-content" id="ch02-intro-prompt-5">방금 정리한 프로필을 다시 한 번 정돈해서 출력해줘.
+
+조건:
+- 전체 내용을 ```markdown 코드블록``` 안에 넣어줘.
+- 제목과 불릿을 유지해줘.
+- 나중에 다른 AI 도구나 문서에 바로 붙여넣을 수 있게 깔끔하게 정리해줘.</div>
+    </div>
+    <div class="info-block" style="margin-top:16px">
+      <div class="info-block-title">왜 이 형식이 중요한가</div>
+      <div style="font-size:0.85rem;line-height:1.7;color:var(--text-body)">AI는 긴 자유서술도 이해하지만, <strong>제목·불릿·코드블록처럼 경계가 분명한 형식</strong>을 훨씬 안정적으로 다룹니다. 그래서 Markdown으로 정리된 결과는 저장하기도 좋고, 다음 프롬프트의 입력으로 다시 넣기도 좋습니다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">4. 한 걸음 더: Canvas로 확장해보기</div>
+  <div class="clip-section-content">
+    <p style="font-size:0.84rem;color:var(--text-secondary);margin-bottom:14px">정리된 프로필이 생기면, 이제 그것을 바탕으로 바로 무언가를 만들 수 있습니다. 여기서는 예시로 <strong>자기소개 웹페이지</strong>를 요청해보며 Canvas 계열 기능을 체감합니다.</p>
+    <div class="prompt-block">
+      <div class="prompt-header"><span class="prompt-label">프로필 기반 웹페이지 생성 요청</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-intro-prompt-6')">복사</button></div>
+      <div class="prompt-content" id="ch02-intro-prompt-6">방금 정리한 내 프로필을 바탕으로, 한 페이지짜리 자기소개 웹페이지 초안을 만들어줘.
+
+조건:
+- 섹션: 소개 / 주요 경력 / 관심 분야 / AI로 만들고 싶은 것
+- 톤: 깔끔하고 전문적인 스타일
+- 너무 화려하지 않게
+- 먼저 전체 구성안을 보여주고, 가능하면 Canvas에서 바로 수정할 수 있는 형태로 제안해줘.</div>
+    </div>
+  </div>
+</div>
+
+<div class="clip-section">
+  <div class="clip-section-title">이 클립에서 자연스럽게 익히는 4가지</div>
   <div class="clip-section-content">
     <table class="comparison-table">
       <thead>
-        <tr><th>원칙</th><th>질문</th><th>실습에서 바로 쓰는 방식</th></tr>
+        <tr><th>요소</th><th>지금 어떤 방식으로 익히나</th><th>왜 중요한가</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>Role</strong></td><td>AI를 누구로 일하게 할 것인가?</td><td>전략 컨설턴트, 수석 비서관, 애널리스트처럼 역할을 먼저 선언</td></tr>
-        <tr><td><strong>Context</strong></td><td>무슨 배경과 자료를 같이 줄 것인가?</td><td>회의 녹음, 보고서, 맥락 문서를 같은 대화에 첨부</td></tr>
-        <tr><td><strong>Format</strong></td><td>어떤 형태로 답을 받을 것인가?</td><td>표, 대시보드, 의사결정 포인트, 액션 아이템으로 출력 지정</td></tr>
-        <tr><td><strong>Step</strong></td><td>한 번에 끝낼 것인가, 나눠서 깊게 갈 것인가?</td><td>회의록 작성 → 이슈 추출 → 자료 교차분석 → 전략 제안</td></tr>
+        <tr><td><strong>페르소나 설정</strong></td><td>Gemini에게 인터뷰어/프로필 비서 역할을 부여</td><td>대화의 방향과 톤을 먼저 잡아줍니다</td></tr>
+        <tr><td><strong>맥락 제공</strong></td><td>나의 역할, 경력, 관심사, 목표를 대화로 축적</td><td>AI가 점점 나에게 맞는 답을 하게 만듭니다</td></tr>
+        <tr><td><strong>구조화된 프롬프트</strong></td><td>섹션 제목과 출력 형식을 명시해 요약 요청</td><td>다시 쓰기 쉽고, 품질이 안정됩니다</td></tr>
+        <tr><td><strong>저장 가능한 결과</strong></td><td>Markdown 코드블록으로 정리해 복사·보관</td><td>다른 AI 도구나 문서 작업으로 이어지기 좋습니다</td></tr>
       </tbody>
     </table>
-    <p style="font-size:0.83rem;color:var(--text-secondary);margin-top:12px">이 챕터에서는 이론을 길게 늘이지 않는다. 대신 <strong>바로 복사해서 써볼 수 있는 프롬프트</strong>와 <strong>같은 대화창에서 깊이를 더하는 흐름</strong>에 집중합니다.</p>
   </div>
 </div>
 
-
-<div class="clip-section">
-  <div class="clip-section-title">회의 오디오로 실습하는 4단계</div>
-  <div class="clip-section-content">
-    <div style="border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--bg-white);margin-bottom:16px">
-      <img src="/assets/gemini/ch02/gemini-upload-menu.png" alt="Gemini 파일 업로드 메뉴" style="width:100%;display:block" loading="lazy">
-      <div style="padding:12px 14px;background:var(--bg-offwhite);font-size:0.8rem;line-height:1.6;color:var(--text-secondary)">회의 녹음과 맥락 자료는 모두 입력창 왼쪽의 파일 업로드 메뉴에서 붙인다. 핵심은 <strong>같은 대화창을 유지하는 것</strong>입니다.</div>
-    </div>
-    <table class="comparison-table">
-      <thead>
-        <tr><th>단계</th><th>입력</th><th>AI에게 시키는 일</th><th>산출물</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>Step 1</strong></td><td>회의 오디오</td><td>구조화된 회의록 작성</td><td>참석자, 발언 요지, 의사결정, 미해결 이슈</td></tr>
-        <tr><td><strong>Step 2</strong></td><td>방금 만든 회의록</td><td>전략 이슈와 의사결정 갭 추출</td><td>핵심 이슈 목록, 리스크, 다음 회의 안건</td></tr>
-        <tr><td><strong>Step 3</strong></td><td>회의 맥락 참고자료</td><td>회의 내용과 데이터 교차검증</td><td>불일치 포인트, 놓친 데이터, 재검토 항목</td></tr>
-        <tr><td><strong>Step 4</strong></td><td>앞선 모든 분석 결과</td><td>CEO용 의사결정 브리프 작성</td><td>핵심 요약, 옵션 비교, 추천 액션</td></tr>
-      </tbody>
-    </table>
-    <p style="margin:14px 0 10px;font-size:0.82rem;color:var(--text-secondary)">버튼을 누르면 실습용 구글 드라이브 링크가 클립보드에 복사됩니다.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button type="button" class="slide-briefing-link" onclick="copyResourceLink(this,'https://drive.google.com/file/d/1f4hFD1fopkkupS0cgIR9Qdmhc0CqNdoy/view?usp=drive_link')">회의 오디오</button>
-      <button type="button" class="slide-briefing-link" onclick="copyResourceLink(this,'https://drive.google.com/file/d/17dJHDavHIyBOPOZ3_rCNo9rrfSRGIkFl/view?usp=drive_link')">맥락 문서</button>
-    </div>
-  </div>
+<div class="clip-nav-footer">
+  <a class="clip-nav-btn" href="#ch04-clip01">← Gemini 소개 및 접속 방법</a>
+  <a class="clip-nav-btn" href="#ch03-clip03">AI 비서 만들기: 비즈니스 프롬프팅 →</a>
 </div>
-
-
-<div class="clip-section">
-  <div class="clip-section-title">프롬프트 Steps</div>
-  <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px">아래 프롬프트를 그대로 붙여 넣은 뒤, 역할, 맥락, 출력 형식에 기반한 프롬프팅 기법의 중요성을 학습한다.</p>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">1. 음성 기반 AI 회의록 작성</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp1')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp1">
-첨부한 음성 파일은 LG그룹 하반기 AX(AI 전환) 전략 회의 녹음입니다.
-
-이 음성을 듣고 아래 형식으로 구조화된 회의록을 작성해 주세요.
-
-## 출력 형식
-
-### 1. 회의 기본 정보
-- 회의명, 일시, 참석자(직책 포함)
-
-### 2. 안건별 논의 내용
-각 안건마다:
-- **안건 제목**
-- **발언 요약**: 누가 무슨 말을 했는지 핵심만
-- **쟁점**: 의견이 갈린 부분
-
-### 3. 결정사항
-- 번호 매기기, 담당자 명시
-
-### 4. 후속조치(Action Items)
-| 번호 | 조치 내용 | 담당자 | 기한 |
-|------|----------|--------|------|
-
-### 5. 미결 사항
-- 추가 논의가 필요한 이슈
-</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">2. 회의록 기반 핵심 이슈 추출</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp2')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp2">방금 작성한 회의록을 기반으로, 경영 전략 애널리스트 관점에서 분석해 주세요.
-
-## 요청 사항
-
-### 1. 핵심 전략 이슈 TOP 3
-각 이슈마다:
-- **이슈명**: 한 줄 요약
-- **배경**: 왜 이것이 중요한지
-- **회의에서의 논의 수준**: 충분 / 부분적 / 미흡
-- **리스크 수준**: 🔴 높음 / 🟡 중간 / 🟢 낮음
-
-### 2. 의사결정 갭 분석
-- 결정은 됐지만 실행 방안이 불명확한 항목
-- 논의는 됐지만 결정이 안 된 항목
-- 아예 다뤄지지 않았지만 다뤄졌어야 할 항목
-
-### 3. CEO 어젠다 추천
-- 다음 회의에서 반드시 다뤄야 할 안건 2~3개
-- 각 안건의 예상 소요 시간과 필요 참석자
-</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">3. 참고자료 첨부 + 멀티턴 분석</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp3')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp3">방금 첨부한 문서는 이번 회의의 배경이 되는 브리핑 자료입니다.
-(경쟁사 동향, 시장 데이터, 내부 KPI 등)
-
-이 참고자료와 앞서 정리한 회의록을 교차 분석해서 다음을 정리해 주세요.
-
-## 요청 사항
-
-### 1. 회의 논의 vs 실제 데이터 대조표
-| 회의에서 언급된 내용 | 참고자료의 실제 데이터 | 일치 여부 | 비고 |
-|---------------------|----------------------|----------|------|
-
-### 2. 계획 대비 실적 갭
-- 상반기 목표 대비 실제 달성률
-- 경쟁사 대비 상대적 위치
-- 가장 큰 괴리가 발생한 영역과 원인 분석
-
-### 3. 회의에서 놓친 포인트
-- 참고자료에는 있지만 회의에서 전혀 논의되지 않은 중요 데이터
-- 해당 데이터가 의사결정에 미칠 수 있는 영향
-
-### 4. 데이터 기반 수정 권고
-- 회의 결정사항 중 참고자료 데이터에 비춰 재검토가 필요한 항목
-- 수정 방향 제안
-</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">4. 전략 추론 - CEO 의사결정 프레임워크</span><button class="copy-btn" onclick="copyPrompt(this,'ch02-gp4')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp4">앞선 분석에서 가장 중요한 전략 이슈로 도출된 주제에 대해
-딥 리서치를 실행해 주세요.
-
-## 리서치 주제
-"글로벌 AI 가전 시장에서 LG전자의 포지셔닝 전략:
-삼성·중국 업체 대비 경쟁 우위 확보 방안"
-
-## 리서치에 포함할 내용
-1. 글로벌 AI 가전 시장 규모 및 성장 전망 (2025-2030)
-2. 주요 경쟁사(삼성, 하이센스, 샤오미 등) AI 전략 비교
-3. LG의 현재 AI 역량(EXAONE, ThinQ AI)의 시장 평가
-4. 소비자 관점에서 AI 가전의 실질적 가치
-5. LG가 집중해야 할 차별화 영역 제안
-
-## 출력 요건
-- 각 항목에 출처 명시
-- 데이터는 가능한 최신 자료 기반
-- 최종 섹션에 'So What: LG 경영진을 위한 시사점' 포함
-</div>
-  </div>
-
-  <div class="prompt-block">
-    <div class="prompt-header"><span class="prompt-label">5. 딥 리서치 연계(추가)</span>
-    <button class="copy-btn" onclick="copyPrompt(this,'ch02-gp5')">복사</button></div>
-    <div class="prompt-content" id="ch02-gp5">지금까지의 모든 분석(회의록, 핵심이슈, 참고자료 교차분석)을 종합하여,
-CEO의 의사결정을 돕는 전략 보좌관 역할로 최종 권고안을 작성해 주세요.
-
-## 출력 형식
-
-### 1. 상황 종합 (Executive Summary)
-- 3문장 이내로 현재 상황의 핵심을 요약
-
-### 2. 전략 옵션 비교표
-
-각 주요 의사결정 사안에 대해:
-
-| 구분 | 옵션 A (공격적) | 옵션 B (점진적) | 옵션 C (보수적) |
-|------|----------------|----------------|----------------|
-| 핵심 내용 | | | |
-| 예상 투자 규모 | | | |
-| 기대 효과 | | | |
-| 주요 리스크 | | | |
-| 실현 가능성 | 상/중/하 | 상/중/하 | 상/중/하 |
-| 경쟁사 대비 포지션 | | | |
-
-### 3. 추천안 및 근거
-- 최우선 추천 옵션과 그 이유 (데이터 기반)
-- 차선책과 전환 트리거 조건
-
-### 4. 실행 로드맵
-- 즉시 (1주 내):
-- 단기 (1개월 내):
-- 중기 (분기 내):
-
-### 5. 모니터링 KPI
-- 핵심 지표 3~5개와 목표치
-</div>
-  </div>
-
-</div>
-
-
-<div class="info-block" style="margin-top:20px">
-  <div class="info-block-title">기억할 점</div>
-  <div style="font-size:0.85rem;line-height:1.7;color:var(--text-body)">이 실습은 Gemini에만 묶인 테크닉이 아니다. 오늘은 Gemini를 쓰지만, <strong>역할 지정, 자료 첨부, 멀티턴 대화, 출력 형식 지정</strong>이라는 원칙 자체는 ChatGPT, Claude, Copilot 등 대부분의 주요 AI에서 그대로 통합니다.</div>
-</div>
-
-<div class="clip-nav-footer"><a class="clip-nav-btn" href="#ch01-clip05">← 프롬프트 구조화 하기</a><a class="clip-nav-btn" href="#ch03-clip03">ChatGPT 소개 및 접속 방법 →</a></div>

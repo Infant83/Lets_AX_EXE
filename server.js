@@ -2030,33 +2030,27 @@ async function buildCatalog(sourceRoot) {
       visibleChapterId: "ch00",
       title: "과정 안내",
       time: "08:30",
-      sourceChapterIds: ["ch00", "ch01"],
-      clipKeys: ["ch00-clip01", "ch01-clip02"],
-      clipTitles: {
-        "ch01-clip02": "자사 생성형 AI 서비스 현황"
-      }
+      sourceChapterIds: ["ch00"],
+      clipKeys: ["ch00-clip01", "ch00-clip02"]
     },
     {
       visibleChapterId: "ch01",
       title: "AI 핵심 개념",
       time: "08:50",
       sourceChapterIds: ["ch01"],
-      clipKeys: ["ch00-clip02", "ch01-clip01", "ch01-clip03", "ch01-clip04"],
-      clipTitles: {
-        "ch01-clip01": "Assistant에서 Agentic AI로"
-      }
+      clipKeys: ["ch01-clip01", "ch01-clip02", "ch01-clip03", "ch01-clip04"]
     },
     {
       visibleChapterId: "ch02",
       title: "Gemini & ChatGPT",
       time: "09:30",
       sourceChapterIds: ["ch03"],
-      clipKeys: ["ch03-clip01", "ch03-clip02", "ch01-clip05", "ch03-clip03", "ch03-clip04"],
+      clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch01-clip05", "ch03-clip04"],
       clipTitles: {
         "ch03-clip01": "Gemini 소개 및 접속 방법",
         "ch03-clip02": "프롬프팅 기초",
-        "ch01-clip05": "Gems 소개: 프롬프트 구조화하기",
         "ch03-clip03": "AI 비서 만들기: 비즈니스 프롬프팅",
+        "ch01-clip05": "Gems 소개: 프롬프트 구조화하기",
         "ch03-clip04": "ChatGPT 및 GPTs 소개"
       }
     },
@@ -2119,10 +2113,7 @@ async function buildCatalog(sourceRoot) {
         "ch07-clip07",
         "ch07-clip08",
         "ch08-clip01",
-        "ch08-clip02",
         "ch08-clip03",
-        "ch08-clip04",
-        "ch08-clip05",
         "ch08-clip06"
       ]
     }

@@ -1,7 +1,7 @@
 {
   "chapterId": "ch00",
   "chapterNum": "CH 00",
-  "title": "오늘의 여정",
+  "title": "과정 안내",
   "time": "08:30",
   "clips": [
     {
@@ -16,8 +16,8 @@
     },
     {
       "route": "#ch00-clip02",
-      "title": "AI 트렌드",
-      "type": "참고",
+      "title": "자사 생성형 AI 서비스 현황",
+      "type": "개요",
       "folder": "chapters/CH00/ch00-clip02",
       "linkCount": 15,
       "imageCount": 0,

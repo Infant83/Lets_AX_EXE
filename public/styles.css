@@ -2070,6 +2070,31 @@ button.ghost {
   background: linear-gradient(160deg, #ffffff 0%, #f7faff 100%);
   border-radius: 12px;
   padding: 11px 12px;
+  color: #1f3558;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.ref-link-item strong {
+  color: #16325d;
+}
+
+.ref-link-item.copied {
+  border-color: #138246;
+  background: linear-gradient(160deg, #1b9951 0%, #138246 100%);
+  color: #ffffff;
+}
+
+.ref-link-item.failed {
+  border-color: #b42318;
+  background: linear-gradient(160deg, #c83a31 0%, #b42318 100%);
+  color: #ffffff;
+}
+
+.ref-link-item.copied strong,
+.ref-link-item.failed strong,
+.ref-link-item.copied span,
+.ref-link-item.failed span {
+  color: #ffffff !important;
 }
 
 .ref-link-text {

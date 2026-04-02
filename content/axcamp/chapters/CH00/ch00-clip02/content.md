@@ -1,29 +1,48 @@
 ---
 route: "#ch01-clip01"
 chapter: "ch01"
-title: "Assistant에서 Agentic AI로"
+title: "AI 트렌드"
 source_url: "https://lg.cmdspace.work/axcamp#ch01-clip01"
 exported_at: "2026-02-28T01:53:40.282Z"
 ---
 
 CH 01
-개념
+참고
 
-# Assistant에서 Agentic AI로
+# AI 트렌드
 
-AI 산업 생태계가 Agentic에서 Physical까지 어떻게 확장되는지, 리더 관점의 22장 브리핑과 카드뉴스로 함께 살펴보세요.
+지금 AI는 답을 잘하는 도구를 넘어, 일을 맡아 실행하고 현실 세계와 연결되는 방향으로 빠르게 확장되고 있습니다. 먼저 짧은 영상을 보고 오늘 실습이 어떤 변화 위에 놓여 있는지 감을 잡습니다.
 
-![ai utilization evolution roadmap](/course-files/AXCAMP/ch01-clip01/assets/ai-utilization-evolution-roadmap.png)
+## 먼저 보는 영상
 
-*ai utilization evolution roadmap*
+이 영상은 **Physical AI**라는 키워드로 시작하지만, 실제로는 AI가 화면 안 답변기에서 벗어나 **현실 세계의 장비·공정·업무 흐름까지 다루기 시작하는 변화**를 직관적으로 보여줍니다.
 
-## 추가 트렌드 카드뉴스
+[The Next Wave of AI: Physical AI](https://www.youtube-nocookie.com/embed/uhLDHA9skFk)
 
-브리핑에서 다룬 신호를 기사 단위로 더 확인할 수 있습니다. 관심 카드를 클릭하면 원문으로 이동합니다.
+3분 1초 · NVIDIA
 
-전체
-비즈니스
-기술
-정책
+[YouTube에서 열기](https://www.youtube.com/watch?v=uhLDHA9skFk)
 
-[business Meta, AI 콘텐츠 라이선싱에 본격 투자 — CNN·Fox 등 7개사와 계약 체결 셀럽 AI 아바타 프로젝트를 종료하고 콘텐츠 라이선싱으로 전환. AI 시대 콘텐츠 IP의 가치가 재편되고 있습니다. Digiday2025.01](https://digiday.com/media/meta-enters-ai-licensing-fray-striking-deals-with-people-inc-usa-today-co-and-more/)[business 1인 AI 스타트업 Base44, Wix에 8,000만 달러에 인수 — "바이브 코딩" 시대 개막 직원 0명의 1인 스타트업이 800억 원에 인수. AI가 기업의 규모 경제 공식을 근본적으로 바꾸고 있습니다. TechCrunch2025.06](https://techcrunch.com/2025/06/18/6-month-old-solo-owned-vibe-coder-base44-sells-to-wix-for-80m-cash/)[technology Gartner: 2026년 기업 앱 40%에 AI 에이전트 탑재 전망 (현재 5% 미만) 멀티 에이전트 시스템 문의 1년 만에 1,445% 급증. 자율 AI 에이전트가 기업 소프트웨어의 새 표준이 되고 있습니다. Gartner2025.08](https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025)[technology "바이브 코딩" 검색량 6,700% 폭증 — Y Combinator 스타트업 25%가 코드 95% AI 생성 미국 개발자 92%가 AI 코딩 도구를 매일 사용. 다만 AI 생성 코드의 보안 취약점은 2.74배 높아 품질 관리 필수. TechCrunch2025.03](https://techcrunch.com/2025/03/06/a-quarter-of-startups-in-ycs-current-cohort-have-codebases-that-are-almost-entirely-ai-generated/)[business 기업 생성형 AI 투자 370억 달러 돌파 — 전년 대비 3.2배 증가 87%가 AI를 도입했지만 실제 EBIT 5%+ 성과를 내는 기업은 6%에 불과. 도구가 아닌 조직 재설계가 성패를 가릅니다. Menlo Ventures2025.10](https://menlovc.com/perspective/2025-the-state-of-generative-ai-in-the-enterprise/)[policy EU AI Act 2026년 8월 전면 시행 — 고위험 AI 시스템 규제 본격화 세계 최초 포괄적 AI 규제법. 유럽 시장 진출 기업은 리스크 등급별 대응 전략이 필요합니다. EU Commission2025.08](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai)[technology LG AI Research, K-EXAONE 공개 — 글로벌 오픈 AI 모델 Top 10 진입 2,360억 파라미터, 한국어 모델 최초 글로벌 Top 10. 온프레미스 배포 가능한 B2B AI 생태계를 구축 중. Korea Herald2025.11](https://www.koreaherald.com/article/10652980)[technology Google Gemini 3.1 Pro 출시 — ARC-AGI-2 77.1%로 추론 성능 2배 향상, LMArena 1위 2026.02.19 출시. Deep Think 추론 통합, 커스텀 도구 최적화 엔드포인트 신설. Claude Opus 4.6, GPT-5.2를 대부분의 벤치마크에서 앞섬. Google2026.02](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/)[business McKinsey: AI 생산성 혁신 잠재가치 4.4조 달러, 소프트웨어 통합 시 7.9조 달러 AI 고성과 기업의 핵심: 변혁적 혁신 추구, 워크플로우 재설계, 빠른 스케일링. McKinsey2025.03](https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier)[business 헬스케어 AI 투자 14억 달러 — 전년 대비 3배 증가 미국 GDP 20%를 차지하는 헬스케어가 경제 대비 2배 속도로 AI 도입. LG EXAONE Path 2.0도 합류. Healthcare Dive2025.12](https://www.healthcaredive.com/news/digital-health-funding-2025-boosted-ai-rock-health/809449/)[business LG전자, 2026년 B2B·AI를 핵심 성장축으로 전환 AI 가전, 스마트팩토리, AI 데이터센터 냉각, 로보틱스에 투자 집중. AI 인프라가 새로운 수익원으로 부상. Digital Commerce 3602026.01](https://www.digitalcommerce360.com/2026/01/08/lg-electronics-b2b-ai-growth-2026/)[technology CLI AI 코딩 도구 경쟁 격화 — Claude Code vs Cursor 터미널 기반 AI 코딩 에이전트가 IDE를 넘어 새로운 개발 패러다임을 형성. 개발자 62%가 AI 코딩 어시스턴트 사용 중. Builder.io2026.01](https://www.builder.io/blog/cursor-vs-claude-code)[policy AI 기술 리더 46%가 "AI 스킬 갭"을 최대 장애물로 지목 AI 전략이 있는 기업의 성공률 80% vs 없는 기업 37%. AI 리터러시 교육이 EU AI Act에서도 의무화. OpenAI2025.09](https://openai.com/index/the-state-of-enterprise-ai-2025-report/)
+## 이 장면에서 느껴볼 것
+
+업무 보조를 넘어 실행으로
+
+Agentic AI는 질문에 답하는 수준을 넘어 계획을 세우고, 도구를 고르고, 결과를 확인하는 방향으로 움직이기 시작합니다.
+
+화면 밖으로 확장되는 AI
+
+Physical AI는 소프트웨어 안의 추론을 넘어 센서, 장비, 로봇, 공정 같은 현실 환경과 연결되는 흐름을 보여줍니다.
+
+결국 남는 것은 데이터와 운영 구조
+
+자율성이 커질수록 모델 자체보다 **좋은 데이터, 맥락, 검증 체계**가 조직의 성과 차이를 만들게 됩니다.
+
+## 추가 참고자료
+
+- [GitHub Agentic Workflows PDF](https://github.github.com/gh-aw/slides/github-agentic-workflows.pdf) · AI가 개발과 실행 흐름을 어떻게 바꾸는지 보여주는 공식 자료
+
+- [OpenClaw](https://openclaw.ai/) · AI가 업무 보조를 넘어 자율 실행형 동료로 이동하는 감각을 보여주는 사례
+
+- [Harness Engineering](https://harness-engineering.ai/) · 에이전트를 운영 가능한 시스템으로 다루는 관점
+
+- [Decisions You Can Trust](https://www.sas.com/content/dam/sasdam/documents/20250124/turn-agentic-ai-into-decisions-you-can-trust.pdf) · 데이터, 거버넌스, 설명 가능성이 왜 핵심인지 정리한 자료
