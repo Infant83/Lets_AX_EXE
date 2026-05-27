@@ -28,7 +28,7 @@ const GENERATED_COURSE_CATALOG_FILE = path.join(GENERATED_COURSES_DIR, "catalog.
 const DEFAULT_COURSE_CODE = "AXCAMP";
 const DEFAULT_COURSE_SLUG = "axcamp";
 const VISIBLE_CATALOG_OVERRIDES_FILE = "visible-catalog-overrides.json";
-const PRACTICE_ROOT_REL = "[공유용] LG AX Camp For Leaders 실습자료";
+const PRACTICE_ROOT_REL = "[공유용] LG 성과향상 with AI 실습자료";
 const PRACTICE_FILE_MAP = {
   "all-zip": "practice_zips/LG_AX_Camp_For_Leaders_practice_all.zip",
   "ch04-zip": "practice_zips/CH04_NotebookLM_practice.zip",
@@ -59,7 +59,30 @@ const EXCLUDED_CLIP_KEYS = new Set([
   "ch02-clip01",
   "ch02-clip02",
   "ch02-clip03",
-  "ch02-clip04"
+  "ch02-clip04",
+  // [HIDDEN] 자사 생성형 AI 서비스 현황 — 복구 시 아래 줄만 삭제하세요
+  "ch00-clip02"
+]);
+
+// [HIDDEN_CHAPTERS] CH04(Google AI Studio & Vibe Coding), CH05(Hi-D Code) 숨김 처리 중
+// 복구 방법: server.js의 visibleBlueprints 배열에서 아래 주석 처리된 블록을 되살리세요.
+// 이 Set은 숨겨진 챕터/클립의 canonical 키 목록으로, 해시 직접 접근 시 안전 처리에 사용됩니다.
+const HIDDEN_CHAPTER_CLIP_KEYS = new Set([
+  // ch04 (Google AI Studio & Vibe Coding) 소속 클립들
+  "ch05-clip01",
+  "ch05-clip02",
+  "ch06-clip01",
+  "ch06-clip02",
+  "ch06-clip03",
+  "ch06-clip04",
+  "ch06-clip05",
+  // ch05 (Hi-D Code) 소속 합성 클립들
+  "ch05-clip01-hidcode",
+  // [HIDDEN] NotebookLM 3번째 세션: 기업 분석 코스
+  // canonical 키(export-report.json 기준) + visible 키(렌더링 시 재맵핑 결과)를 모두 등록
+  // 복구 시: 아래 두 줄을 삭제하고, visibleBlueprints ch03 clipKeys에 "ch04-clip03"을 다시 추가하세요.
+  "ch04-clip03",  // canonical key (원본 챕터 폴더 기준)
+  "ch03-clip03"   // visible key (렌더링 후 재맵핑된 클립 키)
 ]);
 const ROOT_ACCOUNT_ID = "root";
 const ROOT_DEFAULT_PASSWORD = process.env.AX_ROOT_PASSWORD || "root";
@@ -694,8 +717,8 @@ function createProjectFromTemplate(template, customName = "") {
         (normalizedTemplate === "workshop"
           ? "워크숍형 교육 과정"
           : normalizedTemplate === "blank"
-          ? "빈 템플릿 과정"
-          : "AX Literacy 신규 과정"),
+            ? "빈 템플릿 과정"
+            : "AX Literacy 신규 과정"),
       subtitle: "",
       audience: "",
       template: normalizedTemplate,
@@ -1854,7 +1877,7 @@ function buildMetadataFromHtml(clip, existingMetadata, rawHtml) {
     ...existingMetadata,
     route,
     url: `https://lg.cmdspace.work/axcamp${route}`,
-    pageTitle: existingMetadata?.pageTitle || "AX Camp for Leaders | LG",
+    pageTitle: existingMetadata?.pageTitle || "성과향상 with AI | LG",
     clipTitle,
     overview,
     badges: badges.length
@@ -2031,7 +2054,9 @@ async function buildCatalog(sourceRoot) {
       title: "과정 안내",
       time: "08:30",
       sourceChapterIds: ["ch00"],
-      clipKeys: ["ch00-clip01", "ch00-clip02"]
+      // [HIDDEN] 자사 생성형 AI 서비스 현황(ch00-clip02) 제외 중.
+      // 복구 시: clipKeys 배열에 "ch00-clip02" 를 다시 추가하세요.
+      clipKeys: ["ch00-clip01"]
     },
     {
       visibleChapterId: "ch01",
@@ -2047,10 +2072,10 @@ async function buildCatalog(sourceRoot) {
       sourceChapterIds: ["ch03"],
       clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch01-clip05", "ch03-clip04"],
       clipTitles: {
-        "ch03-clip01": "Gemini 소개 및 접속 방법",
-        "ch03-clip02": "프롬프팅 기초",
+        "ch03-clip01": "Gemini 소개 및 접속 방법_test",
+        "ch03-clip02": "프롬프팅 기초_test",
         "ch03-clip03": "비지니스 프롬프팅: AI 회의록",
-        "ch01-clip05": "Gems 소개: AI 비서 만들기",
+        "ch01-clip05": "Gems 소개: AI 비서 만들기_test",
         "ch03-clip04": "ChatGPT 및 GPTs 소개"
       }
     },
@@ -2059,38 +2084,47 @@ async function buildCatalog(sourceRoot) {
       title: "NotebookLM",
       time: "13:00",
       sourceChapterIds: ["ch04"],
-      clipKeys: ["ch04-clip01", "ch04-clip02", "ch04-clip03"]
+      // [HIDDEN] ch04-clip03 = 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석 — 노출 제외 중
+      // 복구 시: 아래 배열에 "ch04-clip03" 을 다시 추가하고, HIDDEN_CHAPTER_CLIP_KEYS에서 두 항목을 제거하세요.
+      clipKeys: ["ch04-clip01", "ch04-clip02"]
     },
-    {
-      visibleChapterId: "ch04",
-      title: "Google AI Studio & Vibe Coding",
-      time: "14:10",
-      sourceChapterIds: ["ch05", "ch06"],
-      clipKeys: [
-        "ch05-clip02",
-        "ch06-clip01",
-        "ch06-clip02"
-      ],
-      clipTitles: {
-        "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
-        "ch06-clip01": "바이브 코딩이란",
-        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기"
-      }
-    },
-    {
-      visibleChapterId: "ch05",
-      title: "Hi-D Code",
-      time: "16:10",
-      sourceChapterIds: [],
-      syntheticClips: [
-        {
-          clipKey: "ch05-clip01",
-          folderRelative: "generated/hid-code/ch05-clip01",
-          title: "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
-          type: "개요"
-        }
-      ]
-    },
+    // ============================================================
+    // [HIDDEN] CH04: Google AI Studio & Vibe Coding — 현재 노출 제외 중
+    // 복구 시: 아래 주석 블록의 '//' 를 제거하고, 바로 아래 ch05(Hi-D Code)도 함께 복구하세요.
+    // {
+    //   visibleChapterId: "ch04",
+    //   title: "Google AI Studio & Vibe Coding",
+    //   time: "14:10",
+    //   sourceChapterIds: ["ch05", "ch06"],
+    //   clipKeys: [
+    //     "ch05-clip02",
+    //     "ch06-clip01",
+    //     "ch06-clip02"
+    //   ],
+    //   clipTitles: {
+    //     "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
+    //     "ch06-clip01": "바이브 코딩이란",
+    //     "ch06-clip02": "바이브 코딩으로 웹앱 제작하기"
+    //   }
+    // },
+    // ============================================================
+    // [HIDDEN] CH05: Hi-D Code — 현재 노출 제외 중
+    // 복구 시: 위의 CH04 블록과 함께 아래 주석을 함께 해제하세요.
+    // {
+    //   visibleChapterId: "ch05",
+    //   title: "Hi-D Code",
+    //   time: "16:10",
+    //   sourceChapterIds: [],
+    //   syntheticClips: [
+    //     {
+    //       clipKey: "ch05-clip01",
+    //       folderRelative: "generated/hid-code/ch05-clip01",
+    //       title: "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+    //       type: "개요"
+    //     }
+    //   ]
+    // },
+    // ============================================================
     {
       visibleChapterId: "ch06",
       title: "Key Takeaways & Q/A",
@@ -2759,11 +2793,11 @@ async function resolveClipPayload(clipKey, course) {
 
   const htmlContent = htmlRaw
     ? rewriteVisibleReferences(
-        rewritePracticeDriveUrls(
-          rewriteRelativeUrls(htmlRaw, activeCourse.courseCode, clip.clipKey)
-        ),
-        catalog
-      )
+      rewritePracticeDriveUrls(
+        rewriteRelativeUrls(htmlRaw, activeCourse.courseCode, clip.clipKey)
+      ),
+      catalog
+    )
     : `<pre>${escapeHtml(mdRaw || txtRaw || "콘텐츠가 없습니다.")}</pre>`;
   const renderedMetadata = buildMetadataFromHtml(clip, metadata, htmlContent);
   const baseBadges =
@@ -2802,10 +2836,26 @@ async function resolveClipPayload(clipKey, course) {
 
 async function handleGetClip(req, res, urlObj) {
   const pathnameParts = urlObj.pathname.split("/").filter(Boolean);
-  const clipKey = pathnameParts[pathnameParts.length - 1];
+  let clipKey = pathnameParts[pathnameParts.length - 1];
   const user = await resolveUserFromRequest(req, urlObj);
   const course = await resolveActiveCourse(user, urlObj);
-  const payload = await resolveClipPayload(clipKey, course);
+  let payload = await resolveClipPayload(clipKey, course);
+
+  if (!payload) {
+    const normalizedKey = normalizeWs(clipKey).toLowerCase();
+    const isHiddenKey = normalizedKey.startsWith("ch04-") ||
+      normalizedKey.startsWith("ch05-") ||
+      HIDDEN_CHAPTER_CLIP_KEYS.has(normalizedKey);
+    if (isHiddenKey) {
+      const catalog = await getCatalog(course);
+      const firstChapter = catalog.chapters?.[0];
+      const firstClip = firstChapter?.clips?.[0];
+      if (firstClip) {
+        clipKey = firstClip.clipKey;
+        payload = await resolveClipPayload(clipKey, course);
+      }
+    }
+  }
 
   if (!payload) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
@@ -2932,9 +2982,9 @@ async function handleAxTask(req, res, urlObj) {
       chapterId: visibleChapterId,
       axTask: task
         ? {
-            ...task,
-            chapterId: visibleChapterId
-          }
+          ...task,
+          chapterId: visibleChapterId
+        }
         : null
     });
   }
@@ -3262,13 +3312,13 @@ async function handleAdminSidebarSource(req, res, urlObj) {
   );
   const reportFlatClip = Array.isArray(report.clips)
     ? report.clips.find(
-        (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
-      )
+      (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+    )
     : null;
   const chapterClip = Array.isArray(chapterJson?.clips)
     ? chapterJson.clips.find(
-        (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
-      )
+      (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+    )
     : null;
   const chapterOverride = overrides.chapters?.[clip.chapterId] || {};
   const clipOverride = overrides.clips?.[clip.clipKey] || {};
@@ -3285,32 +3335,32 @@ async function handleAdminSidebarSource(req, res, urlObj) {
       sidebar: {
         chapterTitle: normalizeWs(
           chapterOverride.title ||
-            visibleChapter.title ||
-            reportChapter?.title ||
-            chapterJson?.title ||
-            clip.chapterTitle
+          visibleChapter.title ||
+          reportChapter?.title ||
+          chapterJson?.title ||
+          clip.chapterTitle
         ),
         chapterTime: normalizeWs(
           chapterOverride.time ||
-            visibleChapter.time ||
-            reportChapter?.time ||
-            chapterJson?.time ||
-            ""
+          visibleChapter.time ||
+          reportChapter?.time ||
+          chapterJson?.time ||
+          ""
         ),
         clipTitle: normalizeWs(
           clipOverride.title ||
-            metadata?.navTitle ||
-            reportClip?.title ||
-            chapterClip?.title ||
-            visibleClip.title ||
-            clip.title
+          metadata?.navTitle ||
+          reportClip?.title ||
+          chapterClip?.title ||
+          visibleClip.title ||
+          clip.title
         ),
         clipType: normalizeSidebarClipType(
           clipOverride.type ||
-            reportClip?.type ||
-            chapterClip?.type ||
-            visibleClip.type ||
-            clip.type,
+          reportClip?.type ||
+          chapterClip?.type ||
+          visibleClip.type ||
+          clip.type,
           clip.type
         )
       },
