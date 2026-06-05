@@ -35,7 +35,7 @@ const PRACTICE_FILE_MAP = {
   "1iKGcE5A6LldmVDV8evPlreUTT2fcfmGL": `${PRACTICE_ROOT_REL}/CH02-EXAONE_보안AI/03_EXAONE_가상_기밀보고서.md`,
   "1xJtcpem3mt4aWAKx08SfXjR9QxtIPSsO": `${PRACTICE_ROOT_REL}/CH02-EXAONE_보안AI/TB 26-01-03 샤오미 EV 혁신 방정식 - 자동차 산업의 시간과 비용을 재정의하다.pdf`,
   "1h2CfdVLN6Bx4SkUhQW-dL7VZAHfWTnAc": `${PRACTICE_ROOT_REL}/CH02-EXAONE_보안AI/06_EXAONE_3단계_프롬프트.md`,
-  "19wD3WR1MXFO8rBrsk0ll9XFg6qF5kSsg": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/01_가상회의_오디오파일.wav`,
+  "19wD3WR1MXFO8rBrsk0ll9XFg6qF5kSsg": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/meeting-audio.mp3`,
   "1xFco3cSTZApWXSG5iWY04K50GMmFCO9N": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/02_회의_맥락_참고자료.md`,
   "1B-zoWWsqVynVUiRqm7lrLcoW68gWQ-86": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/07_Gemini_단일흐름_프롬프트.md`,
   "1SQgCgDVWwXBjK93LwaI3m4vRgOuMQop_": `${PRACTICE_ROOT_REL}/CH03-02-Gems_AI어시스턴트/08_Gems_시스템_인스트럭션.md`,

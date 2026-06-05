@@ -603,10 +603,10 @@ Stage 3 (딥 리서치)
 
 -
 
-[가상 회의 오디오 (WAV)](/practice-files/19wD3WR1MXFO8rBrsk0ll9XFg6qF5kSsg)
+[가상 회의 오디오 (MP3)](/practice-files/19wD3WR1MXFO8rBrsk0ll9XFg6qF5kSsg)
 5분 분량 임원 전략회의 녹음 · Gemini 음성 업로드 실습에 사용
 
-TTS 생성WAV · 12MB
+TTS 생성MP3 · 19MB
 
 -
 
