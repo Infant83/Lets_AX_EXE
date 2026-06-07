@@ -4557,10 +4557,22 @@ function setupPromptMarkdownPreview(block) {
   let toggleBtn = null;
   if (hasMore) {
     const header = block.querySelector(".prompt-inline-header, .prompt-header");
+    const copyBtn = block.querySelector(".copy-btn, .prompt-inline-copy");
+
+    // 복사 버튼과 펼치기 버튼을 하나의 그룹으로 묶어 오른쪽에 나란히 배치
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "prompt-header-actions";
+
+    if (copyBtn) {
+      btnGroup.appendChild(copyBtn);
+    }
+
     toggleBtn = document.createElement("button");
     toggleBtn.type = "button";
     toggleBtn.className = "prompt-expand-toggle";
-    header?.appendChild(toggleBtn);
+    btnGroup.appendChild(toggleBtn);
+
+    header?.appendChild(btnGroup);
   }
 
   const render = () => {
