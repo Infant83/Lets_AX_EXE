@@ -395,7 +395,7 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     chapterId: "ch02",
     chapterCode: "CH02",
     chapterNum: "CH 02",
-    title: "Gemini 활용",
+    title: "Gemini 활용 (1)",
     time: "09:30",
     clips: [
       { clipKey: "ch02-clip01", title: "Gemini 소개 및 접속 방법", type: "플랫폼" },
@@ -408,30 +408,40 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     chapterId: "ch03",
     chapterCode: "CH03",
     chapterNum: "CH 03",
+    title: "Gemini 활용 (2) - AI 시대, 성과 창출을 위한 조직(팀) 역량 점검",
+    time: "13:30",
+    clips: [
+      { clipKey: "ch03-clip01", title: "[실습] 조직 역량 점검 및 Workflow 재설계 (4단계)", type: "실습" }
+    ]
+  },
+  {
+    chapterId: "ch04",
+    chapterCode: "CH04",
+    chapterNum: "CH 04",
     title: "NotebookLM",
     time: "13:00",
     clips: [
-      { clipKey: "ch03-clip01", title: "NotebookLM 소개 및 문서 기반 AI 연구 도우미", type: "플랫폼" },
-      { clipKey: "ch03-clip02", title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑", type: "실습" },
-      { clipKey: "ch03-clip03", title: "Gems 소개: AI 비서 만들기", type: "참고" },
-      { clipKey: "ch03-clip04", title: "ChatGPT 및 GPTs 소개", type: "플랫폼" }
-      // [HIDDEN] ch03-clip05 = 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석 — 노출 제외 중
+      { clipKey: "ch04-clip01", title: "NotebookLM 소개 및 문서 기반 AI 연구 도우미", type: "플랫폼" },
+      { clipKey: "ch04-clip02", title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑", type: "실습" },
+      { clipKey: "ch04-clip03", title: "Gems 소개: AI 비서 만들기", type: "참고" },
+      { clipKey: "ch04-clip04", title: "ChatGPT 및 GPTs 소개", type: "플랫폼" }
+      // [HIDDEN] ch04-clip05 = 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석 — 노출 제외 중
       // 복구 시: 아래 주석을 해제하고 server.js의 ch04-clip03도 함께 복구하세요.
-      // { clipKey: "ch03-clip05", title: "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석", type: "실습" }
+      // { clipKey: "ch04-clip05", title: "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석", type: "실습" }
     ]
   }
   // ============================================================
-  // [HIDDEN] CH04: Google AI Studio — 현재 노출 제외 중 (복구 시 아래 주석 해제)
+  // [HIDDEN] CH05: Google AI Studio — 현재 노출 제외 중 (복구 시 아래 주석 해제)
   // {
-  //   chapterId: "ch04",
-  //   chapterCode: "CH04",
-  //   chapterNum: "CH 04",
+  //   chapterId: "ch05",
+  //   chapterCode: "CH05",
+  //   chapterNum: "CH 05",
   //   title: "Google AI Studio",
   //   time: "14:10",
   //   clips: [
-  //     { clipKey: "ch04-clip01", title: "Google AI Studio 소개 및 접속 방법", type: "설정" },
-  //     { clipKey: "ch04-clip02", title: "바이브 코딩이란", type: "개념" },
-  //     { clipKey: "ch04-clip03", title: "바이브 코딩으로 웹앱 제작하기", type: "실습" }
+  //     { clipKey: "ch05-clip01", title: "Google AI Studio 소개 및 접속 방법", type: "설정" },
+  //     { clipKey: "ch05-clip02", title: "바이브 코딩이란", type: "개념" },
+  //     { clipKey: "ch05-clip03", title: "바이브 코딩으로 웹앱 제작하기", type: "실습" }
   //   ]
   // }
   // ============================================================
@@ -440,17 +450,16 @@ const CLIENT_CATALOG_BLUEPRINTS = [
 // [HIDDEN] 화면에서 제외된 클립 키 목록 (해시 직접 접근 시 안전 리다이렉트에 사용)
 // 복구 시: 해당 clipKey 항목을 이 Set에서 삭제하고, CLIENT_CATALOG_BLUEPRINTS에 다시 추가하세요.
 const HIDDEN_CLIP_KEYS_REDIRECT_SET = new Set([
-  // [HIDDEN] ch03-clip05: 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석
-  "ch03-clip05",
-  // [HIDDEN] ch04-clip01~03: Google AI Studio & Vibe Coding (canonical 포함)
-  "ch04-clip01", "ch04-clip02", "ch04-clip03",
+  // [HIDDEN] ch04-clip05: 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석
+  "ch04-clip05",
+  // [HIDDEN] ch05-clip01~03: Google AI Studio & Vibe Coding (canonical 포함)
   "ch05-clip01", "ch05-clip02", "ch05-clip03",
-  "ch06-clip01-hidcode", "ch05-clip01-hidcode"
+  "ch06-clip01-hidcode", "ch06-clip01-hidcode"
 ]);
 
 // '오늘의 핵심 정리' 챕터 ID — 숨겨진 클립 해시 접근 시 이 챕터의 첫 클립으로 리다이렉트합니다.
-// 서버 visibleBlueprints 기준 ch06 (Key Takeaways & Q/A)
-const HIDDEN_REDIRECT_TARGET_CHAPTER_ID = "ch06";
+// 서버 visibleBlueprints 기준 ch07 (Key Takeaways & Q/A)
+const HIDDEN_REDIRECT_TARGET_CHAPTER_ID = "ch07";
 
 const CLIENT_RUNTIME_CLIP_OVERRIDE_URLS = {
   "ch00-clip02": "/runtime-overrides/ch00-clip02.html",
@@ -2308,7 +2317,7 @@ function getAllClips() {
 // 복구 시: 해당 clipKey를 아래 배열에서 삭제하세요.
 // - "ch00-clip02": 자사 생성형 AI 서비스 현황
 // - "ch03-clip05": 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석
-const HIDDEN_CLIP_KEYS_FROM_PROGRESS = new Set(["ch00-clip02", "ch03-clip05"]);
+const HIDDEN_CLIP_KEYS_FROM_PROGRESS = new Set(["ch00-clip02", "ch04-clip05"]);
 
 function updateProgressBadge() {
   const all = getAllClips().filter((clip) => !HIDDEN_CLIP_KEYS_FROM_PROGRESS.has(clip.clipKey));
