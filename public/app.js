@@ -373,8 +373,9 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     title: "과정 안내",
     time: "08:30",
     clips: [
-      { clipKey: "ch00-clip01", title: "오늘의 시간표", type: "개요" },
-      { clipKey: "ch00-clip02", title: "자사 생성형 AI 서비스 현황", type: "개요" }
+      { clipKey: "ch00-clip01", title: "오늘의 시간표", type: "개요" }
+      // [HIDDEN] 자사 생성형 AI 서비스 현황 복구 시 아래 줄의 주석을 해제하세요:
+      // { clipKey: "ch00-clip02", title: "자사 생성형 AI 서비스 현황", type: "개요" }
     ]
   },
   {
@@ -394,41 +395,71 @@ const CLIENT_CATALOG_BLUEPRINTS = [
     chapterId: "ch02",
     chapterCode: "CH02",
     chapterNum: "CH 02",
-    title: "Gemini & ChatGPT",
+    title: "Gemini 활용 (1)",
     time: "09:30",
     clips: [
       { clipKey: "ch02-clip01", title: "Gemini 소개 및 접속 방법", type: "플랫폼" },
-      { clipKey: "ch02-clip02", title: "프롬프팅 기초", type: "실습" },
-      { clipKey: "ch02-clip03", title: "비지니스 프롬프팅: AI 회의록", type: "실습" },
-      { clipKey: "ch02-clip04", title: "Gems 소개: AI 비서 만들기", type: "실습" },
-      { clipKey: "ch02-clip05", title: "ChatGPT 및 GPTs 소개", type: "플랫폼" }
+      { clipKey: "ch02-clip02", title: "ice breaking: Ai-Friendly 리더십", type: "참고" },
+      { clipKey: "ch02-clip03", title: "프롬프팅 기초: 리더의 역할", type: "실습" },
+      { clipKey: "ch02-clip04", title: "비지니스 프롬프팅: 핵심 역량&스킬", type: "실습" }
     ]
   },
   {
     chapterId: "ch03",
     chapterCode: "CH03",
     chapterNum: "CH 03",
-    title: "NotebookLM",
-    time: "13:00",
+    title: "Gemini 활용 (2) - AI 시대, 성과 창출을 위한 조직(팀) 역량 점검",
+    time: "13:30",
     clips: [
-      { clipKey: "ch03-clip01", title: "NotebookLM 소개 및 문서 기반 AI 연구 도우미", type: "플랫폼" },
-      { clipKey: "ch03-clip02", title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑", type: "실습" },
-      { clipKey: "ch03-clip03", title: "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석", type: "실습" }
+      { clipKey: "ch03-clip01", title: "[실습] 조직 역량 점검 및 Workflow 재설계 (4단계)", type: "실습" }
     ]
   },
   {
     chapterId: "ch04",
     chapterCode: "CH04",
     chapterNum: "CH 04",
-    title: "Google AI Studio",
-    time: "14:10",
+    title: "NotebookLM",
+    time: "13:00",
     clips: [
-      { clipKey: "ch04-clip01", title: "Google AI Studio 소개 및 접속 방법", type: "설정" },
-      { clipKey: "ch04-clip02", title: "바이브 코딩이란", type: "개념" },
-      { clipKey: "ch04-clip03", title: "바이브 코딩으로 웹앱 제작하기", type: "실습" }
+      { clipKey: "ch04-clip01", title: "NotebookLM 소개 및 문서 기반 AI 연구 도우미", type: "플랫폼" },
+      { clipKey: "ch04-clip02", title: "문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑", type: "실습" },
+      { clipKey: "ch04-clip03", title: "Gems 소개: AI 비서 만들기", type: "참고" },
+      { clipKey: "ch04-clip04", title: "ChatGPT 및 GPTs 소개", type: "플랫폼" }
+      // [HIDDEN] ch04-clip05 = 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석 — 노출 제외 중
+      // 복구 시: 아래 주석을 해제하고 server.js의 ch04-clip03도 함께 복구하세요.
+      // { clipKey: "ch04-clip05", title: "기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석", type: "실습" }
     ]
   }
+  // ============================================================
+  // [HIDDEN] CH05: Google AI Studio — 현재 노출 제외 중 (복구 시 아래 주석 해제)
+  // {
+  //   chapterId: "ch05",
+  //   chapterCode: "CH05",
+  //   chapterNum: "CH 05",
+  //   title: "Google AI Studio",
+  //   time: "14:10",
+  //   clips: [
+  //     { clipKey: "ch05-clip01", title: "Google AI Studio 소개 및 접속 방법", type: "설정" },
+  //     { clipKey: "ch05-clip02", title: "바이브 코딩이란", type: "개념" },
+  //     { clipKey: "ch05-clip03", title: "바이브 코딩으로 웹앱 제작하기", type: "실습" }
+  //   ]
+  // }
+  // ============================================================
 ];
+
+// [HIDDEN] 화면에서 제외된 클립 키 목록 (해시 직접 접근 시 안전 리다이렉트에 사용)
+// 복구 시: 해당 clipKey 항목을 이 Set에서 삭제하고, CLIENT_CATALOG_BLUEPRINTS에 다시 추가하세요.
+const HIDDEN_CLIP_KEYS_REDIRECT_SET = new Set([
+  // [HIDDEN] ch04-clip05: 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석
+  "ch04-clip05",
+  // [HIDDEN] ch05-clip01~03: Google AI Studio & Vibe Coding (canonical 포함)
+  "ch05-clip01", "ch05-clip02", "ch05-clip03",
+  "ch06-clip01-hidcode", "ch06-clip01-hidcode"
+]);
+
+// '오늘의 핵심 정리' 챕터 ID — 숨겨진 클립 해시 접근 시 이 챕터의 첫 클립으로 리다이렉트합니다.
+// 서버 visibleBlueprints 기준 ch07 (Key Takeaways & Q/A)
+const HIDDEN_REDIRECT_TARGET_CHAPTER_ID = "ch07";
 
 const CLIENT_RUNTIME_CLIP_OVERRIDE_URLS = {
   "ch00-clip02": "/runtime-overrides/ch00-clip02.html",
@@ -601,56 +632,8 @@ function buildClientVisibleCatalog(rawChapters) {
 }
 
 function needsClientCatalogPatch(rawChapters) {
-  const chapters = Array.isArray(rawChapters) ? rawChapters : [];
-  const chapterMap = new Map(
-    chapters.map((chapter) => [normalizeWs(chapter.chapterId).toLowerCase(), chapter])
-  );
-  const ch00 = chapterMap.get("ch00");
-  const ch01 = chapterMap.get("ch01");
-  const ch02 = chapterMap.get("ch02");
-  const ch03 = chapterMap.get("ch03");
-  const ch04 = chapterMap.get("ch04");
-  const ch01ClipTitles = Array.isArray(ch01?.clips)
-    ? ch01.clips.map((clip) => normalizeWs(clip.title))
-    : [];
-  const ch02ClipTitles = Array.isArray(ch02?.clips)
-    ? ch02.clips.map((clip) => normalizeWs(clip.title))
-    : [];
-  const ch03ClipTitles = Array.isArray(ch03?.clips)
-    ? ch03.clips.map((clip) => normalizeWs(clip.title))
-    : [];
-  const ch04ClipTitles = Array.isArray(ch04?.clips)
-    ? ch04.clips.map((clip) => normalizeWs(clip.title))
-    : [];
-  const ch02PromptingIndex = ch02ClipTitles.findIndex(
-    (title) => title === "프롬프팅 기초"
-  );
-  const ch02BusinessIndex = ch02ClipTitles.findIndex(
-    (title) => title === "Gems 소개: AI 비서 만들기"
-  );
-  const ch02StructuredIndex = ch02ClipTitles.findIndex(
-    (title) => title === "비지니스 프롬프팅: AI 회의록"
-  );
-
-  return Boolean(
-    (Array.isArray(ch00?.clips) && ch00.clips.length !== 2) ||
-      (Array.isArray(ch01?.clips) && ch01.clips.length > 4) ||
-      (Array.isArray(ch02?.clips) && ch02.clips.length < 5) ||
-      (Array.isArray(ch03?.clips) && ch03.clips.length !== 3) ||
-      (Array.isArray(ch04?.clips) && ch04.clips.length !== 3) ||
-      normalizeWs(ch01?.clips?.[0]?.title) !== "AI 트렌드" ||
-      normalizeWs(ch00?.clips?.[1]?.title) !== "자사 생성형 AI 서비스 현황" ||
-      ch02ClipTitles.includes("프롬프트 엔지니어링 4가지 원칙") ||
-      ch04ClipTitles.includes("경쟁사 리서치 대시보드") ||
-      ch01ClipTitles.includes("프롬프트 구조화 하기") ||
-      normalizeWs(ch03?.title) !== "NotebookLM" ||
-      normalizeWs(ch04?.title) !== "Google AI Studio" ||
-      !ch03ClipTitles.includes("문서 기반 AI 리서치: CIQO와 LG 스타일 브리핑") ||
-      !ch04ClipTitles.includes("바이브 코딩으로 웹앱 제작하기") ||
-      !ch02ClipTitles.includes("비지니스 프롬프팅: AI 회의록") ||
-      ch02StructuredIndex !== ch02PromptingIndex + 1 ||
-      ch02BusinessIndex !== ch02StructuredIndex + 1
-  );
+  // 서버가 이미 완성된 완벽한 목차 카탈로그를 내려주므로, 클라이언트 오버라이드를 비활성화하고 서버의 원천 데이터를 100% 신뢰합니다.
+  return false;
 }
 
 function applyClientClipDisplay(clip, sidebarClip) {
@@ -717,6 +700,39 @@ function rewriteClientClipHtml(clipKey, contentHtml) {
   rewriteClipNavFooter(doc, normalized);
 
   if (needsTimetableFix) {
+    // [HIDDEN] 자사 생성형 AI 서비스 현황(ch00-clip02) 행을 시간표에서 숨깁니다.
+    // 복구 시 아래 3줄을 제거하세요.
+    const timetableRows = Array.from(doc.querySelectorAll(".comparison-table tbody tr"));
+    timetableRows.forEach((row) => {
+      const cellText = row.textContent.replace(/\s+/g, " ").trim();
+      if (cellText.includes("자사 생성형 AI 서비스 현황") || cellText.includes("CH00: 자사 생성형 AI")) {
+        row.remove();
+        return;
+      }
+      // [HIDDEN] CH04 Google AI Studio 및 CH05 Hi-D Code 관련 행들도 시간표에서 숨깁니다.
+      if (
+        cellText.includes("Google AI Studio") ||
+        cellText.includes("Vibe Coding") ||
+        cellText.includes("Hi-D Code") ||
+        cellText.includes("CH04:") ||
+        cellText.includes("CH05:")
+      ) {
+        if (!cellText.includes("Key Takeaways") && !cellText.includes("Q/A")) {
+          row.remove();
+          return;
+        }
+      }
+      // [HIDDEN] NotebookLM 3번째 세션(기업 분석 코스) 행도 시간표에서 숨깁니다.
+      // 복구 시: 아래 if 블록을 제거하세요.
+      if (
+        cellText.includes("기업 분석 코스") ||
+        cellText.includes("열린 주제로 해보는 NotebookLM")
+      ) {
+        row.remove();
+        return;
+      }
+    });
+
     const timetableAnchors = Array.from(doc.querySelectorAll(".comparison-table tbody a"));
     timetableAnchors.forEach((anchor) => {
       const text = String(anchor.textContent || "").replace(/\s+/g, " ").trim();
@@ -725,24 +741,28 @@ function rewriteClientClipHtml(clipKey, contentHtml) {
         anchor.textContent = "CH03: NotebookLM";
         return;
       }
-      if (text === "CH03: Google AI Studio" || text === "CH04: Google AI Studio") {
-        anchor.setAttribute("href", "#ch04-clip01");
-        anchor.textContent = "CH04: Google AI Studio";
-        return;
+      if (text.includes("Google AI Studio") || text.includes("Hi-D Code") || text.includes("CH04: ") || text.includes("CH05: ")) {
+        if (!text.includes("Key Takeaways") && !text.includes("Q/A")) {
+          anchor.closest("tr")?.remove();
+          return;
+        }
       }
-      if (text === "CH04: Hi-D Code" || text === "CH05: Hi-D Code") {
-        anchor.setAttribute("href", "#ch05-clip01");
-        anchor.textContent = "CH05: Hi-D Code";
+      // [HIDDEN] 기업 분석 코스 앱커도 시간표에서 제거합니다.
+      if (
+        text.includes("기업 분석 코스") ||
+        text.includes("열린 주제로 해보는 NotebookLM")
+      ) {
+        anchor.closest("tr")?.remove();
         return;
       }
       if (text === "CH04: Key Takeaways & Q/A" || text === "CH06: Key Takeaways & Q/A") {
         anchor.setAttribute("href", "#ch06-clip01");
-        anchor.textContent = "CH06: Key Takeaways & Q/A";
+        anchor.textContent = "CH04: Key Takeaways & Q/A";
         return;
       }
       if (text === "CH07: 참고자료 라이브러리" || text === "CH08: 참고자료 라이브러리") {
-        anchor.setAttribute("href", "#ch07-clip09");
-        anchor.textContent = "CH07: 참고자료 라이브러리";
+        anchor.setAttribute("href", "#ch07-clip01");
+        anchor.textContent = "CH05: 참고자료 라이브러리";
       }
     });
   }
@@ -841,14 +861,14 @@ async function apiStatic(path, options = {}) {
     const completed = new Set(getStaticCompletedClipKeys());
     const chapters = Array.isArray(data.chapters)
       ? data.chapters.map((chapter) => ({
-          ...chapter,
-          clips: Array.isArray(chapter.clips)
-            ? chapter.clips.map((clip) => ({
-                ...clip,
-                completed: completed.has(clip.clipKey)
-              }))
-            : []
-        }))
+        ...chapter,
+        clips: Array.isArray(chapter.clips)
+          ? chapter.clips.map((clip) => ({
+            ...clip,
+            completed: completed.has(clip.clipKey)
+          }))
+          : []
+      }))
       : [];
     return {
       ...data,
@@ -1232,10 +1252,10 @@ function focusContentEditorSource(offset, lineHint = 0) {
 function isLiveContentDirectEditEnabled() {
   return Boolean(
     state.isAdmin &&
-      state.editModeOpen &&
-      state.currentClipKey &&
-      state.editorSourceClipKey &&
-      state.editorSourceClipKey === state.currentClipKey
+    state.editModeOpen &&
+    state.currentClipKey &&
+    state.editorSourceClipKey &&
+    state.editorSourceClipKey === state.currentClipKey
   );
 }
 
@@ -1412,7 +1432,19 @@ function onContentEditorPreviewDoubleClick(event) {
   openInlineQuickEditor(target, offset, lineNumber);
 }
 
-function onClipBodyDirectEditDoubleClick(event) {
+async function onClipBodyDirectEditDoubleClick(event) {
+  if (!state.isAdmin) return;
+
+  // 본문 수정 모드가 꺼져 있다면 더블클릭 시 자동으로 본문 수정 에디터를 활성화합니다.
+  if (!state.editModeOpen) {
+    try {
+      await onToggleEditMode();
+    } catch (error) {
+      setEditorStatus(error.message, true);
+      return;
+    }
+  }
+
   if (!isLiveContentDirectEditEnabled()) return;
   const target = event.target.closest("[data-editor-source-index]");
   if (!target || !el.clipBody.contains(target)) return;
@@ -1998,10 +2030,10 @@ function applySidebarDraftToClientState(draft) {
       time: draft.chapterTime,
       clips: Array.isArray(chapter.clips)
         ? chapter.clips.map((clip) =>
-            normalizeWs(clip.clipKey || "").toLowerCase() === clipKey
-              ? { ...clip, title: draft.clipTitle, type: draft.clipType }
-              : clip
-          )
+          normalizeWs(clip.clipKey || "").toLowerCase() === clipKey
+            ? { ...clip, title: draft.clipTitle, type: draft.clipType }
+            : clip
+        )
         : []
     };
   });
@@ -2281,8 +2313,14 @@ function getAllClips() {
   return state.chapters.flatMap((chapter) => chapter.clips);
 }
 
+// [HIDDEN] 진도율 계산에서 숨겨진 세션들을 제외합니다.
+// 복구 시: 해당 clipKey를 아래 배열에서 삭제하세요.
+// - "ch00-clip02": 자사 생성형 AI 서비스 현황
+// - "ch03-clip05": 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석
+const HIDDEN_CLIP_KEYS_FROM_PROGRESS = new Set(["ch00-clip02", "ch04-clip05"]);
+
 function updateProgressBadge() {
-  const all = getAllClips();
+  const all = getAllClips().filter((clip) => !HIDDEN_CLIP_KEYS_FROM_PROGRESS.has(clip.clipKey));
   const total = all.length;
   const done = all.filter((clip) => state.completedSet.has(clip.clipKey)).length;
   const pct = total ? Math.round((done / total) * 100) : 0;
@@ -2655,102 +2693,102 @@ function buildWebStylePromptSlide(entry, index) {
     : `${entry.title} 스타일로 ${entry.useCase} 웹 화면을 만들어줘. ${cuesText}를 먼저 보이게 하고, ${avoidText}는 피해서 정리해줘. 색은 따로 지정하지 않으면 ${tone.defaultPalette} 톤으로 잡아줘.`;
   const fullPrompt = isLgTone
     ? [
-        "Create a polished responsive enterprise web interface for an internal AI briefing dashboard.",
-        "",
-        "Brand interpretation",
-        "- Overall style: LG Style",
-        `- Tone family: ${tone.label} (${tone.identity})`,
-        `- Layout grammar: ${grammar.label} (${grammar.structure})`,
-        "- Treat the LG logo only as a reference for brand character, not as a giant hero graphic.",
-        "- The interface should feel like a credible internal product used by executives and strategy teams.",
-        "",
-        "Visual direction",
-        "- Use a white or very light gray base with charcoal and gray-led typography.",
-        "- Use LG red (#a50034) only for CTA, progress, status, or one focal accent at a time.",
-        "- Prefer clean cards, generous whitespace, thin borders, and subtle shadows over flashy visual tricks.",
-        `- Visual cues to emphasize: ${cuesText}`,
-        `- Avoid: ${avoidText}`,
-        "",
-        "Layout requirements",
-        `- Make the structure clearly read as ${grammar.outcome}.`,
-        "- Use a clean header, one focused working area, and restrained support panels.",
-        "- Keep copy concise, executive-friendly, and easy to scan in three seconds.",
-        "- Make the page feel like a production-minded React or HTML/CSS/JS app, not a poster-only mockup.",
-        "",
-        "Color guidance",
-        `- If I do not specify colors, default to ${tone.defaultPalette}.`,
-        "- Keep the palette mostly neutral and let LG red appear only as a controlled accent.",
-        "- Do not flood the background with saturated red.",
-        "",
-        "Output guidance",
-        "- Return a distinctive but restrained enterprise UI concept.",
-        "- The first impression should read as LG-style technology brand, not generic SaaS or startup demo."
-      ].join("\n")
+      "Create a polished responsive enterprise web interface for an internal AI briefing dashboard.",
+      "",
+      "Brand interpretation",
+      "- Overall style: LG Style",
+      `- Tone family: ${tone.label} (${tone.identity})`,
+      `- Layout grammar: ${grammar.label} (${grammar.structure})`,
+      "- Treat the LG logo only as a reference for brand character, not as a giant hero graphic.",
+      "- The interface should feel like a credible internal product used by executives and strategy teams.",
+      "",
+      "Visual direction",
+      "- Use a white or very light gray base with charcoal and gray-led typography.",
+      "- Use LG red (#a50034) only for CTA, progress, status, or one focal accent at a time.",
+      "- Prefer clean cards, generous whitespace, thin borders, and subtle shadows over flashy visual tricks.",
+      `- Visual cues to emphasize: ${cuesText}`,
+      `- Avoid: ${avoidText}`,
+      "",
+      "Layout requirements",
+      `- Make the structure clearly read as ${grammar.outcome}.`,
+      "- Use a clean header, one focused working area, and restrained support panels.",
+      "- Keep copy concise, executive-friendly, and easy to scan in three seconds.",
+      "- Make the page feel like a production-minded React or HTML/CSS/JS app, not a poster-only mockup.",
+      "",
+      "Color guidance",
+      `- If I do not specify colors, default to ${tone.defaultPalette}.`,
+      "- Keep the palette mostly neutral and let LG red appear only as a controlled accent.",
+      "- Do not flood the background with saturated red.",
+      "",
+      "Output guidance",
+      "- Return a distinctive but restrained enterprise UI concept.",
+      "- The first impression should read as LG-style technology brand, not generic SaaS or startup demo."
+    ].join("\n")
     : [
-        `Create a polished responsive web interface for ${entry.useCase}.`,
-        "",
-        `Style direction`,
-        `- Overall style: ${entry.title}`,
-        `- Tone family: ${tone.label} (${tone.identity})`,
-        `- Layout grammar: ${grammar.label} (${grammar.structure})`,
-        `- Visual cues to emphasize: ${cuesText}`,
-        `- Avoid: ${avoidText}`,
-        "",
-        `Layout requirements`,
-        `- Keep the page usable as a realistic web app, not a poster-only mockup.`,
-        `- Use a clear header, one main working area, and support panels that match ${grammar.outcome}.`,
-        `- Make the hierarchy obvious within 3 seconds when the screen first loads.`,
-        `- Keep copy concise and executive-friendly.`,
-        "",
-        `Color guidance`,
-        `- If I do not specify brand colors, use the default ${tone.label} palette: ${tone.defaultPalette}.`,
-        `- If brand colors are required, keep them constrained so the ${tone.label} mood still survives.`,
-        "",
-        `Output guidance`,
-        `- Return a production-minded web UI concept that could be implemented in HTML/CSS/JS or React.`,
-        `- Make the interface feel intentional and visually distinctive instead of generic SaaS.`,
-        `- The first impression should clearly read as ${entry.title}.`
-      ].join("\n");
+      `Create a polished responsive web interface for ${entry.useCase}.`,
+      "",
+      `Style direction`,
+      `- Overall style: ${entry.title}`,
+      `- Tone family: ${tone.label} (${tone.identity})`,
+      `- Layout grammar: ${grammar.label} (${grammar.structure})`,
+      `- Visual cues to emphasize: ${cuesText}`,
+      `- Avoid: ${avoidText}`,
+      "",
+      `Layout requirements`,
+      `- Keep the page usable as a realistic web app, not a poster-only mockup.`,
+      `- Use a clear header, one main working area, and support panels that match ${grammar.outcome}.`,
+      `- Make the hierarchy obvious within 3 seconds when the screen first loads.`,
+      `- Keep copy concise and executive-friendly.`,
+      "",
+      `Color guidance`,
+      `- If I do not specify brand colors, use the default ${tone.label} palette: ${tone.defaultPalette}.`,
+      `- If brand colors are required, keep them constrained so the ${tone.label} mood still survives.`,
+      "",
+      `Output guidance`,
+      `- Return a production-minded web UI concept that could be implemented in HTML/CSS/JS or React.`,
+      `- Make the interface feel intentional and visually distinctive instead of generic SaaS.`,
+      `- The first impression should clearly read as ${entry.title}.`
+    ].join("\n");
   const infoBlocks = isLgTone
     ? [
-        {
-          title: "색상 팁",
-          items: [
-            tone.colorTip,
-            "로고의 빨간색을 화면 전체 배경으로 확장하지 말고, CTA와 핵심 상태 강조에만 쓰는 편이 더 LG답습니다."
-          ]
-        },
-        {
-          title: "브랜드 해석",
-          items: [
-            "사내 브리핑과 엔터프라이즈 제품 같은 신뢰감을 먼저 보여주세요.",
-            "회색 중심 타이포, 얇은 선, 넓은 여백, 절제된 카드 구조가 기본입니다."
-          ]
-        },
-        {
-          title: "언제 쓰나",
-          items: [
-            "임원용 AI 대시보드, 전략 브리핑, 내부 포털처럼 브랜드 신뢰감이 중요한 화면일 때",
-            "4×4 매트릭스로 구조를 고른 뒤 마지막 브랜드 모드로 마감하고 싶을 때"
-          ]
-        }
-      ]
+      {
+        title: "색상 팁",
+        items: [
+          tone.colorTip,
+          "로고의 빨간색을 화면 전체 배경으로 확장하지 말고, CTA와 핵심 상태 강조에만 쓰는 편이 더 LG답습니다."
+        ]
+      },
+      {
+        title: "브랜드 해석",
+        items: [
+          "사내 브리핑과 엔터프라이즈 제품 같은 신뢰감을 먼저 보여주세요.",
+          "회색 중심 타이포, 얇은 선, 넓은 여백, 절제된 카드 구조가 기본입니다."
+        ]
+      },
+      {
+        title: "언제 쓰나",
+        items: [
+          "임원용 AI 대시보드, 전략 브리핑, 내부 포털처럼 브랜드 신뢰감이 중요한 화면일 때",
+          "4×4 매트릭스로 구조를 고른 뒤 마지막 브랜드 모드로 마감하고 싶을 때"
+        ]
+      }
+    ]
     : [
-        {
-          title: "색상 팁",
-          items: [
-            tone.colorTip,
-            "브랜드 컬러를 강하게 써야 할 때만 추가로 색을 지정하고, 그렇지 않으면 톤 패밀리 기본 팔레트를 믿는 편이 안정적입니다."
-          ]
-        },
-        {
-          title: "언제 쓰나",
-          items: [
-            `${entry.useCase}처럼 화면 목적이 분명할 때`,
-            `${grammar.label} 문법을 먼저 고르고 톤은 ${tone.label}로 확정하고 싶을 때`
-          ]
-        }
-      ];
+      {
+        title: "색상 팁",
+        items: [
+          tone.colorTip,
+          "브랜드 컬러를 강하게 써야 할 때만 추가로 색을 지정하고, 그렇지 않으면 톤 패밀리 기본 팔레트를 믿는 편이 안정적입니다."
+        ]
+      },
+      {
+        title: "언제 쓰나",
+        items: [
+          `${entry.useCase}처럼 화면 목적이 분명할 때`,
+          `${grammar.label} 문법을 먼저 고르고 톤은 ${tone.label}로 확정하고 싶을 때`
+        ]
+      }
+    ];
 
   return {
     eyebrow: `${String(index + 1).padStart(2, "0")} / ${entry.title}`,
@@ -4528,10 +4566,22 @@ function setupPromptMarkdownPreview(block) {
   let toggleBtn = null;
   if (hasMore) {
     const header = block.querySelector(".prompt-inline-header, .prompt-header");
+    const copyBtn = block.querySelector(".copy-btn, .prompt-inline-copy");
+
+    // 복사 버튼과 펼치기 버튼을 하나의 그룹으로 묶어 오른쪽에 나란히 배치
+    const btnGroup = document.createElement("div");
+    btnGroup.className = "prompt-header-actions";
+
+    if (copyBtn) {
+      btnGroup.appendChild(copyBtn);
+    }
+
     toggleBtn = document.createElement("button");
     toggleBtn.type = "button";
     toggleBtn.className = "prompt-expand-toggle";
-    header?.appendChild(toggleBtn);
+    btnGroup.appendChild(toggleBtn);
+
+    header?.appendChild(btnGroup);
   }
 
   const render = () => {
@@ -4747,7 +4797,7 @@ function enhanceMermaidBlocks(root = el.clipBody) {
   }
   const nodes = Array.from(root.querySelectorAll(".mermaid"));
   if (!nodes.length) return;
-  window.mermaid.run({ nodes }).catch(() => {});
+  window.mermaid.run({ nodes }).catch(() => { });
 }
 
 function enhanceClipBody() {
@@ -4893,7 +4943,21 @@ async function loadChaptersAndDefaultClip() {
 
   const firstClip = state.chapters[0]?.clips[0]?.clipKey || "";
   const hashClip = normalizeClipKey(window.location.hash.replace(/^#/, ""));
-  const targetClip = knownClipKeys.has(hashClip) ? hashClip : firstClip;
+
+  // [HIDDEN] 숨겨진 클립 해시로 직접 접근 시 '오늘의 핵심 정리' 챕터 첫 클립으로 리다이렉트합니다.
+  // 복구 시 이 블록을 제거하세요.
+  const isHiddenHashAccess = hashClip && HIDDEN_CLIP_KEYS_REDIRECT_SET.has(hashClip);
+  const hiddenRedirectTargetClip = (() => {
+    if (!isHiddenHashAccess) return null;
+    const targetChapter = state.chapters.find(
+      (ch) => normalizeWs(ch.chapterId || "").toLowerCase() === HIDDEN_REDIRECT_TARGET_CHAPTER_ID
+    );
+    return targetChapter?.clips?.[0]?.clipKey || firstClip;
+  })();
+
+  const targetClip = knownClipKeys.has(hashClip)
+    ? hashClip
+    : (isHiddenHashAccess ? hiddenRedirectTargetClip : firstClip) || firstClip;
 
   const targetChapter =
     state.chapters.find((chapter) =>
@@ -5195,7 +5259,7 @@ async function onToggleEditMode() {
     }
     renderClipBodyContent(
       state.currentVisibleContentHtml ||
-        editorLiveRenderHtml(state.editorSourceHtml || el.contentEditorInput?.value || ""),
+      editorLiveRenderHtml(state.editorSourceHtml || el.contentEditorInput?.value || ""),
       { liveEditEnabled: false }
     );
     resetContentEditor();
@@ -6241,7 +6305,7 @@ window.publishRootChanges = function publishRootChanges() {
 
 bindEvents();
 loadCourseDirectory()
-  .catch(() => {})
+  .catch(() => { })
   .finally(() => {
-    tryAutoLogin().catch(() => {});
+    tryAutoLogin().catch(() => { });
   });

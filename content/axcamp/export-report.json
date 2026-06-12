@@ -157,6 +157,16 @@
           "promptCount": 0
         },
         {
+          "route": "#ch03-clip08",
+          "title": "ice breaking: Ai-Friendly 리더십",
+          "type": "참고",
+          "folder": "chapters/CH03/ch03-clip08",
+          "linkCount": 0,
+          "imageCount": 0,
+          "sectionCount": 1,
+          "promptCount": 0
+        },
+        {
           "route": "#ch03-clip02",
           "title": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
           "type": "실습",
@@ -185,6 +195,16 @@
           "imageCount": 0,
           "sectionCount": 4,
           "promptCount": 2
+        },
+        {
+          "route": "#ch03-clip09",
+          "title": "[실습] 조직 역량 점검 및 Workflow 재설계 (4단계)",
+          "type": "실습",
+          "folder": "ch03/clip01",
+          "linkCount": 0,
+          "imageCount": 0,
+          "sectionCount": 0,
+          "promptCount": 0
         }
       ]
     },
@@ -632,6 +652,19 @@
     },
     {
       "chapterId": "ch03",
+      "route": "#ch03-clip08",
+      "title": "ice breaking: Ai-Friendly 리더십",
+      "folder": "chapters/CH03/ch03-clip08",
+      "textLength": 100,
+      "htmlLength": 500,
+      "sectionCount": 1,
+      "promptCount": 0,
+      "linkCount": 0,
+      "imageCount": 0,
+      "type": "참고"
+    },
+    {
+      "chapterId": "ch03",
       "route": "#ch03-clip02",
       "title": "프롬프팅 기초 및 비즈니스 프롬프트 연습",
       "folder": "chapters/CH03/ch03-clip02",
@@ -653,6 +686,19 @@
       "promptCount": 3,
       "linkCount": 4,
       "imageCount": 3
+    },
+    {
+      "chapterId": "ch03",
+      "route": "#ch03-clip09",
+      "title": "[실습] 조직 역량 점검 및 Workflow 재설계 (4단계)",
+      "folder": "ch03/clip01",
+      "textLength": 0,
+      "htmlLength": 0,
+      "sectionCount": 0,
+      "promptCount": 0,
+      "linkCount": 0,
+      "imageCount": 0,
+      "type": "실습"
     },
     {
       "chapterId": "ch04",

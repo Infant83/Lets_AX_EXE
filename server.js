@@ -28,14 +28,14 @@ const GENERATED_COURSE_CATALOG_FILE = path.join(GENERATED_COURSES_DIR, "catalog.
 const DEFAULT_COURSE_CODE = "AXCAMP";
 const DEFAULT_COURSE_SLUG = "axcamp";
 const VISIBLE_CATALOG_OVERRIDES_FILE = "visible-catalog-overrides.json";
-const PRACTICE_ROOT_REL = "[공유용] LG AX Camp For Leaders 실습자료";
+const PRACTICE_ROOT_REL = "[공유용] LG 성과향상 with AI 실습자료";
 const PRACTICE_FILE_MAP = {
   "all-zip": "practice_zips/LG_AX_Camp_For_Leaders_practice_all.zip",
   "ch04-zip": "practice_zips/CH04_NotebookLM_practice.zip",
   "1iKGcE5A6LldmVDV8evPlreUTT2fcfmGL": `${PRACTICE_ROOT_REL}/CH02-EXAONE_보안AI/03_EXAONE_가상_기밀보고서.md`,
   "1xJtcpem3mt4aWAKx08SfXjR9QxtIPSsO": `${PRACTICE_ROOT_REL}/CH02-EXAONE_보안AI/TB 26-01-03 샤오미 EV 혁신 방정식 - 자동차 산업의 시간과 비용을 재정의하다.pdf`,
   "1h2CfdVLN6Bx4SkUhQW-dL7VZAHfWTnAc": `${PRACTICE_ROOT_REL}/CH02-EXAONE_보안AI/06_EXAONE_3단계_프롬프트.md`,
-  "19wD3WR1MXFO8rBrsk0ll9XFg6qF5kSsg": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/01_가상회의_오디오파일.wav`,
+  "19wD3WR1MXFO8rBrsk0ll9XFg6qF5kSsg": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/meeting-audio.mp3`,
   "1xFco3cSTZApWXSG5iWY04K50GMmFCO9N": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/02_회의_맥락_참고자료.md`,
   "1B-zoWWsqVynVUiRqm7lrLcoW68gWQ-86": `${PRACTICE_ROOT_REL}/CH03-01-Gemini_회의분석/07_Gemini_단일흐름_프롬프트.md`,
   "1SQgCgDVWwXBjK93LwaI3m4vRgOuMQop_": `${PRACTICE_ROOT_REL}/CH03-02-Gems_AI어시스턴트/08_Gems_시스템_인스트럭션.md`,
@@ -59,7 +59,30 @@ const EXCLUDED_CLIP_KEYS = new Set([
   "ch02-clip01",
   "ch02-clip02",
   "ch02-clip03",
-  "ch02-clip04"
+  "ch02-clip04",
+  // [HIDDEN] 자사 생성형 AI 서비스 현황 — 복구 시 아래 줄만 삭제하세요
+  "ch00-clip02"
+]);
+
+// [HIDDEN_CHAPTERS] CH04(Google AI Studio & Vibe Coding), CH05(Hi-D Code) 숨김 처리 중
+// 복구 방법: server.js의 visibleBlueprints 배열에서 아래 주석 처리된 블록을 되살리세요.
+// 이 Set은 숨겨진 챕터/클립의 canonical 키 목록으로, 해시 직접 접근 시 안전 처리에 사용됩니다.
+const HIDDEN_CHAPTER_CLIP_KEYS = new Set([
+  // ch04 (Google AI Studio & Vibe Coding) 소속 클립들
+  "ch05-clip01",
+  "ch05-clip02",
+  "ch06-clip01",
+  "ch06-clip02",
+  "ch06-clip03",
+  "ch06-clip04",
+  "ch06-clip05",
+  // ch05 (Hi-D Code) 소속 합성 클립들
+  "ch05-clip01-hidcode",
+  // [HIDDEN] NotebookLM 3번째 세션: 기업 분석 코스
+  // canonical 키(export-report.json 기준) + visible 키(렌더링 시 재맵핑 결과)를 모두 등록
+  // 복구 시: 아래 두 줄을 삭제하고, visibleBlueprints ch03 clipKeys에 "ch04-clip03"을 다시 추가하세요.
+  "ch04-clip03",  // canonical key (원본 챕터 폴더 기준)
+  "ch03-clip05"   // visible key (렌더링 후 재맵핑된 클립 키)
 ]);
 const ROOT_ACCOUNT_ID = "root";
 const ROOT_DEFAULT_PASSWORD = process.env.AX_ROOT_PASSWORD || "root";
@@ -694,8 +717,8 @@ function createProjectFromTemplate(template, customName = "") {
         (normalizedTemplate === "workshop"
           ? "워크숍형 교육 과정"
           : normalizedTemplate === "blank"
-          ? "빈 템플릿 과정"
-          : "AX Literacy 신규 과정"),
+            ? "빈 템플릿 과정"
+            : "AX Literacy 신규 과정"),
       subtitle: "",
       audience: "",
       template: normalizedTemplate,
@@ -1854,7 +1877,7 @@ function buildMetadataFromHtml(clip, existingMetadata, rawHtml) {
     ...existingMetadata,
     route,
     url: `https://lg.cmdspace.work/axcamp${route}`,
-    pageTitle: existingMetadata?.pageTitle || "AX Camp for Leaders | LG",
+    pageTitle: existingMetadata?.pageTitle || "성과향상 with AI | LG",
     clipTitle,
     overview,
     badges: badges.length
@@ -1930,6 +1953,36 @@ async function resolveCourseContext(primary, secondary = "") {
   return dir.byCode.get(DEFAULT_COURSE_CODE) || defaultCourseContext();
 }
 
+async function buildSyntheticClip(sourceRootDir, spec, chapterId, chapterTitle, chapterNum) {
+  const folderAbsolute = path.resolve(sourceRootDir, spec.folderRelative || "");
+  const metadataPath = path.join(folderAbsolute, "metadata.json");
+  const metadata = await readJsonFileSafe(metadataPath, null);
+
+  const clipKey = normalizeWs(spec.clipKey).toLowerCase();
+  const cleanTitle = deriveClipTitle(metadata, spec.title || metadata?.clipTitle || clipKey);
+  const cleanType = normalizeWs(spec.type || metadata?.type || "");
+
+  return {
+    clipKey,
+    canonicalClipKey: clipKey,
+    route: `#${clipKey}`,
+    canonicalRoute: `#${clipKey}`,
+    title: cleanTitle,
+    type: cleanType,
+    chapterId,
+    canonicalChapterId: chapterId,
+    chapterCode: chapterCodeFromId(chapterId),
+    chapterNum,
+    chapterTitle,
+    overview: normalizeWs(metadata?.overview || ""),
+    badges: Array.isArray(metadata?.badges) ? metadata.badges : [],
+    folderRelative: spec.folderRelative || "",
+    folderAbsolute,
+    metadataPath,
+    screenshotPath: path.join(folderAbsolute, "screenshot.png")
+  };
+}
+
 async function buildCatalog(sourceRoot) {
   const reportFile = path.join(sourceRoot, "export-report.json");
   const report = await readJsonFileSafe(reportFile, null);
@@ -1941,6 +1994,7 @@ async function buildCatalog(sourceRoot) {
   const canonicalChaptersById = new Map();
   const canonicalClipsByKey = new Map();
 
+  // 1. Canonical 챕터 및 클립 메타데이터 로드
   for (const chapter of report.chapters) {
     const canonicalChapterId = normalizeWs(chapter.chapterId).toLowerCase();
     const chapterObj = {
@@ -1956,8 +2010,8 @@ async function buildCatalog(sourceRoot) {
 
     for (const clip of chapter.clips || []) {
       const clipKey = clipKeyFromRoute(clip.route);
-      if (!clipKey) continue;
-      if (EXCLUDED_CLIP_KEYS.has(clipKey)) continue;
+      if (!clipKey || EXCLUDED_CLIP_KEYS.has(clipKey)) continue;
+
       const absoluteClipDir = path.resolve(sourceRoot, clip.folder || "");
       const metadataPath = path.join(absoluteClipDir, "metadata.json");
       const metadata = await readJsonFileSafe(metadataPath, null);
@@ -1995,43 +2049,16 @@ async function buildCatalog(sourceRoot) {
     }
   }
 
-  async function buildSyntheticClip(sourceRootDir, spec, chapterId, chapterTitle, chapterNum) {
-    const folderAbsolute = path.resolve(sourceRootDir, spec.folderRelative || "");
-    const metadataPath = path.join(folderAbsolute, "metadata.json");
-    const metadata = await readJsonFileSafe(metadataPath, null);
-
-    const clipKey = normalizeWs(spec.clipKey).toLowerCase();
-    const cleanTitle = deriveClipTitle(metadata, spec.title || metadata?.clipTitle || clipKey);
-    const cleanType = normalizeWs(spec.type || metadata?.type || "");
-
-    return {
-      clipKey,
-      canonicalClipKey: clipKey,
-      route: `#${clipKey}`,
-      canonicalRoute: `#${clipKey}`,
-      title: cleanTitle,
-      type: cleanType,
-      chapterId,
-      canonicalChapterId: chapterId,
-      chapterCode: chapterCodeFromId(chapterId),
-      chapterNum,
-      chapterTitle,
-      overview: normalizeWs(metadata?.overview || ""),
-      badges: Array.isArray(metadata?.badges) ? metadata.badges : [],
-      folderRelative: spec.folderRelative || "",
-      folderAbsolute,
-      metadataPath,
-      screenshotPath: path.join(folderAbsolute, "screenshot.png")
-    };
-  }
-
+  // 2. 가시적 챕터 노출용 블루프린트 설정 정의
   const visibleBlueprints = [
     {
       visibleChapterId: "ch00",
       title: "과정 안내",
       time: "08:30",
       sourceChapterIds: ["ch00"],
-      clipKeys: ["ch00-clip01", "ch00-clip02"]
+      // [HIDDEN] 자사 생성형 AI 서비스 현황(ch00-clip02) 제외 중.
+      // 복구 시: clipKeys 배열에 "ch00-clip02" 를 다시 추가하세요.
+      clipKeys: ["ch00-clip01"]
     },
     {
       visibleChapterId: "ch01",
@@ -2042,16 +2069,15 @@ async function buildCatalog(sourceRoot) {
     },
     {
       visibleChapterId: "ch02",
-      title: "Gemini & ChatGPT",
+      title: "Gemini 활용",
       time: "09:30",
       sourceChapterIds: ["ch03"],
-      clipKeys: ["ch03-clip01", "ch03-clip02", "ch03-clip03", "ch01-clip05", "ch03-clip04"],
+      clipKeys: ["ch03-clip01", "ch03-clip08", "ch03-clip02", "ch03-clip03"],
       clipTitles: {
         "ch03-clip01": "Gemini 소개 및 접속 방법",
-        "ch03-clip02": "프롬프팅 기초",
-        "ch03-clip03": "비지니스 프롬프팅: AI 회의록",
-        "ch01-clip05": "Gems 소개: AI 비서 만들기",
-        "ch03-clip04": "ChatGPT 및 GPTs 소개"
+        "ch03-clip08": "ice breaking: Ai-Friendly 리더십",
+        "ch03-clip02": "프롬프팅 기초: 리더의 역할",
+        "ch03-clip03": "비지니스 프롬프팅: 핵심 역량&스킬"
       }
     },
     {
@@ -2059,38 +2085,51 @@ async function buildCatalog(sourceRoot) {
       title: "NotebookLM",
       time: "13:00",
       sourceChapterIds: ["ch04"],
-      clipKeys: ["ch04-clip01", "ch04-clip02", "ch04-clip03"]
-    },
-    {
-      visibleChapterId: "ch04",
-      title: "Google AI Studio & Vibe Coding",
-      time: "14:10",
-      sourceChapterIds: ["ch05", "ch06"],
-      clipKeys: [
-        "ch05-clip02",
-        "ch06-clip01",
-        "ch06-clip02"
-      ],
+      // [HIDDEN] ch04-clip03 = 기업 분석 코스: 열린 주제로 해보는 NotebookLM 분석 — 노출 제외 중
+      // 복구 시: 아래 배열에 "ch04-clip03" 을 다시 추가하고, HIDDEN_CHAPTER_CLIP_KEYS에서 두 항목을 제거하세요.
+      clipKeys: ["ch04-clip01", "ch04-clip02", "ch03-clip03", "ch03-clip04"],
       clipTitles: {
-        "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
-        "ch06-clip01": "바이브 코딩이란",
-        "ch06-clip02": "바이브 코딩으로 웹앱 제작하기"
+        "ch03-clip03": "Gems 소개: AI 비서 만들기",
+        "ch03-clip04": "ChatGPT 및 GPTs 소개"
       }
     },
-    {
-      visibleChapterId: "ch05",
-      title: "Hi-D Code",
-      time: "16:10",
-      sourceChapterIds: [],
-      syntheticClips: [
-        {
-          clipKey: "ch05-clip01",
-          folderRelative: "generated/hid-code/ch05-clip01",
-          title: "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
-          type: "개요"
-        }
-      ]
-    },
+    // ============================================================
+    // [HIDDEN] CH04: Google AI Studio & Vibe Coding — 현재 노출 제외 중
+    // 복구 시: 아래 주석 블록의 '//' 를 제거하고, 바로 아래 ch05(Hi-D Code)도 함께 복구하세요.
+    // {
+    //   visibleChapterId: "ch04",
+    //   title: "Google AI Studio & Vibe Coding",
+    //   time: "14:10",
+    //   sourceChapterIds: ["ch05", "ch06"],
+    //   clipKeys: [
+    //     "ch05-clip02",
+    //     "ch06-clip01",
+    //     "ch06-clip02"
+    //   ],
+    //   clipTitles: {
+    //     "ch05-clip02": "Google AI Studio 소개 및 접속 방법",
+    //     "ch06-clip01": "바이브 코딩이란",
+    //     "ch06-clip02": "바이브 코딩으로 웹앱 제작하기"
+    //   }
+    // },
+    // ============================================================
+    // [HIDDEN] CH05: Hi-D Code — 현재 노출 제외 중
+    // 복구 시: 위의 CH04 블록과 함께 아래 주석을 함께 해제하세요.
+    // {
+    //   visibleChapterId: "ch05",
+    //   title: "Hi-D Code",
+    //   time: "16:10",
+    //   sourceChapterIds: [],
+    //   syntheticClips: [
+    //     {
+    //       clipKey: "ch05-clip01",
+    //       folderRelative: "generated/hid-code/ch05-clip01",
+    //       title: "Hi-D Code 소개 및 시연 (최남석, Agentic AI 팀)",
+    //       type: "개요"
+    //     }
+    //   ]
+    // },
+    // ============================================================
     {
       visibleChapterId: "ch06",
       title: "Key Takeaways & Q/A",
@@ -2119,6 +2158,7 @@ async function buildCatalog(sourceRoot) {
     }
   ];
 
+  // 3. 반환용 자료 구조 및 맵 레지스트리 준비
   const chapters = [];
   const clipsByKey = new Map();
   const visibleClipsByKey = new Map();
@@ -2127,6 +2167,8 @@ async function buildCatalog(sourceRoot) {
   const canonicalChapterIdByVisibleId = new Map();
   const visibleClipKeyByCanonicalKey = new Map();
   const sourceChapterIdsByVisibleId = new Map();
+
+  // 클립 메타데이터를 통합 레지스트리 Map들에 일괄 등록하는 헬퍼 함수
   const registerClipObject = (clipObj) => {
     if (!clipObj?.clipKey) return;
 
@@ -2146,12 +2188,14 @@ async function buildCatalog(sourceRoot) {
     }
   };
 
+  // 4. 블루프린트를 순회하며 최종 챕터 및 클립 리바인딩 수행
   for (const [chapterIndex, blueprint] of visibleBlueprints.entries()) {
     const visibleChapterId = blueprint.visibleChapterId;
     const primarySourceChapterId = normalizeWs(blueprint.sourceChapterIds?.[0] || visibleChapterId).toLowerCase();
     const visibleChapterNum = formatChapterNum(chapterIndex);
     const visibleChapterCode = chapterCodeFromId(visibleChapterId);
     const chapterOverride = overrides.chapters?.[visibleChapterId] || {};
+
     const chapterObj = {
       chapterId: visibleChapterId,
       canonicalChapterId: primarySourceChapterId,
@@ -2171,6 +2215,7 @@ async function buildCatalog(sourceRoot) {
       visibleChapterIdByCanonicalId.set(normalizeWs(sourceChapterId).toLowerCase(), visibleChapterId);
     }
 
+    // 블루프린트에 등록된 클립 목록을 단일 명세(Specs) 리스트로 통합
     const clipSpecs = [];
     for (const clipKey of blueprint.clipKeys || []) {
       clipSpecs.push({ clipKey, synthetic: false });
@@ -2179,30 +2224,45 @@ async function buildCatalog(sourceRoot) {
       clipSpecs.push({ ...syntheticClip, synthetic: true });
     }
 
+    // 각 클립 명세를 순회하여 visible 기준 클립 오브젝트 빌드
     for (const [clipIndex, clipSpec] of clipSpecs.entries()) {
+      const clipSuffix = String(clipIndex + 1).padStart(2, "0");
+      const visibleClipKey = `${visibleChapterId}-clip${clipSuffix}`;
       let clipObj = null;
 
       if (clipSpec.synthetic) {
-        clipObj = await buildSyntheticClip(
+        // 합성 클립 빌드 및 키 오버라이드
+        const rawSynthetic = await buildSyntheticClip(
           sourceRoot,
           clipSpec,
           visibleChapterId,
           chapterObj.title,
           visibleChapterNum
         );
+        clipObj = {
+          ...rawSynthetic,
+          clipKey: visibleClipKey,
+          route: `#${visibleClipKey}`,
+          canonicalClipKey: visibleClipKey,
+          canonicalRoute: `#${visibleClipKey}`
+        };
       } else {
-        const sourceClip = canonicalClipsByKey.get(normalizeWs(clipSpec.clipKey).toLowerCase());
+        // 기존(Canonical) 클립 리바인딩
+        const sourceClipKey = normalizeWs(clipSpec.clipKey).toLowerCase();
+        const sourceClip = canonicalClipsByKey.get(sourceClipKey);
         if (!sourceClip) continue;
+
+        const overrideTitle = blueprint.clipTitles?.[clipSpec.clipKey] || clipSpec.title || sourceClip.title;
         clipObj = {
           ...sourceClip,
-          clipKey: `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
-          route: `#${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`,
+          clipKey: visibleClipKey,
+          route: `#${visibleClipKey}`,
           chapterId: visibleChapterId,
           canonicalChapterId: sourceClip.canonicalChapterId,
           chapterCode: visibleChapterCode,
           chapterNum: visibleChapterNum,
           chapterTitle: chapterObj.title,
-          title: normalizeWs(blueprint.clipTitles?.[clipSpec.clipKey] || clipSpec.title || sourceClip.title),
+          title: normalizeWs(overrideTitle),
           canonicalClipKey: sourceClip.canonicalClipKey,
           canonicalRoute: sourceClip.canonicalRoute
         };
@@ -2210,18 +2270,7 @@ async function buildCatalog(sourceRoot) {
 
       if (!clipObj) continue;
 
-      if (clipSpec.synthetic) {
-        clipObj.chapterId = visibleChapterId;
-        clipObj.canonicalChapterId = visibleChapterId;
-        clipObj.chapterCode = visibleChapterCode;
-        clipObj.chapterNum = visibleChapterNum;
-        clipObj.chapterTitle = chapterObj.title;
-        clipObj.clipKey = `${visibleChapterId}-clip${String(clipIndex + 1).padStart(2, "0")}`;
-        clipObj.route = `#${clipObj.clipKey}`;
-        clipObj.canonicalClipKey = clipObj.clipKey;
-        clipObj.canonicalRoute = clipObj.route;
-      }
-
+      // JSON 오버라이드 설정에 따른 메타데이터 덮어쓰기 적용
       const clipOverride = overrides.clips?.[clipObj.clipKey] || {};
       if (clipOverride.title) {
         clipObj.title = clipOverride.title;
@@ -2230,10 +2279,12 @@ async function buildCatalog(sourceRoot) {
         clipObj.type = clipOverride.type;
       }
 
+      // 최종 클립 객체 레지스트리 등록 및 챕터 추가
       registerClipObject(clipObj);
       chapterObj.clipObjects.push(clipObj);
     }
 
+    // 유효한 클립이 포함된 챕터만 최종 챕터 리스트에 취합
     if (chapterObj.clipObjects.length) {
       chapterObj.clips = chapterObj.clipObjects.map((clipObj) => ({
         clipKey: clipObj.clipKey,
@@ -2759,11 +2810,11 @@ async function resolveClipPayload(clipKey, course) {
 
   const htmlContent = htmlRaw
     ? rewriteVisibleReferences(
-        rewritePracticeDriveUrls(
-          rewriteRelativeUrls(htmlRaw, activeCourse.courseCode, clip.clipKey)
-        ),
-        catalog
-      )
+      rewritePracticeDriveUrls(
+        rewriteRelativeUrls(htmlRaw, activeCourse.courseCode, clip.clipKey)
+      ),
+      catalog
+    )
     : `<pre>${escapeHtml(mdRaw || txtRaw || "콘텐츠가 없습니다.")}</pre>`;
   const renderedMetadata = buildMetadataFromHtml(clip, metadata, htmlContent);
   const baseBadges =
@@ -2802,10 +2853,26 @@ async function resolveClipPayload(clipKey, course) {
 
 async function handleGetClip(req, res, urlObj) {
   const pathnameParts = urlObj.pathname.split("/").filter(Boolean);
-  const clipKey = pathnameParts[pathnameParts.length - 1];
+  let clipKey = pathnameParts[pathnameParts.length - 1];
   const user = await resolveUserFromRequest(req, urlObj);
   const course = await resolveActiveCourse(user, urlObj);
-  const payload = await resolveClipPayload(clipKey, course);
+  let payload = await resolveClipPayload(clipKey, course);
+
+  if (!payload) {
+    const normalizedKey = normalizeWs(clipKey).toLowerCase();
+    const isHiddenKey = normalizedKey.startsWith("ch04-") || 
+                        normalizedKey.startsWith("ch05-") || 
+                        HIDDEN_CHAPTER_CLIP_KEYS.has(normalizedKey);
+    if (isHiddenKey) {
+      const catalog = await getCatalog(course);
+      const firstChapter = catalog.chapters?.[0];
+      const firstClip = firstChapter?.clips?.[0];
+      if (firstClip) {
+        clipKey = firstClip.clipKey;
+        payload = await resolveClipPayload(clipKey, course);
+      }
+    }
+  }
 
   if (!payload) {
     return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
@@ -2932,9 +2999,9 @@ async function handleAxTask(req, res, urlObj) {
       chapterId: visibleChapterId,
       axTask: task
         ? {
-            ...task,
-            chapterId: visibleChapterId
-          }
+          ...task,
+          chapterId: visibleChapterId
+        }
         : null
     });
   }
@@ -2991,6 +3058,148 @@ async function handleAxTask(req, res, urlObj) {
       chapterId: toVisibleChapterId(catalog, chapterId)
     }
   });
+}
+
+async function handleSharedAudio(req, res, urlObj) {
+  const user = await resolveUserFromRequest(req, urlObj);
+  if (!user) {
+    return sendJson(res, 401, { ok: false, error: "로그인이 필요합니다." });
+  }
+
+  const course = await resolveActiveCourse(user, urlObj);
+  const catalog = await getCatalog(course);
+  const clipKey = normalizeWs(urlObj.searchParams.get("clipKey")).toLowerCase();
+  
+  if (!clipKey) {
+    return sendJson(res, 400, { ok: false, error: "clipKey가 필요합니다." });
+  }
+
+  const clip = resolveCatalogClip(catalog, clipKey);
+  if (!clip) {
+    return sendJson(res, 404, { ok: false, error: "클립을 찾을 수 없습니다." });
+  }
+
+  const sharedDir = path.join(clip.folderAbsolute, "shared-audios");
+
+  if (req.method === "GET") {
+    try {
+      if (!(await pathExists(sharedDir))) {
+        return sendJson(res, 200, { ok: true, audios: [] });
+      }
+      const files = await fs.readdir(sharedDir);
+      const audios = [];
+      for (const file of files) {
+        const filePath = path.join(sharedDir, file);
+        const stat = await fs.stat(filePath);
+        if (stat.isFile()) {
+          audios.push({
+            fileName: file,
+            size: stat.size,
+            sizeLabel: formatByteSize(stat.size),
+            url: `/course-files/${encodeURIComponent(course.courseCode)}/${encodeURIComponent(clip.clipKey)}/shared-audios/${encodeURIComponent(file)}`,
+            uploadedAt: stat.mtime.toISOString(),
+            uploadedBy: user.accountId
+          });
+        }
+      }
+      audios.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+      return sendJson(res, 200, { ok: true, audios });
+    } catch (error) {
+      console.error("Failed to list shared audios:", error);
+      return sendJson(res, 500, { ok: false, error: "오디오 목록을 가져오지 못했습니다." });
+    }
+  }
+
+  if (req.method === "POST") {
+    try {
+      const payload = await readRequestJson(req);
+      const originalName = sanitizeAssetFileName(payload.fileName || "");
+      const ext = path.extname(originalName).toLowerCase();
+      const base64 = String(payload.contentBase64 || "").trim();
+
+      const ALLOWED_AUDIO_EXTENSIONS = new Set([".mp3", ".wav", ".m4a", ".ogg", ".aac"]);
+
+      if (!originalName || !ext) {
+        return sendJson(res, 400, { ok: false, error: "파일 이름이 올바르지 않습니다." });
+      }
+
+      if (!ALLOWED_AUDIO_EXTENSIONS.has(ext)) {
+        return sendJson(res, 400, {
+          ok: false,
+          error: `지원하지 않는 파일 형식입니다. 오디오 파일만 업로드할 수 있습니다. (${ext})`
+        });
+      }
+
+      if (!base64) {
+        return sendJson(res, 400, { ok: false, error: "업로드할 파일 내용이 비어 있습니다." });
+      }
+
+      const content = Buffer.from(base64, "base64");
+      if (!content.length) {
+        return sendJson(res, 400, { ok: false, error: "업로드할 파일 내용이 비어 있습니다." });
+      }
+
+      if (content.length > MAX_ADMIN_ASSET_BYTES) {
+        return sendJson(res, 400, {
+          ok: false,
+          error: `파일 용량은 ${formatByteSize(MAX_ADMIN_ASSET_BYTES)} 이하로 업로드해 주세요.`
+        });
+      }
+
+      await fs.mkdir(sharedDir, { recursive: true });
+
+      const stem = path.basename(originalName, ext) || "audio";
+      let candidateName = `${stem}${ext}`;
+      let targetPath = path.join(sharedDir, candidateName);
+      let suffix = 2;
+
+      while (await pathExists(targetPath)) {
+        candidateName = `${stem}_${suffix}${ext}`;
+        targetPath = path.join(sharedDir, candidateName);
+        suffix++;
+      }
+
+      await fs.writeFile(targetPath, content);
+
+      return sendJson(res, 200, {
+        ok: true,
+        audio: {
+          fileName: candidateName,
+          size: content.length,
+          sizeLabel: formatByteSize(content.length),
+          url: `/course-files/${encodeURIComponent(course.courseCode)}/${encodeURIComponent(clip.clipKey)}/shared-audios/${encodeURIComponent(candidateName)}`,
+          uploadedAt: new Date().toISOString(),
+          uploadedBy: user.accountId
+        }
+      });
+    } catch (error) {
+      console.error("Failed to upload shared audio:", error);
+      return sendJson(res, 500, { ok: false, error: "오디오 업로드에 실패했습니다." });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    try {
+      const payload = await readRequestJson(req);
+      const fileName = sanitizeAssetFileName(payload.fileName || "");
+      if (!fileName) {
+        return sendJson(res, 400, { ok: false, error: "삭제할 파일명이 필요합니다." });
+      }
+
+      const targetPath = path.join(sharedDir, fileName);
+      if (!(await pathExists(targetPath))) {
+        return sendJson(res, 404, { ok: false, error: "삭제할 파일이 존재하지 않습니다." });
+      }
+
+      await fs.unlink(targetPath);
+      return sendJson(res, 200, { ok: true, message: "성공적으로 삭제되었습니다." });
+    } catch (error) {
+      console.error("Failed to delete shared audio:", error);
+      return sendJson(res, 500, { ok: false, error: "파일 삭제에 실패했습니다." });
+    }
+  }
+
+  return sendText(res, 405, "text/plain; charset=utf-8", "Method not allowed");
 }
 
 async function handleNotes(req, res, urlObj) {
@@ -3262,13 +3471,13 @@ async function handleAdminSidebarSource(req, res, urlObj) {
   );
   const reportFlatClip = Array.isArray(report.clips)
     ? report.clips.find(
-        (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
-      )
+      (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+    )
     : null;
   const chapterClip = Array.isArray(chapterJson?.clips)
     ? chapterJson.clips.find(
-        (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
-      )
+      (item) => normalizeWs(item.route).toLowerCase() === canonicalRoute.toLowerCase()
+    )
     : null;
   const chapterOverride = overrides.chapters?.[clip.chapterId] || {};
   const clipOverride = overrides.clips?.[clip.clipKey] || {};
@@ -3285,32 +3494,32 @@ async function handleAdminSidebarSource(req, res, urlObj) {
       sidebar: {
         chapterTitle: normalizeWs(
           chapterOverride.title ||
-            visibleChapter.title ||
-            reportChapter?.title ||
-            chapterJson?.title ||
-            clip.chapterTitle
+          visibleChapter.title ||
+          reportChapter?.title ||
+          chapterJson?.title ||
+          clip.chapterTitle
         ),
         chapterTime: normalizeWs(
           chapterOverride.time ||
-            visibleChapter.time ||
-            reportChapter?.time ||
-            chapterJson?.time ||
-            ""
+          visibleChapter.time ||
+          reportChapter?.time ||
+          chapterJson?.time ||
+          ""
         ),
         clipTitle: normalizeWs(
           clipOverride.title ||
-            metadata?.navTitle ||
-            reportClip?.title ||
-            chapterClip?.title ||
-            visibleClip.title ||
-            clip.title
+          metadata?.navTitle ||
+          reportClip?.title ||
+          chapterClip?.title ||
+          visibleClip.title ||
+          clip.title
         ),
         clipType: normalizeSidebarClipType(
           clipOverride.type ||
-            reportClip?.type ||
-            chapterClip?.type ||
-            visibleClip.type ||
-            clip.type,
+          reportClip?.type ||
+          chapterClip?.type ||
+          visibleClip.type ||
+          clip.type,
           clip.type
         )
       },
@@ -3753,10 +3962,10 @@ async function handleCourseFile(req, res, urlObj) {
   if (parts.length >= 4 && directory.byCode.has(maybeCourseCode)) {
     course = directory.byCode.get(maybeCourseCode);
     clipKey = decodeURIComponent(parts[2] || "");
-    requested = parts.slice(3).join("/");
+    requested = decodeURIComponent(parts.slice(3).join("/"));
   } else {
     clipKey = decodeURIComponent(parts[1] || "");
-    requested = parts.slice(2).join("/");
+    requested = decodeURIComponent(parts.slice(2).join("/"));
   }
 
   const catalog = await getCatalog(course);
@@ -3901,6 +4110,13 @@ async function route(req, res) {
 
   if (req.method === "GET" && urlObj.pathname.startsWith("/api/clips/")) {
     return handleGetClip(req, res, urlObj);
+  }
+  
+  if (
+    (req.method === "GET" || req.method === "POST" || req.method === "DELETE") &&
+    urlObj.pathname === "/api/shared-audio"
+  ) {
+    return handleSharedAudio(req, res, urlObj);
   }
 
   if (
