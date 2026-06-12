@@ -15,10 +15,49 @@
   <div class="clip-section-title">실습 가이드</div>
   <div class="clip-section-content">
     <p style="margin-bottom: 16px; font-weight: 500; line-height: 1.7; color: var(--text-body);">
-      이번 시간에는 "AI 시대, 리더의 고민과 역할"에 대해 회의를 해보는 시간입니다. 회의를 진행할 때 녹음을 해주세요. 녹음은 Tiro를 이용할 것이며 이에 대한 내용은 아래 이미지를 참고하시기 바랍니다.
+
+
+      이번 시간에는 먼저 퀴즈앤(https://quizn.show/)에 접속해서 퀴즈를 풀어보는 시간을 가져보겠습니다.
+      <br><br>
+      그 다음에는 "AI 시대, 리더의 고민과 역할"에 대해 회의를 해보는 시간입니다. 회의를 진행할 때 녹음을 해주세요. 녹음은 Tiro를 이용할 것이며 이에 대한 내용은 아래 이미지를 참고하시기 바랍니다.
       녹음 후에는 음성 파일을 다운로드하고 여기에 업로드해주세요.
     </p>
     <p>아래 이미지 가이드를 참고하여 진행해 주시기 바랍니다.</p>
+    <div class="clip-section" id="shared-audio-section">
+      <div class="clip-section-title">조원 오디오 자료 공유방</div>
+      <div class="clip-section-content">
+        <p style="margin-bottom: 12px; color: var(--text-secondary); font-size: 0.85rem;">
+          팀 리더십 토론 녹음 오디오 파일을 업로드하여 조원들과 공유하세요. 업로드된 파일은 목록에서 바로 다운로드할 수 있습니다. (지원 형식: MP3, WAV, M4A 등, 최대 32MB)
+        </p>
+
+        <!-- 파일 선택 및 업로드 영역 -->
+        <div
+          style="background: var(--bg-offwhite); border: 1px dashed var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="file" id="sharedAudioFileInput" accept="audio/*" style="display: none;" />
+            <button type="button" class="slide-briefing-link" id="selectSharedAudioBtn"
+              style="margin: 0; font-size: 0.85rem;">파일 선택</button>
+            <span id="sharedAudioFileLabel"
+              style="font-size: 0.85rem; color: var(--text-secondary); word-break: break-all;">선택된 파일 없음</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="sharedAudioStatus" style="font-size: 0.8rem; color: var(--text-secondary);"></span>
+            <button type="button" class="slide-briefing-link" id="uploadSharedAudioBtn"
+              style="margin: 0; font-size: 0.85rem; background: var(--brand); color: white; border: none; opacity: 0.6;"
+              disabled>업로드 하기</button>
+          </div>
+        </div>
+
+        <!-- 공유된 파일 리스트 영역 -->
+        <div style="margin-top: 16px;">
+          <h5 style="margin-bottom: 8px; font-size: 0.9rem;">업로드된 오디오 목록</h5>
+          <div id="sharedAudioList"
+            style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--bg-white);">
+            <p class="muted" style="font-size: 0.85rem; margin: 0; text-align: center; padding: 12px;">불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div style="display: flex; flex-direction: column; gap: 24px; margin-top: 16px;">
       <div>
@@ -55,41 +94,7 @@
   </div>
 </div>
 
-<div class="clip-section" id="shared-audio-section">
-  <div class="clip-section-title">조원 오디오 자료 공유방</div>
-  <div class="clip-section-content">
-    <p style="margin-bottom: 12px; color: var(--text-secondary); font-size: 0.85rem;">
-      팀 리더십 토론 녹음 오디오 파일을 업로드하여 조원들과 공유하세요. 업로드된 파일은 목록에서 바로 다운로드할 수 있습니다. (지원 형식: MP3, WAV, M4A 등, 최대 32MB)
-    </p>
 
-    <!-- 파일 선택 및 업로드 영역 -->
-    <div
-      style="background: var(--bg-offwhite); border: 1px dashed var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px;">
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <input type="file" id="sharedAudioFileInput" accept="audio/*" style="display: none;" />
-        <button type="button" class="slide-briefing-link" id="selectSharedAudioBtn"
-          style="margin: 0; font-size: 0.85rem;">파일 선택</button>
-        <span id="sharedAudioFileLabel"
-          style="font-size: 0.85rem; color: var(--text-secondary); word-break: break-all;">선택된 파일 없음</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span id="sharedAudioStatus" style="font-size: 0.8rem; color: var(--text-secondary);"></span>
-        <button type="button" class="slide-briefing-link" id="uploadSharedAudioBtn"
-          style="margin: 0; font-size: 0.85rem; background: var(--brand); color: white; border: none; opacity: 0.6;"
-          disabled>업로드 하기</button>
-      </div>
-    </div>
-
-    <!-- 공유된 파일 리스트 영역 -->
-    <div style="margin-top: 16px;">
-      <h5 style="margin-bottom: 8px; font-size: 0.9rem;">업로드된 오디오 목록</h5>
-      <div id="sharedAudioList"
-        style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--bg-white);">
-        <p class="muted" style="font-size: 0.85rem; margin: 0; text-align: center; padding: 12px;">불러오는 중...</p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- IIFE Script Hack -->
 <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="(function(){
